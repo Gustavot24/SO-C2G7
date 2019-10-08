@@ -16,6 +16,8 @@ CREATE TABLE ParticionesFijas (
 GO
 
 /* crea la tabla para guardar los procesos */
+/* modele el ciclo de vida como un varchar momentaneamente,
+   hasta que definamos como vamos a representar en el algoritmo */
 CREATE TABLE Procesos (
 	idProceso INT PRIMARY KEY IDENTITY(0, 1),
 	tamano INT NOT NULL,
