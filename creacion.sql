@@ -1,19 +1,26 @@
 /* crea la base de datos */
 CREATE DATABASE Simulador;
+GO
+
+/* usa la base de datos que creaste recien */
+USE Simulador;
+GO
 
 /* crea la tabla para guardar las particiones fijas */
-CREATE TABLE Simulador.ParticionesFijas (
+CREATE TABLE ParticionesFijas (
 	idParticion INT PRIMARY KEY IDENTITY(0, 1),
 	dirInicio INT NOT NULL,
 	dirFin INT NOT NULL,
 	tamano INT NOT NULL,
 );
+GO
 
 /* crea la tabla para guardar los procesos */
-CREATE TABLE Simulador.Procesos (
+CREATE TABLE Procesos (
 	idProceso INT PRIMARY KEY IDENTITY(0, 1),
 	tamano INT NOT NULL,
 	prioridad INT NOT NULL,
 	tiempoDeArribo INT NOT NULL,
 	cicloDeVida VARCHAR(10) NOT NULL,
 );
+GO
