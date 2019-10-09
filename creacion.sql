@@ -8,10 +8,9 @@ GO
 
 /* crea la tabla para guardar las particiones fijas */
 CREATE TABLE ParticionesFijas (
-	idParticion INT PRIMARY KEY IDENTITY(0, 1),
-	dirInicio INT NOT NULL,
-	dirFin INT NOT NULL,
-	tamano INT NOT NULL,
+	idParticion INT PRIMARY KEY IDENTITY(1, 1),
+	nombre VARCHAR(20),
+	listado XML,
 );
 GO
 
@@ -19,10 +18,8 @@ GO
 /* modele el ciclo de vida como un varchar momentaneamente,
    hasta que definamos como vamos a representar en el algoritmo */
 CREATE TABLE Procesos (
-	idProceso INT PRIMARY KEY IDENTITY(0, 1),
-	tamano INT NOT NULL,
-	prioridad INT NOT NULL,
-	tiempoDeArribo INT NOT NULL,
-	cicloDeVida VARCHAR(10) NOT NULL,
+	idProceso INT PRIMARY KEY IDENTITY(1, 1),
+	nombre VARCHAR(20),
+	listado XML,
 );
 GO
