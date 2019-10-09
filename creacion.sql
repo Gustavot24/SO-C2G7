@@ -15,11 +15,22 @@ CREATE TABLE ParticionesFijas (
 GO
 
 /* crea la tabla para guardar los procesos */
-/* modele el ciclo de vida como un varchar momentaneamente,
-   hasta que definamos como vamos a representar en el algoritmo */
 CREATE TABLE Procesos (
 	idProceso INT PRIMARY KEY IDENTITY(1, 1),
 	nombre VARCHAR(20),
 	listado XML,
 );
 GO
+
+/* el xml puede ser asi:
+<particion id="x">
+	<dirInicio>direccion de inicio</dirInicio>
+	<dirFin>direccion de fin</dirFin>
+	<tamano>tamaño</tamano>
+</particion>
+
+o asi:
+<particion id="x" dirInicio="x" dirFin="x" tamano="x" />
+
+hay que decidir como hacer
+*/
