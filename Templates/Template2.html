@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="Static/main.css">
+    <script src="https://kit.fontawesome.com/740eaa0327.js" crossorigin="anonymous"></script>
     <title>Document</title>
 </head>
 <body>
@@ -103,11 +104,11 @@
                         <div class="d-flex align-items-center justify-items-start m-3">
                             <label for="rpm">Porcentaje ocupada por la S.O.</label>
                             <form class="field-range ml-2">
-                                <input class="custom-range ml-3" id="myRange" type="range" min="10" max="25" />
+                              <input class="custom-range ml-3" id="myRange" value="10" type="range" min="10" max="25" />
                             </form>
-                            <p>Valor: </p>
-                            <p id="demo"></p>
-                            <p>%</p>
+                            <label for="rpm" class="ml-4" >Valor: </label>
+                            <label for="rpm" id="demo"></label>
+                            <label for="rpm">%</label>
                         </div>
                         <div class="form-check form-check-inline m-3">
                             <input class="form-check-input" type="radio" name="inlineRadioOptions" id="prtfixed" value="option1" onclick="checked()">
@@ -130,10 +131,16 @@
                             <div class="form-check form-check-inline m-3" id="lbstfit">
                                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="bstfit" value="option2">
                                 <label class="form-check-label" for="bstfit">Best Fit</label>
-                            </div>
-                            <button type="button" class="btn btn-secondary ml-3" data-toggle="modal" data-target="#addprt">Agregar varias Particiones Fijas</button>
+                            </div>                            
                         </div>
-                        <div class="d-flex align-items-center">
+                        <div class="form-inline">
+                          <button type="button" class="btn btn-secondary ml-3" 
+                            data-toggle="modal" data-target="#addprt" id="boton1">Agregar varias particiones iguales</button>
+                          <button type="button" class="btn btn-secondary ml-3" id="boton2" onclick="setVisible()">Agregar particiones manualmente</button>
+                          <button type="button" class="btn btn-secondary ml-3" id="boton3" data-toggle="modal" data-target="#fromdbprt">Cargar desde DB</button>
+                        </div>
+
+                        <div id="div-particiones" class="d-flex align-items-center mt-4" style="visibility: hidden">
                             <table class="table table-bordered bg-white" id="tabla-particiones">
                                 <thead>
                                     <tr>
@@ -150,15 +157,21 @@
                                         <td>#</td>
                                         <td>
                                           <input type="text" class="form-control" id='tamano1' placeholder="Ingrese tamaño">
-                                        </td>
+                                        </td>                                        
                                     </tr>                                    
                                 </tbody>
+                                <tfoot id="boton4" style="visibility: hidden">
+                                    <td>
+                                      <button type="button"  class="btn btn-secondary"  onclick="cargarParticionesVbles()">
+                                          <i class="fas fa-plus-circle"></i></button>
+                                    </td>
+                                </tfoot>
                             </table>
+                        </div>                        
+                        <button type="button" class="btn btn-secondary" id="boton5" style="visibility: hidden">Guardar en DB</button>
+                        <div align="right">
+                        <button type="button"  class="btn btn-secondary"  id="boton6" style="visibility: visible">Siguiente</button>
                         </div>
-                        <button type="button" class="btn btn-secondary" onclick="mostrar()">Agregar</button>
-                        <button type="button" class="btn btn-secondary">Guardar en DB</button>
-                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#fromdbprt">Cargar desde DB</button>
-
                     </div>
 
                     <div id="result" class="container tab-pane fade"><br>
@@ -188,38 +201,19 @@
             <form class="form-inline">
                 <div class="form-group mx-sm-3 mb-2">
                   <label for="szmem">Cantidad de Particiones</label>
-                  <input type="number" value="0" min="0" max="1000" step="1"/>
-                  <!--<select class="form-control ml-2" id="sel1">
-                    <option>Selecciona</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </select>-->
+                  <input type="number" id="cantpart" value="1" min="1" max="100" step="1"/>                  
                 </div>
             </form>
             <form class="form-inline">
                 <div class="form-group mx-sm-3 mb-2">
                   <label for="szmem">Tamaño (KB)</label>
-                  <select class="form-control ml-2" id="mp">
-                    <option>Selecciona</option>
-                    <option>2</option>
-                    <option>4</option>
-                    <option>8</option>
-                    <option>16</option>
-                    <option>32</option>
-                    <option>64</option>
-                    <option>128</option>
-                    <option>256</option>
-                    <option>512</option>
-                  </select>
+                  <input type="number" id="tamanopart" value="1" min="1" max="2048" step="1"/>
                 </div>
             </form>
         </div>
         
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary mr-5">Aceptar</button>
+            <button type="button" class="btn btn-secondary mr-5" onclick="cargarParticionesFijas()">Aceptar</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         </div>
         
