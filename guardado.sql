@@ -7,3 +7,8 @@ GO
 INSERT INTO	Procesos (nombre, listado)
 VALUES /* aca van los valores de las filas de la tabla */;
 GO
+
+/* guardar en la tabla de colas */
+INSERT INTO	Colas (nombre, algoritmoColaCPU, algoritmoColaEntrada, algoritmoColaSalida, colasMultinivel)
+VALUES /* aca van los valores de las filas de la tabla */;
+GO
