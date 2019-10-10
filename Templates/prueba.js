@@ -84,14 +84,16 @@ console.log(tablaProcesos);
 
 
 function prueba() {
-    var algoritmo=parseInt(prompt("1-FF   2-BF"));
+    var algoritmo=parseInt(prompt("1-FF   2-BF   3-WF"));
     switch (algoritmo) {
         case 1:
             firstFit(tablaParticiones,tablaProcesos);
             break;
-    
-        default:
+        case 2:
             bestFit(tablaParticiones,tablaProcesos);
+            break;
+        default:
+            worstFit(tablaParticiones,tablaProcesos);
             break;
     }
 }
@@ -107,7 +109,7 @@ function firstFit(tablaParticiones,tablaProcesos) {
             const particioni = tablaParticiones[j];
             if ((procesoi.tamaño<=particioni.tamaño) && (particioni.estado==0)) {
                 particioni.estado=1;
-                particioni.idProceso=i;
+                particioni.idProceso=(i+1);
                 particioni.FI=(particioni.tamaño-procesoi.tamaño);
                 exito=true;
                 fiTotal=particioni.FI+fiTotal;
@@ -153,7 +155,50 @@ function bestFit(tablaParticiones,tablaProcesos) {
             idpart=idpart-1;
             const particioni = tablaParticiones[idpart];
             particioni.estado=1;
-            particioni.idProceso=i;
+            particioni.idProceso=(i+1);
+            particioni.FI=fiactual;
+            fiTotal=fiactual+fiTotal;
+        }
+    }
+    console.log(fiTotal);
+    console.log(tablaParticiones);
+}
+
+function worstFit(tablaParticiones,tablaProcesos) {
+    var fiTotal=0;    
+    var idpart=0;
+    for (let i = 0; i < tablaProcesos.length; i++) {
+        const procesoi = tablaProcesos[i];
+        var fiactual=0;
+        //var exito = false;
+        var exito2 = false;
+        var j=0;
+        do {            
+            const particioni = tablaParticiones[j];
+            if (exito2==false) {
+                if ((procesoi.tamaño<=particioni.tamaño) && (particioni.estado==0)) {
+                    idpart=particioni.idParticion;
+                    fiactual=(particioni.tamaño-procesoi.tamaño);
+                    exito2=true;
+                } 
+                
+            } else {
+                if ((procesoi.tamaño<=particioni.tamaño) && (particioni.estado==0)) {
+                    var ficompara=(particioni.tamaño-procesoi.tamaño);
+                    if (ficompara>fiactual) {
+                        idpart=particioni.idParticion;
+                        fiactual=ficompara;
+                    }                    
+                }
+            }
+            j++;
+        } while ( j<tablaParticiones.length);
+
+        if (exito2==true) {
+            idpart=idpart-1;
+            const particioni = tablaParticiones[idpart];
+            particioni.estado=1;
+            particioni.idProceso=(i+1);
             particioni.FI=fiactual;
             fiTotal=fiactual+fiTotal;
         }
