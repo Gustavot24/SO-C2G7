@@ -1,3 +1,4 @@
+//algoritmos de asignacion de procesos a memoria
 var tablaParticiones = [];
 var particion ={ //se crea el object
     "idParticion": 1,
