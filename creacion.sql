@@ -10,7 +10,7 @@ GO
 CREATE TABLE ParticionesFijas (
 	idParticion INT PRIMARY KEY IDENTITY(1, 1),
 	nombre VARCHAR(20),
-	listado XML,
+	listado VARCHAR(MAX),
 );
 GO
 
@@ -18,7 +18,7 @@ GO
 CREATE TABLE Procesos (
 	idProceso INT PRIMARY KEY IDENTITY(1, 1),
 	nombre VARCHAR(20),
-	listado XML,
+	listado VARCHAR(MAX),
 );
 GO
 
@@ -30,19 +30,6 @@ CREATE TABLE Colas (
 	algoritmoColaCPU VARCHAR(20),
 	algoritmoColaEntrada VARCHAR(20),
 	algoritmoColaSalida	VARCHAR(20),
-	colasMultinivel XML,
+	colasMultinivel VARCHAR(MAX),
 );
 GO
-
-/* el xml puede ser asi:
-<particion id="x">
-	<dirInicio>direccion de inicio</dirInicio>
-	<dirFin>direccion de fin</dirFin>
-	<tamano>tamaño</tamano>
-</particion>
-
-o asi:
-<particion id="x" dirInicio="x" dirFin="x" tamano="x" />
-
-hay que decidir como hacer
-*/
