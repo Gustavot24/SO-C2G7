@@ -60,12 +60,22 @@ function guardarParticiones() {
 }
 
 // recupera una lista de particiones de la db y la carga en la tabla del html
+// faltaria algun modo de controlar que no se carguen mas particiones que el tamaño de la memoria
 function cargarParticiones() {
+    var tabla = document.getElementById("tabla-particiones"); // variable que apunta a la tabla de particiones
     var stringDeConsulta = 'SELECT nombre, listado FROM ParticionesFijas WHERE nombre = "' + document.getElementById("sel1").value + '";';
-    rs.open(stringDeConsulta, conexion);
-    rs.moveFirst;
-    while(!rs.eof) {
-        // colocar cada fila
-        rs.moveNext;
+    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
+    rs.moveFirst; // se mueve al primer registro de la consulta
+    var tablaConvertidaEnJSON = JSON.parse(rs.fields(2)); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
+    for(var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
+        var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
+        var celdaIdParticion = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
+        var celdaDirInicio = nuevaFila.insertCell(1);
+        var celdaDirFin = nuevaFila.insertCell(2);
+        var celdaTamano = nuevaFila.insertCell(3);
+        celdaIdParticion.innerHTML = tablaConvertidaEnJSON[i].idParticion; // le va cargando los datos a cada una de las celdas
+        celdaDirInicio.innerHTML = tablaConvertidaEnJSON[i].dirInicio;
+        celdaDirFin.innerHTML = tablaConvertidaEnJSON[i].dirFin;
+        celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamano;
     }
 }
