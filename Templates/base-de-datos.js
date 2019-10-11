@@ -11,7 +11,7 @@ var rs;
 // ver como hacer para que ande en cualquier maquina sin tocar nada
 // supuestamente esto es re inseguro, pero somos re loco y le mandamos igual
 function abrirConexion() {
-    conexion = new ActiveXObject("ADODB.Connection") ;
+    conexion = new ActiveXObject("ADODB.Connection"); // NO ANDA, VER COMO ARREGLAR
     //var stringDeConexion="Data Source=localhost;Initial Catalog=<catalog>;User ID=<user>;Password=<password>;Provider=SQLOLEDB";
     var stringDeConexion = "driver={sql server};server=localhost;database=Simulador;uid=sa;password="
     conexion.Open(stringDeConexion);
@@ -41,21 +41,21 @@ function cerrarConexion() {
 // con info de https://stackoverflow.com/questions/3065342/how-do-i-iterate-through-table-rows-and-cells-in-javascript
 function guardarParticiones() {
     var tabla = document.getElementById("tabla-particiones"); // variable que apunta a la tabla de particiones
-    var tablaConvertidaEnJSON = "["; // string que va a contener la tabla convertida en jota son
-    for (var i = 0, fila; fila = tabla.rows[i]; i++) { // va agregando cada fila de la tabla al json
-        tablaConvertidaEnJSON = tablaConvertidaEnJSON + "{" +
-            "idParticion: " + fila.cells[0] + ", " +
-            "dirInicio: " + fila.cells[1] + ", " +
-            "dirFin: " + fila.cells[2] + ", " +
-            "tamano: " + fila.cells[3] + "}";
-        if (i != tabla.rows.size()) { // si no es la ultima fila, agrega una coma
-            tablaConvertidaEnJSON = tablaConvertidaEnJSON + ", ";
-        }
+    var tablaConvertidaEnObjeto = []; // array que va a contener las particiones convertidas en objetos
+    for (var i = 0, fila; fila = tabla.rows[i]; i++) { // va agregando cada fila de la tabla a un array de objetos
+        var particionConvertidaEnObjeto = { // crea el objeto de una particion
+            idParticion: fila.cells[0],
+            dirInicio: fila.cells[1],
+            dirFin: fila.cells[2],
+            tamano: fila.cells[3],
+        };
+        tablaConvertidaEnObjeto.push(particionConvertidaEnObjeto); // agrega el objeto recien creado al array
      }
-    tablaConvertidaEnJSON = tablaConvertidaEnJSON + "]";
+    var tablaConvertidaEnJSON = JSON.stringify(tablaConvertidaEnObjeto); // convierte el array de objetos en un string de un jota son
     var stringDeConsulta = "INSERT INTO ParticionesFijas (nombre, listado) VALUES " +
         '"' + "aca va el input del nombre de la lista de particiones" + '", ' +
         '"' + tablaConvertidaEnJSON + '";'; // crea el string de la consulta
+        // si no me equivoco esto es re vulnerable a una inyeccion sql
     rs.open(stringDeConsulta, conexion); // ejecuta la consulta
 }
 
@@ -63,11 +63,11 @@ function guardarParticiones() {
 // faltaria algun modo de controlar que no se carguen mas particiones que el tamaño de la memoria
 function cargarParticiones() {
     var tabla = document.getElementById("tabla-particiones"); // variable que apunta a la tabla de particiones
-    var stringDeConsulta = 'SELECT nombre, listado FROM ParticionesFijas WHERE nombre = "' + document.getElementById("sel1").value + '";';
+    var stringDeConsulta = 'SELECT nombre, listado FROM ParticionesFijas WHERE nombre = "' + document.getElementById("sel1").value + '";'; // crea el string de la consulta
     rs.open(stringDeConsulta, conexion); // ejecuta la consulta
     rs.moveFirst; // se mueve al primer registro de la consulta
     var tablaConvertidaEnJSON = JSON.parse(rs.fields(2)); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
-    for(var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
+    for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
         var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
         var celdaIdParticion = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
         var celdaDirInicio = nuevaFila.insertCell(1);
@@ -78,4 +78,24 @@ function cargarParticiones() {
         celdaDirFin.innerHTML = tablaConvertidaEnJSON[i].dirFin;
         celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamano;
     }
+}
+
+// guarda la lista de procesos que esta en el html en la db
+function guardarProcesos() {
+    // falta hacer
+}
+
+// recupera una lista de procesos de la db y la carga en la tabla del html
+function cargarProcesos() {
+    // falta hacer
+}
+
+// guarda la lista de colas que esta en el html (y los algoritmos de las otras colas) en la db
+function guardarColas() {
+    // falta hacer
+}
+
+// recupera una lista de colas de la db (y los algoritmos de las otras colas) y la carga en la tabla del html
+function cargarColas() {
+    // falta hacer
 }
