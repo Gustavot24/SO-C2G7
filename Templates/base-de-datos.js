@@ -39,15 +39,17 @@ function cerrarConexion() {
 
 // guarda la lista de particiones que esta en el html en la db
 // con info de https://stackoverflow.com/questions/3065342/how-do-i-iterate-through-table-rows-and-cells-in-javascript
+// y de https://www.w3schools.com/jsref/coll_table_tbodies.asp
 function guardarParticiones() {
-    var tabla = document.getElementById("tabla-particiones"); // variable que apunta a la tabla de particiones
+    var tabla = document.getElementById("tabla-particiones").tBodies.item(0); // variable que apunta a la tabla de particiones
     var tablaConvertidaEnObjeto = []; // array que va a contener las particiones convertidas en objetos
-    for (var i = 0, fila; fila = tabla.rows[i]; i++) { // va agregando cada fila de la tabla a un array de objetos
+    for (var i = 0, fila; i < tabla.rows.length; i++) { // va agregando cada fila de la tabla a un array de objetos
+        fila = tabla.rows[i];
         var particionConvertidaEnObjeto = { // crea el objeto de una particion
-            idParticion: fila.cells[0],
-            dirInicio: fila.cells[1],
-            dirFin: fila.cells[2],
-            tamano: fila.cells[3],
+            idParticion: fila.cells[0].innerHTML,
+            dirInicio: fila.cells[1].innerHTML,
+            dirFin: fila.cells[2].innerHTML,
+            tamano: fila.cells[3].innerHTML,
         };
         tablaConvertidaEnObjeto.push(particionConvertidaEnObjeto); // agrega el objeto recien creado al array
      }
@@ -61,10 +63,10 @@ function guardarParticiones() {
     else {
         algoritmo = "bestfit";
     }
-    var stringDeConsulta = "INSERT INTO ParticionesFijas (nombre, listado) VALUES " +
+    var stringDeConsulta = "INSERT INTO ParticionesFijas (nombre, tamanoMemoria, porcentajeSO, algoritmo, listado) VALUES " +
         '"' + "aca va el input del nombre de la lista de particiones" + '", ' +
         tamanoMemoria + ", " + porcentajeSO + ', "' + algoritmo + '", ' +
-        '"' + tablaConvertidaEnJSON + '";'; // crea el string de la consulta
+        "'" + tablaConvertidaEnJSON + "';"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
     rs.open(stringDeConsulta, conexion); // ejecuta la consulta
 }
