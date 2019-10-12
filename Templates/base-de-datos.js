@@ -52,15 +52,24 @@ function guardarParticiones() {
         tablaConvertidaEnObjeto.push(particionConvertidaEnObjeto); // agrega el objeto recien creado al array
      }
     var tablaConvertidaEnJSON = JSON.stringify(tablaConvertidaEnObjeto); // convierte el array de objetos en un string de un jota son
+    var tamanoMemoria = document.getElementById("mp").value; // obtiene el tamaño de la memoria
+    var porcentajeSO = document.getElementById("myRange").value; // obtiene el porcentaje ocupado por el SO
+    var algoritmo; //declara una variable para guardar el algoritmo
+    if (document.getElementById("frtfit").checked == true) { // depende del radiobutton chequeado asigna el algoritmo
+        algoritmo = "firstfit";
+    }
+    else {
+        algoritmo = "bestfit";
+    }
     var stringDeConsulta = "INSERT INTO ParticionesFijas (nombre, listado) VALUES " +
         '"' + "aca va el input del nombre de la lista de particiones" + '", ' +
+        tamanoMemoria + ", " + porcentajeSO + ', "' + algoritmo + '", ' +
         '"' + tablaConvertidaEnJSON + '";'; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
     rs.open(stringDeConsulta, conexion); // ejecuta la consulta
 }
 
 // recupera una lista de particiones de la db y la carga en la tabla del html
-// faltaria algun modo de controlar que no se carguen mas particiones que el tamaño de la memoria
 function cargarParticiones() {
     var tabla = document.getElementById("tabla-particiones"); // variable que apunta a la tabla de particiones
     var stringDeConsulta = 'SELECT nombre, listado FROM ParticionesFijas WHERE nombre = "' + document.getElementById("sel1").value + '";'; // crea el string de la consulta
