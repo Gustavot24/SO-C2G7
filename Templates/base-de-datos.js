@@ -45,7 +45,7 @@ function guardarParticiones(nombre) {
     var tablaConvertidaEnObjeto = []; // array que va a contener las particiones convertidas en objetos
     for (var i = 0, fila; i < tabla.rows.length; i++) { // va agregando cada fila de la tabla a un array de objetos
         fila = tabla.rows[i];
-        if (fila.cells[0].innerHTML != "#") {
+        if (fila.cells[0].innerHTML != "#") { // esto es para que ande al cargar particiones manualmente (la ultima fila no debe guardarse)
             var particionConvertidaEnObjeto = { // crea el objeto de una particion
                 idParticion: fila.cells[0].innerHTML,
                 dirInicio: fila.cells[1].innerHTML,
@@ -70,8 +70,7 @@ function guardarParticiones(nombre) {
         tamanoMemoria + ", " + porcentajeSO + ', "' + algoritmo + '", ' +
         "'" + tablaConvertidaEnJSON + "';"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
-    //rs.open(stringDeConsulta, conexion); // ejecuta la consulta
-    alert(stringDeConsulta);
+    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
 }
 
 // recupera una lista de particiones de la db y la carga en la tabla del html
@@ -95,17 +94,18 @@ function cargarParticiones() {
 }
 
 // guarda la lista de procesos que esta en el html en la db
+// con info de https://stackoverflow.com/questions/13137597/how-to-get-element-inside-a-td-using-row-index-and-td-index
 function guardarProcesos(nombre) {
     var tabla = document.getElementById("tabla-procesos").tBodies.item(0); // variable que apunta a la tabla de procesos
     var tablaConvertidaEnObjeto = []; // array que va a contener la lista de procesos convertida en objetos
     for (var i = 0, fila; i < tabla.rows.length - 1; i++) { // va agregando cada fila de la tabla a un array de objetos
         fila = tabla.rows[i];
         var procesosConvertidosEnObjeto = { // crea el objeto de una particion
-            idProceso: fila.cells[0].innerHTML, //ACA TIENE QUE ACCEDER AL INPUT QUE ESTA
-            tamano: fila.cells[1].innerHTML,    //ADENTRO DE UN DIV QUE ESTA ADENTRO
-            prioridad: fila.cells[2].innerHTML, //DE LA CELDA
-            tiempoDeArribo: fila.cells[3].innerHTML,
-            cicloVida: fila.cells[4].innerHTML,
+            idProceso: fila.cells[0].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value,
+            tamano: fila.cells[1].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value,
+            prioridad: fila.cells[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value,
+            tiempoDeArribo: fila.cells[3].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value,
+            cicloVida: fila.cells[4].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value,
         };
         tablaConvertidaEnObjeto.push(procesosConvertidosEnObjeto); // agrega el objeto recien creado al array
      }
