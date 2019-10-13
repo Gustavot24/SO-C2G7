@@ -45,13 +45,15 @@ function guardarParticiones(nombre) {
     var tablaConvertidaEnObjeto = []; // array que va a contener las particiones convertidas en objetos
     for (var i = 0, fila; i < tabla.rows.length; i++) { // va agregando cada fila de la tabla a un array de objetos
         fila = tabla.rows[i];
-        var particionConvertidaEnObjeto = { // crea el objeto de una particion
-            idParticion: fila.cells[0].innerHTML,
-            dirInicio: fila.cells[1].innerHTML,
-            dirFin: fila.cells[2].innerHTML,
-            tamano: fila.cells[3].innerHTML,
-        };
-        tablaConvertidaEnObjeto.push(particionConvertidaEnObjeto); // agrega el objeto recien creado al array
+        if (fila.cells[0].innerHTML != "#") {
+            var particionConvertidaEnObjeto = { // crea el objeto de una particion
+                idParticion: fila.cells[0].innerHTML,
+                dirInicio: fila.cells[1].innerHTML,
+                dirFin: fila.cells[2].innerHTML,
+                tamano: fila.cells[3].innerHTML,
+            };
+            tablaConvertidaEnObjeto.push(particionConvertidaEnObjeto); // agrega el objeto recien creado al array
+        }
      }
     var tablaConvertidaEnJSON = JSON.stringify(tablaConvertidaEnObjeto); // convierte el array de objetos en un string de un jota son
     var tamanoMemoria = document.getElementById("mp").value; // obtiene el tamaño de la memoria
@@ -68,7 +70,8 @@ function guardarParticiones(nombre) {
         tamanoMemoria + ", " + porcentajeSO + ', "' + algoritmo + '", ' +
         "'" + tablaConvertidaEnJSON + "';"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
-    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
+    //rs.open(stringDeConsulta, conexion); // ejecuta la consulta
+    alert(stringDeConsulta);
 }
 
 // recupera una lista de particiones de la db y la carga en la tabla del html
