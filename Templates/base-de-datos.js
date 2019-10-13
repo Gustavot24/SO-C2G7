@@ -1,5 +1,5 @@
 // Script para conectarse a la base de datos
-// robado de https://stackoverflow.com/questions/857670/how-to-connect-to-sql-server-database-from-javascript-in-the-browser
+// con info de https://stackoverflow.com/questions/857670/how-to-connect-to-sql-server-database-from-javascript-in-the-browser
 // tambien de http://sirlagz.net/2011/07/02/connecting-to-sql-server-with-javascript/
 
 var conexion;
@@ -40,7 +40,7 @@ function cerrarConexion() {
 // guarda la lista de particiones que esta en el html en la db
 // con info de https://stackoverflow.com/questions/3065342/how-do-i-iterate-through-table-rows-and-cells-in-javascript
 // y de https://www.w3schools.com/jsref/coll_table_tbodies.asp
-function guardarParticiones() {
+function guardarParticiones(nombre) {
     var tabla = document.getElementById("tabla-particiones").tBodies.item(0); // variable que apunta a la tabla de particiones
     var tablaConvertidaEnObjeto = []; // array que va a contener las particiones convertidas en objetos
     for (var i = 0, fila; i < tabla.rows.length; i++) { // va agregando cada fila de la tabla a un array de objetos
@@ -64,7 +64,7 @@ function guardarParticiones() {
         algoritmo = "bestfit";
     }
     var stringDeConsulta = "INSERT INTO ParticionesFijas (nombre, tamanoMemoria, porcentajeSO, algoritmo, listado) VALUES " +
-        '"' + "aca va el input del nombre de la lista de particiones" + '", ' +
+        '"' + nombre + '", ' +
         tamanoMemoria + ", " + porcentajeSO + ', "' + algoritmo + '", ' +
         "'" + tablaConvertidaEnJSON + "';"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
@@ -92,8 +92,27 @@ function cargarParticiones() {
 }
 
 // guarda la lista de procesos que esta en el html en la db
-function guardarProcesos() {
-    // falta hacer
+function guardarProcesos(nombre) {
+    var tabla = document.getElementById("tabla-procesos").tBodies.item(0); // variable que apunta a la tabla de procesos
+    var tablaConvertidaEnObjeto = []; // array que va a contener la lista de procesos convertida en objetos
+    for (var i = 0, fila; i < tabla.rows.length - 1; i++) { // va agregando cada fila de la tabla a un array de objetos
+        fila = tabla.rows[i];
+        var procesosConvertidosEnObjeto = { // crea el objeto de una particion
+            idProceso: fila.cells[0].innerHTML, //ACA TIENE QUE ACCEDER AL INPUT QUE ESTA
+            tamano: fila.cells[1].innerHTML,    //ADENTRO DE UN DIV QUE ESTA ADENTRO
+            prioridad: fila.cells[2].innerHTML, //DE LA CELDA
+            tiempoDeArribo: fila.cells[3].innerHTML,
+            cicloVida: fila.cells[4].innerHTML,
+        };
+        tablaConvertidaEnObjeto.push(procesosConvertidosEnObjeto); // agrega el objeto recien creado al array
+     }
+    var tablaConvertidaEnJSON = JSON.stringify(tablaConvertidaEnObjeto); // convierte el array de objetos en un string de un jota son
+    var stringDeConsulta = "INSERT INTO Procesos (nombre, listado) VALUES " +
+        '"' + nombre + '", ' +
+        "'" + tablaConvertidaEnJSON + "';"; // crea el string de la consulta
+        // si no me equivoco esto es re vulnerable a una inyeccion sql
+    //rs.open(stringDeConsulta, conexion); // ejecuta la consulta
+    alert(stringDeConsulta);
 }
 
 // recupera una lista de procesos de la db y la carga en la tabla del html
