@@ -81,7 +81,7 @@ function guardarParticiones(nombre) {
 // y de https://www.w3schools.com/jsref/prop_range_value.asp
 function cargarParticiones(nombre) {
     var tabla = document.getElementById("tabla-particiones"); // variable que apunta a la tabla de particiones
-    var stringDeConsulta = 'SELECT nombre, listado FROM ParticionesFijas WHERE nombre = "' + nombre + '";'; // crea el string de la consulta
+    var stringDeConsulta = 'SELECT * FROM ParticionesFijas WHERE nombre = "' + nombre + '";'; // crea el string de la consulta
     rs.open(stringDeConsulta, conexion); // ejecuta la consulta
     rs.moveFirst; // se mueve al primer registro de la consulta
     // [0] es el id, [1] es el nombre, despues van los demas campos
@@ -149,8 +149,26 @@ function guardarProcesos(nombre) {
 }
 
 // recupera una lista de procesos de la db y la carga en la tabla del html
-function cargarProcesos() {
-    // falta hacer
+function cargarProcesos(nombre) {
+    var tabla = document.getElementById("tabla-procesos"); // variable que apunta a la tabla de procesos
+    var stringDeConsulta = 'SELECT * FROM Procesos WHERE nombre = "' + nombre + '";'; // crea el string de la consulta
+    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
+    rs.moveFirst; // se mueve al primer registro de la consulta
+    // [0] es el id, [1] es el nombre, [2] es el listado
+    var tablaConvertidaEnJSON = JSON.parse(rs.fields(2)); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
+    for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
+        var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
+        var celdaIdProceso = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
+        var celdaTamano = nuevaFila.insertCell(1);
+        var celdaPrioridad = nuevaFila.insertCell(2);
+        var celdaTiempoDeArribo = nuevaFila.insertCell(3);
+        var celdaCicloDeVida = nuevaFila.insertCell(4);
+        celdaIdProceso.innerHTML = tablaCOnvertidaEnJSON[i].idProceso; // le va cargando los datos a cada una de las celdas
+        celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamano;
+        celdaPrioridad.innerHTML = tablaConvertidaEnJSON[i].prioridad;
+        celdaTiempoDeArribo.innerHTML = tablaConvertidaEnJSON[i].tiempoDeArribo;
+        celdaCicloDeVida.innerHTML = tablaConvertidaEnJSON[i].cicloDeVida;
+    }
 }
 
 // guarda la lista de colas que esta en el html (y los algoritmos de las otras colas) en la db
