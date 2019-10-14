@@ -2,6 +2,9 @@
 // con info de https://stackoverflow.com/questions/857670/how-to-connect-to-sql-server-database-from-javascript-in-the-browser
 // tambien de http://sirlagz.net/2011/07/02/connecting-to-sql-server-with-javascript/
 
+// FALTA HACER:
+// QUE DE ALGUN MODO SE CREE LA DB Y LAS TABLAS ANTES DE ARRANCAR EL PROGRAMA
+
 var conexion;
 var rs;
 
@@ -30,12 +33,12 @@ while(!rs.eof)
 */
 
 // cierra la conexion con la base de datos
-// se tiene que ejecutar al cerrar el simulador
-// VER COMO HACER ESO
-function cerrarConexion() {
+// se ejecuta al cerrar la pagina o al recargar
+// con info de https://stackoverflow.com/questions/13443503/run-javascript-code-on-window-close-or-page-refresh
+window.addEventListener("beforeunload", function(e){
     rs.close;
-    conexion.close; 
-}
+    conexion.close;
+ }, false); 
 
 // guarda la lista de particiones que esta en el html en la db
 // con info de https://stackoverflow.com/questions/3065342/how-do-i-iterate-through-table-rows-and-cells-in-javascript
@@ -74,12 +77,39 @@ function guardarParticiones(nombre) {
 }
 
 // recupera una lista de particiones de la db y la carga en la tabla del html
-function cargarParticiones() {
+// con info de https://stackoverflow.com/questions/10911526/how-do-i-change-an-html-selected-option-using-javascript
+// y de https://www.w3schools.com/jsref/prop_range_value.asp
+function cargarParticiones(nombre) {
     var tabla = document.getElementById("tabla-particiones"); // variable que apunta a la tabla de particiones
-    var stringDeConsulta = 'SELECT nombre, listado FROM ParticionesFijas WHERE nombre = "' + document.getElementById("sel1").value + '";'; // crea el string de la consulta
+    var stringDeConsulta = 'SELECT nombre, listado FROM ParticionesFijas WHERE nombre = "' + nombre + '";'; // crea el string de la consulta
     rs.open(stringDeConsulta, conexion); // ejecuta la consulta
     rs.moveFirst; // se mueve al primer registro de la consulta
-    var tablaConvertidaEnJSON = JSON.parse(rs.fields(2)); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
+    // [0] es el id, [1] es el nombre, despues van los demas campos
+    switch (rs.fields[2]) { // asigna el valor del tamaño de memoria al select
+        case "128":
+            document.getElementById("mp").value = "128";
+            break;
+        case "256":
+            document.getElementById("mp").value = "256";
+            break;
+        case "512":
+            document.getElementById("mp").value = "512";
+            break;
+        case "1024":
+            document.getElementById("mp").value = "1024";
+            break;
+        case "2048":
+            document.getElementById("mp").value = "2048";
+            break;
+    }
+    document.getElementById("myRange").value = rs.fields[3]; // asigna el valor del porcentaje del SO al range
+    if (rs.fields[4] = "firstfit") {
+        document.getElementById("frtfit").checked = true;
+    }
+    else {
+        document.getElementById("bstfit").checked = true;
+    }
+    var tablaConvertidaEnJSON = JSON.parse(rs.fields(5)); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
     for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
         var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
         var celdaIdParticion = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
