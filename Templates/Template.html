@@ -47,11 +47,11 @@
                         <table class="table table-bordered bg-white" id="tabla-procesos">
                             <thead>
                               <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col">Tamaño</th>
-                                <th scope="col">Prioridad</th>
-                                <th scope="col">Tiempo de Arribo</th>
-                                <th scope="col"> Ciclo de Vida</th>
+                                <th scope="col" id="idProc">Id</th>
+                                <th scope="col" id="tamProc">Tamaño</th>
+                                <th scope="col" id="prioProc">Prioridad</th>
+                                <th scope="col" id="tArrProc">Tiempo de Arribo</th>
+                                <th scope="col" id="cvProc"> Ciclo de Vida</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -59,12 +59,12 @@
                                 <th scope="row">1</th>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="szmmr" placeholder="Tamaño del Proceso">
+                                        <input type="text" class="form-control" id="tamProc1" placeholder="Tamaño del Proceso">
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <select class="form-control" id="sel1">
+                                        <select class="form-control" id="prioProc1">
                                           <option>1</option>
                                           <option>2</option>
                                           <option>3</option>
@@ -73,18 +73,22 @@
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="arrt" placeholder="Tiempo de Arribo">
+                                        <input type="text" class="form-control" id="tArrProc1" placeholder="Tiempo de Arribo">
                                     </div>
                                 </td>
-                                <td></td>
+                                <td>
+									<div class="form-group" id="cvp">
+                                        <input type="text" class="form-control" id="cvProc1" placeholder="CPU-E-CPU-S-CPU">
+                                    </div>
+								</td>
                             </tbody>
                         </table>
                         <div class="d-flex">
-                            <div class="p-2 flex-fill mr-5">
-                                <button type="button" class="btn btn-secondary">Agregar</button>
-                                <button type="button" class="btn btn-secondary">Guardar en DB</button>
-                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#frombd">Cargar desde DB</button>
-                            </div>
+                            <div class="p-2 flex-fill mr-5" id="botonesCargaDeTrabajo">
+                                <button type="button" class="btn btn-secondary" id="botonNuevoProceso" onclick="agregarProc()">Nuevo Proceso</button>
+                                <button type="button" class="btn btn-secondary" id="botonGuardarLista" onclick="guardarEnDB()">Guardar Lista</button>
+                                <div align="right"><button type="button" class="btn btn-secondary" id="botonCargarLista" onclick="cargarDesdeDB()">Cargar Lista</button></div>
+							</div>
                         </div>
                     </div>
                     <div id="icondition" class="container tab-pane active"><br>
@@ -139,7 +143,6 @@
                           <button type="button" class="btn btn-secondary ml-3" id="boton2" onclick="setVisible()">Agregar particiones manualmente</button>
                           <button type="button" class="btn btn-secondary ml-3" id="boton3" data-toggle="modal" data-target="#fromdbprt">Cargar desde DB</button>
                         </div>
-
                         <div id="div-particiones" class="d-flex align-items-center mt-4" style="visibility: hidden">
                             <table class="table table-bordered bg-white" id="tabla-particiones">
                                 <thead>
@@ -211,7 +214,7 @@
                 </div>
             </form>
         </div>
-        
+      
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary mr-5" onclick="cargarParticionesFijas()">Aceptar</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -275,6 +278,7 @@
 </div>
     <script src="Static/main.js"></script>
     <script src="algoritmo.js"></script>
+	  <script src="lista-de-procesos.js"></script>
     <script src="prueba.js"></script>
     <script src="base-de-datos.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
