@@ -1,3 +1,75 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body{
+    background-image: url("images/image.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: black;
+    font-family: 'Hind Madurai', sans-serif;
+    margin-bottom: 8%;
+}
+
+hr{
+    border-top: 1px solid #CCD1D1 ;
+}
+
+thead{
+    background-color: #154360 ;
+}
+#content{
+    margin-right: 0%;
+    padding-right: 0%;
+}
+
 .nav-tabs .nav-item .nav-link.active {
-    background-color: #f8f9fa !important;
+    background-color: black !important;
+    color: #CCD1D1;
+    border-style: none;  
+    
+}
+.nav-tabs .nav-item{
+    background-color: white;
+
+}
+.tab-content{
+    background-color: white;
+    
+}
+a:not([href]):not([tabindex]){
+    color: black;
+}
+
+a:link, a:visited {
+    color: black;
+}
+
+.dropdown-item.active, .dropdown-item:active{
+    background-color: black;
+    color: #CCD1D1;
+}
+
+.nav-item, .dropdown, .dropdown-menu :hover{
+    background-color: black;
+    color: #CCD1D1;
+}
+
+.btn{
+    background-color: #154360 ;
+}
+
+.btn:hover{
+    background-color: white;
+    color: #154360;
+}
+
+#sticky-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    background-color: black;
 }
