@@ -163,7 +163,7 @@ function cargarProcesos(nombre) {
         var celdaPrioridad = nuevaFila.insertCell(2);
         var celdaTiempoDeArribo = nuevaFila.insertCell(3);
         var celdaCicloDeVida = nuevaFila.insertCell(4);
-        celdaIdProceso.innerHTML = tablaCOnvertidaEnJSON[i].idProceso; // le va cargando los datos a cada una de las celdas
+        celdaIdProceso.innerHTML = tablaConvertidaEnJSON[i].idProceso; // le va cargando los datos a cada una de las celdas
         celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamano;
         celdaPrioridad.innerHTML = tablaConvertidaEnJSON[i].prioridad;
         celdaTiempoDeArribo.innerHTML = tablaConvertidaEnJSON[i].tiempoDeArribo;
