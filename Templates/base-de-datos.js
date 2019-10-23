@@ -126,16 +126,16 @@ function cargarParticiones(nombre) {
 // guarda la lista de procesos que esta en el html en la db
 // con info de https://stackoverflow.com/questions/13137597/how-to-get-element-inside-a-td-using-row-index-and-td-index
 function guardarProcesos(nombre) {
-    var tabla = document.getElementById("tabla-procesos").tBodies.item(0); // variable que apunta a la tabla de procesos
+    var tabla = document.getElementById("tabla-procesos").tBodies[0]; // variable que apunta a la tabla de procesos
     var tablaConvertidaEnObjeto = []; // array que va a contener la lista de procesos convertida en objetos
     for (var i = 0, fila; i < tabla.rows.length - 1; i++) { // va agregando cada fila de la tabla a un array de objetos
         fila = tabla.rows[i];
         var procesosConvertidosEnObjeto = { // crea el objeto de una particion
-            idProceso: fila.cells[0].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value,
-            tamano: fila.cells[1].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value,
-            prioridad: fila.cells[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value,
-            tiempoDeArribo: fila.cells[3].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value,
-            cicloVida: fila.cells[4].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value,
+            idProceso: fila.cells[0].innerHTML,
+            tamano: fila.cells[1].innerHTML,
+            prioridad: fila.cells[2].innerHTML,
+            tiempoDeArribo: fila.cells[3].innerHTML,
+            cicloVida: fila.cells[4].innerHTML,
         };
         tablaConvertidaEnObjeto.push(procesosConvertidosEnObjeto); // agrega el objeto recien creado al array
      }
