@@ -39,7 +39,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#result">Resultados</a>
-                    </li>
+                    </li>                    
                 </ul>
                 <div class="tab-content border border-top-0 bg-light pb-4">
                     <div id="workload" class="container tab-pane fade"><br>
@@ -150,7 +150,7 @@
                                         <th>Id</th>
                                         <th>Direccion de Inicio</th>
                                         <th>Direccion de Fin</th>
-                                        <th>Tamaño</th>
+                                        <th>Tamaño (KB)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -166,15 +166,15 @@
                                 <tfoot id="boton4" style="visibility: hidden">
                                     <td>
                                       <button type="button"  class="btn btn-secondary"  onclick="cargarParticionesVbles()">
-                                          <i class="fas fa-plus-circle"></i></button>
+                                        <i class="fas fa-plus-circle"></i></button>
                                     </td>
                                 </tfoot>
                             </table>
                         </div>                        
                         <button type="button" class="btn btn-secondary" id="boton5" style="visibility: hidden">Guardar en DB</button>
                         <div align="right">
-                        <button type="button"  class="btn btn-secondary"  id="boton6" style="visibility: visible" onclick="prueba()">Siguiente</button>
-                        </div>
+                        <button type="button" class="btn btn-secondary"  id="boton6" style="visibility: visible">Siguiente</button>                           
+                      </div>
                     </div>
 
                     <div id="result" class="container tab-pane fade"><br>
@@ -185,6 +185,14 @@
                         <div class="form-check form-check-inline m-3">
                             <input class="form-check-input" type="radio" name="inlineRadioOptions" id="mnprocess" value="option2">
                             <label class="form-check-label" for="mnprocess">Avanzar Manualmente</label>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="prueba()">Siguiente</button>
+                        <div id="resultados" style="display:none">
+                          <table class="table table-bordered bg-white" id="tabla-particion">
+                            <tbody>
+                              
+                            </tbody>
+                          </table>
                         </div>
                     </div>
                 </div>

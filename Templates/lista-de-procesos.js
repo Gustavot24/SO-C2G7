@@ -166,6 +166,7 @@ function agregarProc() {
             $('#tabla-procesos tbody').append(htmlTags);
 		
 	}
+	console.log(tablaProcesos);
 }
 
 function guardarEnDB() {

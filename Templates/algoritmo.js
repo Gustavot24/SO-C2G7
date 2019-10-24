@@ -1,3 +1,7 @@
+//Perstaña:Carga de condiciones inicialea
+
+
+//Esto es para el slider que muestra el porcentaje del SO
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
 output.innerHTML = slider.value;
@@ -8,6 +12,7 @@ slider.oninput = function() {
     output.innerHTML = this.value;
 }
 
+//Funcion para setear visibilidad de los botones
 function setVisible() {
     document.getElementById("div-particiones").style.visibility="visible";
     document.getElementById("boton1").disabled=true; 
@@ -16,7 +21,9 @@ function setVisible() {
     document.getElementById("boton4").style.visibility="visible";
 }
 
-var condicionesInciales ={ //se crea el object de las condiciones iniciales
+//Object que contine todos los datos ingresados por el usuario en cuanto a las
+//condiciones iniciales
+var condicionesInciales ={ 
     "tamanoMP": null,
     "porcentajeSO": null,
     "tamanoSO": null,
@@ -25,16 +32,22 @@ var condicionesInciales ={ //se crea el object de las condiciones iniciales
     "tablaParticiones": [],
 };
 
+//Variables globales
 var idPart=1;
 var direccionLibre=0;
 var tamanoLibre =0;
 
+//Funcion que carga en el object los datos para las particiones de distintos tamaños. 
+//Cuando presiona el boton Agregar Particiones Manualmente
 function cargarParticionesVbles() {
+    //Carga los datos: tipo de particion y algortimo
     if($('#prtfixed').is(':checked')) { condicionesInciales.tipoParticion="F" }
     if($('#prtvar').is(':checked')) { condicionesInciales.tipoParticion="V"  }
     if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="F"}
     if($('#wrtfit').is(':checked')) { condicionesInciales.algoritmo="W"}
     if($('#bstfit').is(':checked')) { condicionesInciales.algoritmo="B" }
+    
+    //La primera vez realiza calculos necesarios para dsps (tamanoLibre, direccionLibre, etc)
     if (idPart==1) {
         var tamanoMP =parseInt(document.getElementById("mp").value);
         var porcentaje =parseInt(document.getElementById("myRange").value)/100;
@@ -45,6 +58,8 @@ function cargarParticionesVbles() {
         condicionesInciales.porcentajeSO=porcentaje;
         condicionesInciales.tamanoSO=tamanoSO;
     } 
+
+    //Carga la particion en el array tabla de particiones que es parte del object
     var tamano = parseInt(document.getElementById(`tamano${idPart}`).value);
     if (tamano <= tamanoLibre) {
         var dirfin= direccionLibre+tamano-1;
@@ -86,6 +101,8 @@ function cargarParticionesVbles() {
     console.log(condicionesInciales);
 }
 
+//Funcion que permite cargar el object cuando las particiones son del mismo tamaño.
+//Cuando el usuario presiona el boton Agregar Particione iguales.
 function cargarParticionesFijas() {
     document.getElementById("boton1").disabled=true;
     document.getElementById("boton2").disabled=true;
