@@ -37,27 +37,27 @@
               <div class="tab-content border-0 pb-4">
                             <div id="workload" class="container tab-pane active"><br>
                                 <h4 style="color: black">Lista de Procesos</h4>
-                                <table class="table table-bordered bg-white">
+                                <table class="table table-bordered bg-white" id="tabla-procesos">
                                     <thead class="text-white">
                                       <tr>
-                                        <th scope="col">Id</th>
-                                        <th scope="col">Tamaño</th>
-                                        <th scope="col">Prioridad</th>
-                                        <th scope="col">Tiempo de Arribo</th>
-                                        <th scope="col"> Ciclo de Vida</th>
+                                        <th scope="col" id="idProc">Id</th>
+                                        <th scope="col" id="tamProc">Tamaño</th>
+                                        <th scope="col" id="prioProc">Prioridad</th>
+                                        <th scope="col" id="tArrProc">Tiempo de Arribo</th>
+                                        <th scope="col" id="cvProc"> Ciclo de Vida</th>
                                       </tr>
                                     </thead>
                                     <tbody>
                                       <tr>
                                         <th scope="row">1</th>
                                         <td>
-                                            <div class="form-group">
-                                                <input type="text" class="form-control" id="szmmr" placeholder="Tamaño del Proceso">
-                                            </div>
+                                          <div class="form-group">
+                                            <input type="text" class="form-control" id="tamProc1" placeholder="Tamaño del Proceso">
+                                        </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
-                                                <select class="form-control" id="sel1">
+                                                <select class="form-control" id="prioProc1">
                                                   <option>1</option>
                                                   <option>2</option>
                                                   <option>3</option>
@@ -65,22 +65,24 @@
                                               </div>
                                         </td>
                                         <td>
-                                            <div class="form-group">
-                                              <input type="text" class="form-control" id="arrt" placeholder="Tiempo de Arribo">
-                                            </div>
-                                        </td>
-                                        <td>
-                                          <input type="text" class="form-control" id="arrt" placeholder="Ciclo vida Proceso">
-                                        </td>
+                                          <div class="form-group">
+                                              <input type="text" class="form-control" id="tArrProc1" placeholder="Tiempo de Arribo">
+                                          </div>
+                                      </td>
+                                      <td>
+                                        <div class="form-group" id="cvp">
+                                          <input type="text" class="form-control" id="cvProc1" placeholder="CPU-E-CPU-S-CPU">
+                                        </div>
+                                      </td>
                                     </tbody>
                                 </table>
                                 <div class="d-flex">
-                                    <div class="p-2 flex-fill mr-5">
-                                        <button type="button" class="btn btn-secondary">Agregar</button>
-                                        <button type="button" class="btn btn-secondary">Guardar en DB</button>
-                                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#frombd">Cargar desde DB</button>
-                                    </div>
-                                </div>
+                                  <div class="p-2 flex-fill mr-5" id="botonesCargaDeTrabajo">
+                                      <button type="button" class="btn btn-secondary" id="botonNuevoProceso" onclick="agregarProc()">Nuevo Proceso</button>
+                                      <button type="button" class="btn btn-secondary" id="botonGuardarLista" onclick="guardarEnDB()">Guardar Lista</button>
+                                      <div align="right"><button type="button" class="btn btn-secondary" id="botonCargarLista" onclick="cargarDesdeDB()">Cargar Lista</button></div>
+                                  </div>
+                              </div>
                             </div>
         
                             <div id="icondition" class="container tab-pane fade"><br>
@@ -165,7 +167,7 @@
                                 </div>                        
                                 <button type="button" class="btn btn-secondary" id="boton5" style="visibility: collapse">Guardar en DB</button>
                                 <div class="d-flex align-content-left m-2">
-                                <button type="button"  class="btn btn-secondary"  id="boton6" style="visibility: visible">Siguiente</button>
+                                <button type="button"  class="btn btn-secondary"  id="boton6" style="visibility: visible" onclick="prueba2()">Siguiente</button>
                                 </div>
                             </div>
         
@@ -177,6 +179,14 @@
                                 <div class="form-check form-check-inline m-3">
                                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="mnprocess" value="option2">
                                     <label class="form-check-label" for="mnprocess">Avanzar Manualmente</label>
+                                </div>
+                                <button type="button" class="btn btn-secondary" onclick="prueba()">Siguiente</button>
+                                <div id="resultados" style="display:none">
+                                  <table class="table table-bordered bg-white" id="tabla-particion">
+                                    <tbody>
+                                      
+                                    </tbody>
+                                  </table>
                                 </div>
                             </div>
         

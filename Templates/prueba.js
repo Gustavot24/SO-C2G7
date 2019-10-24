@@ -182,8 +182,8 @@ function firstfit(element) {
         return 0;
     }
 }
-/*
-function prueba() {
+
+function prueba2() {
     var algoritmo=parseInt(prompt("1-FF   2-BF   3-WF"));
     switch (algoritmo) {
         case 1:
@@ -306,4 +306,3 @@ function worstFit(tablaParticiones,tablaProcesos) {
     console.log(fiTotal);
     console.log(tablaParticiones);
 }
-*/
