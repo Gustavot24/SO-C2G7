@@ -73,7 +73,8 @@ function guardarParticiones(nombre) {
         tamanoMemoria + ", " + porcentajeSO + ', "' + algoritmo + '", ' +
         "'" + tablaConvertidaEnJSON + "';"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
-    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
+    //rs.open(stringDeConsulta, conexion); // ejecuta la consulta
+    alert(stringDeConsulta);
 }
 
 // recupera una lista de particiones de la db y la carga en la tabla del html
