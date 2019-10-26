@@ -23,15 +23,15 @@ var config = { // establece los parametros para conectarse a la db
 };
 
 sql.connect(config, function (err) { // ejecuta la conexion
-    if (err) { // si falla al conectarse tira el error en la consola
-        console.log(err);
+    if (err) { // si falla al conectarse tira el error
+        throw err;
     }
     var request = new sql.Request(); // crea el objeto de la consulta
-    request.query('select * from dbo.ParticionesFijas', function (err, recordset) { // ejecuta una consulta de ejemplo
+    request.query('select * from dbo.ParticionesFijas', function (err, resultado) { // ejecuta una consulta de ejemplo
         if (err) { // si hay error en la consulta lo tira en la consola
             console.log(err)
         }
-        console.log(recordset); // tira en la consola el resultado de la consulta
+        console.log(resultado.recordset); // tira en la consola el resultado de la consulta
     });
 });
 
@@ -154,11 +154,20 @@ function guardarProcesos(nombre) {
 // recupera una lista de procesos de la db y la carga en la tabla del html
 function cargarProcesos(nombre) {
     var tabla = document.getElementById("tabla-procesos"); // variable que apunta a la tabla de procesos
-    var stringDeConsulta = 'SELECT * FROM Procesos WHERE nombre = "' + nombre + '";'; // crea el string de la consulta
-//    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
-//    rs.moveFirst; // se mueve al primer registro de la consulta
-    // [0] es el id, [1] es el nombre, [2] es el listado
-    var tablaConvertidaEnJSON = JSON.parse(rs.fields(2)); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
+    var stringDeConsulta = "SELECT * FROM Procesos WHERE nombre = '" + nombre + "'"; // crea el string de la consulta
+    sql.connect(config, function (err) { // ejecuta la conexion
+        if (err) { // si falla al conectarse tira el error en un alert
+            alert(err);
+        }
+        var request = new sql.Request(); // crea el objeto de la consulta
+        request.query(stringDeConsulta, function (err, resultado) { // ejecuta una consulta de ejemplo
+            if (err) { // si hay error en la consulta lo tira como un alert
+                alert(err);
+            }
+            tablaProcesos = resultado.recordset.listado; // guarda el campo listado en la variable tablaProcesos de lista-de-procesos.js
+        });
+    });    
+    var tablaProcesos = JSON.parse(tablaProcesos); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
     for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
         var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
         var celdaIdProceso = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
@@ -167,10 +176,10 @@ function cargarProcesos(nombre) {
         var celdaTiempoDeArribo = nuevaFila.insertCell(3);
         var celdaCicloDeVida = nuevaFila.insertCell(4);
         celdaIdProceso.innerHTML = tablaConvertidaEnJSON[i].idProceso; // le va cargando los datos a cada una de las celdas
-        celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamano;
+        celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamaño;
         celdaPrioridad.innerHTML = tablaConvertidaEnJSON[i].prioridad;
-        celdaTiempoDeArribo.innerHTML = tablaConvertidaEnJSON[i].tiempoDeArribo;
-        celdaCicloDeVida.innerHTML = tablaConvertidaEnJSON[i].cicloDeVida;
+        celdaTiempoDeArribo.innerHTML = tablaConvertidaEnJSON[i].tiempoArribo;
+        celdaCicloDeVida.innerHTML = tablaConvertidaEnJSON[i].cicloVida;
     }
 }
 
