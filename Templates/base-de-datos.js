@@ -129,26 +129,24 @@ function cargarParticiones(nombre) {
 // guarda la lista de procesos que esta en el html en la db
 // con info de https://stackoverflow.com/questions/13137597/how-to-get-element-inside-a-td-using-row-index-and-td-index
 function guardarProcesos(nombre) {
-    var tabla = document.getElementById("tabla-procesos").tBodies[0]; // variable que apunta a la tabla de procesos
-    var tablaConvertidaEnObjeto = []; // array que va a contener la lista de procesos convertida en objetos
-    for (var i = 0, fila; i < tabla.rows.length - 1; i++) { // va agregando cada fila de la tabla a un array de objetos
-        fila = tabla.rows[i];
-        var procesosConvertidosEnObjeto = { // crea el objeto de una particion
-            idProceso: fila.cells[0].innerHTML,
-            tamano: fila.cells[1].innerHTML,
-            prioridad: fila.cells[2].innerHTML,
-            tiempoDeArribo: fila.cells[3].innerHTML,
-            cicloVida: fila.cells[4].innerHTML,
-        };
-        tablaConvertidaEnObjeto.push(procesosConvertidosEnObjeto); // agrega el objeto recien creado al array
-     }
-    var tablaConvertidaEnJSON = JSON.stringify(tablaConvertidaEnObjeto); // convierte el array de objetos en un string de un jota son
+    var tablaConvertidaEnJSON = JSON.stringify(tablaProcesos); // convierte el listado de procesos en un string de un jota son
     var stringDeConsulta = "INSERT INTO Procesos (nombre, listado) VALUES " +
-        '"' + nombre + '", ' +
-        "'" + tablaConvertidaEnJSON + "';"; // crea el string de la consulta
+        "'" + nombre + "', " +
+        "'" + tablaConvertidaEnJSON + "'"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
-    //rs.open(stringDeConsulta, conexion); // ejecuta la consulta
     alert(stringDeConsulta);
+    sql.connect(config, function (err) { // ejecuta la conexion
+        if (err) { // si falla al conectarse tira el error en un alert
+            alert(err);
+        }
+        var request = new sql.Request(); // crea el objeto de la consulta
+        request.query(stringDeConsulta, function (err, resultado) { // ejecuta una consulta de ejemplo
+            if (err) { // si hay error en la consulta lo tira como un alert
+                alert(err);
+            }
+            // aca tiene que ir un mensaje que diga que se guardo exitosamente
+        });
+    });    
 }
 
 // recupera una lista de procesos de la db y la carga en la tabla del html
