@@ -1,44 +1,46 @@
 // Script para conectarse a la base de datos
-// con info de https://stackoverflow.com/questions/857670/how-to-connect-to-sql-server-database-from-javascript-in-the-browser
-// tambien de http://sirlagz.net/2011/07/02/connecting-to-sql-server-with-javascript/
+// con info de https://medium.com/zero-equals-false/how-to-connect-node-js-app-with-sql-server-18a176afae46 (casi todo)
+// y de https://www.tutorialsteacher.com/nodejs/access-sql-server-in-nodejs (algunas cosas)
+
+// primero tenes que seguir todos los pasos del primer link (menos el que tiene el codigo js)
+// despues tenes que estar en la carpeta Templates
+// despues ejecutar npm init -y (no creo que sea necesario, ya hice y subi al git)
+// y despues npm install mssql (idem)
+// y despues ejecutar el script con node base-de-datos.js
 
 // FALTA HACER:
 // QUE DE ALGUN MODO SE CREE LA DB Y LAS TABLAS ANTES DE ARRANCAR EL PROGRAMA
 
-var conexion;
-var rs;
-
 // abre la conexion con la base de datos
-// se ejecuta cuando termina de cargar el <body>
 // el nombre de usuario y la contraseña dependen de como configuraste tu maquina
 // ver como hacer para que ande en cualquier maquina sin tocar nada
-// supuestamente esto es re inseguro, pero somos re loco y le mandamos igual
-function abrirConexion() {
-    conexion = new ActiveXObject("ADODB.Connection"); // NO ANDA, VER COMO ARREGLAR
-    //var stringDeConexion="Data Source=localhost;Initial Catalog=<catalog>;User ID=<user>;Password=<password>;Provider=SQLOLEDB";
-    var stringDeConexion = "driver={sql server};server=localhost;database=Simulador;uid=sa;password="
-    conexion.Open(stringDeConexion);
-    rs = new ActiveXObject("ADODB.Recordset");
-}
+var sql = require("mssql"); // solicita el modulo de sql server
+var config = { // establece los parametros para conectarse a la db
+    user: 'sa',
+    password: 'Intel80386!',
+    server: 'localhost', 
+    database: 'Simulador' 
+};
 
-// ejemplo de como hacer una consulta, se borra despues
-/*
-rs.Open("SELECT * FROM table", conexion);
-rs.MoveFirst
-while(!rs.eof)
-{
-   document.write(rs.fields(1));
-   rs.movenext;
-}
-*/
+sql.connect(config, function (err) { // ejecuta la conexion
+    if (err) { // si falla al conectarse tira el error en la consola
+        console.log(err);
+    }
+    var request = new sql.Request(); // crea el objeto de la consulta
+    request.query('select * from dbo.ParticionesFijas', function (err, recordset) { // ejecuta una consulta de ejemplo
+        if (err) { // si hay error en la consulta lo tira en la consola
+            console.log(err)
+        }
+        console.log(recordset); // tira en la consola el resultado de la consulta
+    });
+});
 
 // cierra la conexion con la base de datos
 // se ejecuta al cerrar la pagina o al recargar
 // con info de https://stackoverflow.com/questions/13443503/run-javascript-code-on-window-close-or-page-refresh
-window.addEventListener("beforeunload", function(e){
-    rs.close;
-    conexion.close;
- }, false); 
+//window.addEventListener("beforeunload", function(e){
+//    
+//}, false); 
 
 // guarda la lista de particiones que esta en el html en la db
 // con info de https://stackoverflow.com/questions/3065342/how-do-i-iterate-through-table-rows-and-cells-in-javascript
@@ -69,8 +71,8 @@ function guardarParticiones(nombre) {
         algoritmo = "bestfit";
     }
     var stringDeConsulta = "INSERT INTO ParticionesFijas (nombre, tamanoMemoria, porcentajeSO, algoritmo, listado) VALUES " +
-        '"' + nombre + '", ' +
-        tamanoMemoria + ", " + porcentajeSO + ', "' + algoritmo + '", ' +
+        "'" + nombre + "', " +
+        tamanoMemoria + ", " + porcentajeSO + ", '" + algoritmo + "', " +
         "'" + tablaConvertidaEnJSON + "';"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
     //rs.open(stringDeConsulta, conexion); // ejecuta la consulta
@@ -83,8 +85,8 @@ function guardarParticiones(nombre) {
 function cargarParticiones(nombre) {
     var tabla = document.getElementById("tabla-particiones"); // variable que apunta a la tabla de particiones
     var stringDeConsulta = 'SELECT * FROM ParticionesFijas WHERE nombre = "' + nombre + '";'; // crea el string de la consulta
-    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
-    rs.moveFirst; // se mueve al primer registro de la consulta
+//    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
+//    rs.moveFirst; // se mueve al primer registro de la consulta
     // [0] es el id, [1] es el nombre, despues van los demas campos
     switch (rs.fields[2]) { // asigna el valor del tamaño de memoria al select
         case "128":
@@ -153,8 +155,8 @@ function guardarProcesos(nombre) {
 function cargarProcesos(nombre) {
     var tabla = document.getElementById("tabla-procesos"); // variable que apunta a la tabla de procesos
     var stringDeConsulta = 'SELECT * FROM Procesos WHERE nombre = "' + nombre + '";'; // crea el string de la consulta
-    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
-    rs.moveFirst; // se mueve al primer registro de la consulta
+//    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
+//    rs.moveFirst; // se mueve al primer registro de la consulta
     // [0] es el id, [1] es el nombre, [2] es el listado
     var tablaConvertidaEnJSON = JSON.parse(rs.fields(2)); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
     for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
