@@ -73,3 +73,22 @@ a:link, a:visited {
     /* Set the fixed height of the footer here */
     background-color: black;
 }
+
+.contenedorMensajes {
+}
+
+.mensajeAviso {
+    border: 1px solid green;
+    border-radius: 5px;
+    background-color: #c0e0b8;
+    color: green;
+    display: none;
+}
+
+.mensajeError {
+    border: 1px solid #ce0000;
+    border-radius: 5px;
+    background-color: #ffb3b3;
+    color: #ce0000;
+    display: none;
+}
