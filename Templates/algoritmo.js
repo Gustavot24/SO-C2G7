@@ -1,4 +1,4 @@
-//Perstaña:Carga de condiciones inicialea
+//Pestaña:Carga de condiciones iniciales
 
 
 //Esto es para el slider que muestra el porcentaje del SO
@@ -82,7 +82,7 @@ function cargarParticionesVbles() {
         idPart++;
         direccionLibre = (dirfin+1);
         if (tamanoLibre == 0) {
-            alert("No hay mas espacio disponible");
+            mostrarMensaje("errorCondicionesIniciales", "No hay mas espacio disponible");
             document.getElementById("boton5").style.visibility="visible";
             document.getElementById("boton4").style.visibility="hidden";
         }else{
@@ -95,7 +95,7 @@ function cargarParticionesVbles() {
             $('#tabla-particiones tbody').append(htmlTags);
         }
     } else {
-        alert("El tamaño ingresado supera el tamaño disponible: " + tamanoLibre);
+        mostrarMensaje("errorCondicionesIniciales", "El tamaño ingresado supera el tamaño disponible: " + tamanoLibre);
         
     }
     console.log(condicionesInciales);
