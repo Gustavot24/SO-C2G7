@@ -4,20 +4,23 @@
 // con info de https://www.w3schools.com/js/js_htmldom_css.asp
 // y de https://www.w3schools.com/js/js_htmldom_animate.asp
 // y de https://stackoverflow.com/questions/17883692/how-to-set-time-delay-in-javascript
+// y de https://stackoverflow.com/questions/29017379/how-to-make-fadeout-effect-with-pure-javascript
 function mostrarMensaje(id, mensaje) {
     elemento = document.getElementById(id); // variable que apunta al div del mensaje
     elemento.style.display = "block"; // hace que sea visible el mensaje
+    elemento.style.opacity = 1;
     elemento.innerHTML = mensaje; // le carga el texto que queres mostrar
     setTimeout(function() {
-        var opacidad = 1;
-        var id = setInterval(frame, 10);
-        function frame() {
-            if (opacidad == 0) {
-                clearInterval(id);
-            } else {
-                opacidad -= 0.01;
-                elemento.style.opacity = opacidad; 
+        var fadeEffect = setInterval(function () {
+            if (!elemento.style.opacity) {
+                elemento.style.opacity = 1;
             }
-        }
+            if (elemento.style.opacity > 0) {
+                elemento.style.opacity -= 0.1;
+            } else {
+                clearInterval(fadeEffect);
+                elemento.style.display = "none";
+            }
+        }, 30);
     }, 3000);
 }

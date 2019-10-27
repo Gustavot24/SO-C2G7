@@ -74,9 +74,6 @@ a:link, a:visited {
     background-color: black;
 }
 
-.contenedorMensajes {
-}
-
 .mensajeAviso {
     border: 1px solid green;
     border-radius: 5px;
