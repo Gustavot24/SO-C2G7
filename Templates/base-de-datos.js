@@ -80,10 +80,20 @@ function guardarParticiones(nombre) {
 function cargarParticiones(nombre) {
     var tabla = document.getElementById("tabla-particiones"); // variable que apunta a la tabla de particiones
     var stringDeConsulta = 'SELECT * FROM ParticionesFijas WHERE nombre = "' + nombre + '";'; // crea el string de la consulta
-//    rs.open(stringDeConsulta, conexion); // ejecuta la consulta
-//    rs.moveFirst; // se mueve al primer registro de la consulta
-    // [0] es el id, [1] es el nombre, despues van los demas campos
-    switch (rs.fields[2]) { // asigna el valor del tamaño de memoria al select
+    var tablaParticiones;
+    sql.connect(config, function (err) { // ejecuta la conexion
+        if (err) { // si falla al conectarse tira el error en un alert
+            alert(err);
+        }
+        var request = new sql.Request(); // crea el objeto de la consulta
+        request.query(stringDeConsulta, function (err, resultado) { // ejecuta una consulta de ejemplo
+            if (err) { // si hay error en la consulta lo tira como un alert
+                alert(err);
+            }
+            tablaParticiones = resultado.recordset.listado; // guarda el campo listado para cargar los datos en la pagina
+        });
+    });    
+    switch (tablaParticiones.tamanoMemoria) { // asigna el valor del tamaño de memoria al select
         case "128":
             document.getElementById("mp").value = "128";
             break;
@@ -100,14 +110,14 @@ function cargarParticiones(nombre) {
             document.getElementById("mp").value = "2048";
             break;
     }
-    document.getElementById("myRange").value = rs.fields[3]; // asigna el valor del porcentaje del SO al range
-    if (rs.fields[4] = "firstfit") {
+    document.getElementById("myRange").value = tablaParticiones.porcentajeSO; // asigna el valor del porcentaje del SO al range
+    if (tablaParticiones.algoritmo = "firstfit") {
         document.getElementById("frtfit").checked = true;
     }
     else {
         document.getElementById("bstfit").checked = true;
     }
-    var tablaConvertidaEnJSON = JSON.parse(rs.fields(5)); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
+    var tablaConvertidaEnJSON = JSON.parse(tablaParticiones.listado); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
     for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
         var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
         var celdaIdParticion = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
@@ -119,6 +129,7 @@ function cargarParticiones(nombre) {
         celdaDirFin.innerHTML = tablaConvertidaEnJSON[i].dirFin;
         celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamano;
     }
+    cargarParticionesVbles(); // ejecuta esta funcion de algoritmo.js para crear el object que tiene todos los datos de la pagina
 }
 
 // guarda la lista de procesos que esta en el html en la db
