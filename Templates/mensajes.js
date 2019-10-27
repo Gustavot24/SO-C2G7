@@ -8,16 +8,17 @@
 function mostrarMensaje(id, mensaje) {
     elemento = document.getElementById(id); // variable que apunta al div del mensaje
     elemento.style.display = "block"; // hace que sea visible el mensaje
-    elemento.style.opacity = 1;
+    elemento.style.opacity = 1; // le pone la opacidad al maximo. sin esto al ejecutar varias veces la funcion no muestra anda
     elemento.innerHTML = mensaje; // le carga el texto que queres mostrar
-    setTimeout(function() {
-        var fadeEffect = setInterval(function () {
+    setTimeout(function() { // esto hace que despues de 3 segundos empiece a hacer el fade
+        var fadeEffect = setInterval(function () { // esto hace que vaya desapareciendo cada 30 ms
             if (!elemento.style.opacity) {
                 elemento.style.opacity = 1;
             }
-            if (elemento.style.opacity > 0) {
+            if (elemento.style.opacity > 0) { // si la opacidad es mayor a 0 le baja 0,1
                 elemento.style.opacity -= 0.1;
-            } else {
+            }
+            else { // si la opacidad es 0 para la funcion setInterval y vuelve a ocultar el mensaje
                 clearInterval(fadeEffect);
                 elemento.style.display = "none";
             }
