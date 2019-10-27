@@ -90,7 +90,7 @@ function cargarParticiones(nombre) {
             if (err) { // si hay error en la consulta lo tira como un alert
                 alert(err);
             }
-            tablaParticiones = resultado.recordset.listado; // guarda el campo listado para cargar los datos en la pagina
+            tablaParticiones = resultado.recordset[0]; // guarda el campo listado para cargar los datos en la pagina
         });
     });    
     switch (tablaParticiones.tamanoMemoria) { // asigna el valor del tamaño de memoria al select
@@ -168,7 +168,7 @@ function cargarProcesos(nombre) {
             if (err) { // si hay error en la consulta lo tira como un alert
                 alert(err);
             }
-            tablaProcesos = resultado.recordset.listado; // guarda el campo listado en la variable tablaProcesos de lista-de-procesos.js
+            tablaProcesos = resultado.recordset[0].listado; // guarda el campo listado en la variable tablaProcesos de lista-de-procesos.js
         });
     });    
     var tablaProcesos = JSON.parse(tablaProcesos); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
