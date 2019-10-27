@@ -18,14 +18,14 @@ function agregarProc() {
 		
 		//Si el campo de entrada está vacio
 		if (tamProc.length == 0) {
-			alert("No se ingresó Tamaño del Proceso. Inténtelo nuevamente.");
+			mostrarMensaje("errorCargaDeTrabajo", "No se ingresó Tamaño del Proceso. Inténtelo nuevamente.");
 			break agregarProc;
 		}
 		
 		//Si se ingresó un tipo de dato no numérico
 		for (i = 0; i < tamProc.length; i++) {
 			if (!(tamProc[i] in numeros)) {
-				alert("Tamaño del Proceso: Debe ingresar número entero. Inténtelo nuevamente.");
+				mostrarMensaje("errorCargaDeTrabajo", "Tamaño del Proceso: Debe ingresar número entero. Inténtelo nuevamente.");
 				break agregarProc;
 			}
 		}
@@ -44,14 +44,14 @@ function agregarProc() {
         
 		//Si el campo de entrada está vacio
 		if (tArrProc.length == 0) {
-			alert("No se ingresó Tiempo de Arribo. Inténtelo nuevamente.");
+			mostrarMensaje("errorCargaDeTrabajo", "No se ingresó Tiempo de Arribo. Inténtelo nuevamente.");
 			break agregarProc;
 		}
 		
 		//Si se ingresó un tipo de dato no numérico
 		for (i = 0; i < tArrProc.length; i++) {
 			if (!(tArrProc[i] in numeros)) {
-				alert("Tiempo de Arribo: Debe ingresar número entero. Inténtelo nuevamente.");
+				mostrarMensaje("errorCargaDeTrabajo", "Tiempo de Arribo: Debe ingresar número entero. Inténtelo nuevamente.");
 				break agregarProc;
 			}
 		}
@@ -65,7 +65,7 @@ function agregarProc() {
 		
 		//Si el campo de entrada está vacio
 		if (cvProc.length == 0) {
-			alert("No se ingresó Ciclo de Vida. Inténtelo nuevamente.");
+			mostrarMensaje("errorCargaDeTrabajo", "No se ingresó Ciclo de Vida. Inténtelo nuevamente.");
 			break agregarProc;
 		}
 		
@@ -74,11 +74,11 @@ function agregarProc() {
 		var cont = 1;
 		while (i < cvProc.length) {
 			if (cont > 5) {
-			alert("1Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
+				mostrarMensaje("errorCargaDeTrabajo", "1Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
 			break agregarProc;
 			}
 			if (!(cvProc[i] in numeros)) {
-				alert("2Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
+				mostrarMensaje("errorCargaDeTrabajo", "2Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
 				break agregarProc;
 			} else {
 				cont++;
@@ -88,7 +88,7 @@ function agregarProc() {
 			}
 			if (i < cvProc.length) {
 				if ((cvProc[i] != caracter) || (i == (cvProc.length-1))) {
-					alert("3Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
+					mostrarMensaje("errorCargaDeTrabajo", "3Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
 					break agregarProc;
 				}
 				i++;
@@ -175,15 +175,15 @@ function guardarEnDB() {
 		//En caso de cancelar la operación simplemente se pueden seguir agregando nuevos procesos a la lista e intentar guardarlo nuevamente...
 		var nombreLista = prompt("Ingrese el nombre de la lista: ", "Lista de Procesos 1");
 		if (nombreLista == null) {
-			alert("La operación ha sido cancelada.");
+			mostrarMensaje("avisoCargaDeTrabajo", "La operación ha sido cancelada.");
 			break guardarEnDB;
 		} else {
 				if (nombreLista == "") {
 					while (nombreLista == "") {
-						alert("No se ha ingresado el nombre de la lista. Inténtelo nuevamente.");
+						mostrarMensaje("errorCargaDeTrabajo", "No se ha ingresado el nombre de la lista. Inténtelo nuevamente.");
 						nombreLista = prompt("Ingrese el nombre de la lista: ", "Lista de Procesos 1");
 						if (nombreLista == null) {
-							alert("La operación ha sido cancelada.");
+							mostrarMensaje("avisoCargaDeTrabajo", "La operación ha sido cancelada.");
 							break guardarEnDB;
 						}
 					}
@@ -200,14 +200,14 @@ function guardarEnDB() {
 		
 		//Si el campo de entrada está vacio
 		if (tamProc.length == 0) {
-			alert("No se ingresó Tamaño del Proceso. Inténtelo nuevamente.");
+			mostrarMensaje("errorCargaDeTrabajo", "No se ingresó Tamaño del Proceso. Inténtelo nuevamente.");
 			break guardarEnDB;
 		}
 		
 		//Si se ingresó un tipo de dato no numérico
 		for (i = 0; i < tamProc.length; i++) {
 			if (!(tamProc[i] in numeros)) {
-				alert("Tamaño del Proceso: Debe ingresar número entero. Inténtelo nuevamente.");
+				mostrarMensaje("errorCargaDeTrabajo", "Tamaño del Proceso: Debe ingresar número entero. Inténtelo nuevamente.");
 				break guardarEnDB;
 			}
 		}
@@ -226,14 +226,14 @@ function guardarEnDB() {
         
 		//Si el campo de entrada está vacio
 		if (tArrProc.length == 0) {
-			alert("No se ingresó Tiempo de Arribo. Inténtelo nuevamente.");
+			mostrarMensaje("errorCargaDeTrabajo", "No se ingresó Tiempo de Arribo. Inténtelo nuevamente.");
 			break guardarEnDB;
 		}
 		
 		//Si se ingresó un tipo de dato no numérico
 		for (i = 0; i < tArrProc.length; i++) {
 			if (!(tArrProc[i] in numeros)) {
-				alert("Tiempo de Arribo: Debe ingresar número entero. Inténtelo nuevamente.");
+				mostrarMensaje("errorCargaDeTrabajo", "Tiempo de Arribo: Debe ingresar número entero. Inténtelo nuevamente.");
 				break guardarEnDB;
 			}
 		}
@@ -247,7 +247,7 @@ function guardarEnDB() {
 		
 		//Si el campo de entrada está vacio
 		if (cvProc.length == 0) {
-			alert("No se ingresó Ciclo de Vida. Inténtelo nuevamente.");
+			mostrarMensaje("errorCargaDeTrabajo", "No se ingresó Ciclo de Vida. Inténtelo nuevamente.");
 			break guardarEnDB;
 		}
 		
@@ -256,11 +256,11 @@ function guardarEnDB() {
 		var cont = 1;
 		while (i < cvProc.length) {
 			if (cont > 5) {
-			alert("1Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
+				mostrarMensaje("errorCargaDeTrabajo", "1Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
 			break guardarEnDB;
 			}
 			if (!(cvProc[i] in numeros)) {
-				alert("2Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
+				mostrarMensaje("errorCargaDeTrabajo", "2Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
 				break guardarEnDB;
 			} else {
 				cont++;
@@ -270,7 +270,7 @@ function guardarEnDB() {
 			}
 			if (i < cvProc.length) {
 				if ((cvProc[i] != caracter) || (i == (cvProc.length-1))) {
-					alert("3Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
+					mostrarMensaje("errorCargaDeTrabajo", "3Ciclo de Vida: El formato ingresado es inválido. Inténtelo nuevamente. Formato de entrada: CPU-E-CPU-S-CPU");
 					break guardarEnDB;
 				}
 				i++;
@@ -308,7 +308,7 @@ function guardarEnDB() {
 		//Se agrega el proceso al array de la lista de procesos	(tablaProcesos)
 		tablaProcesos.push(proceso);
 		
-		alert("Lista de Procesos almacenada correctamente.");
+		mostrarMensaje("avisoCargaDeTrabajo", "Lista de Procesos almacenada correctamente.");
 		
 		//Se eliminan los botones "Nuevo Proceso", "Guardar Lista", "Cargar Lista"
 		var botones = document.getElementById("botonesCargaDeTrabajo");
