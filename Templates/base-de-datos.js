@@ -43,24 +43,8 @@ sql.connect(config, function (err) { // ejecuta la conexion
 //}, false); 
 
 // guarda la lista de particiones que esta en el html en la db
-// con info de https://stackoverflow.com/questions/3065342/how-do-i-iterate-through-table-rows-and-cells-in-javascript
-// y de https://www.w3schools.com/jsref/coll_table_tbodies.asp
 function guardarParticiones(nombre) {
-    var tabla = document.getElementById("tabla-particiones").tBodies.item(0); // variable que apunta a la tabla de particiones
-    var tablaConvertidaEnObjeto = []; // array que va a contener las particiones convertidas en objetos
-    for (var i = 0, fila; i < tabla.rows.length; i++) { // va agregando cada fila de la tabla a un array de objetos
-        fila = tabla.rows[i];
-        if (fila.cells[0].innerHTML != "#") { // esto es para que ande al cargar particiones manualmente (la ultima fila no debe guardarse)
-            var particionConvertidaEnObjeto = { // crea el objeto de una particion
-                idParticion: fila.cells[0].innerHTML,
-                dirInicio: fila.cells[1].innerHTML,
-                dirFin: fila.cells[2].innerHTML,
-                tamano: fila.cells[3].innerHTML,
-            };
-            tablaConvertidaEnObjeto.push(particionConvertidaEnObjeto); // agrega el objeto recien creado al array
-        }
-     }
-    var tablaConvertidaEnJSON = JSON.stringify(tablaConvertidaEnObjeto); // convierte el array de objetos en un string de un jota son
+    var tablaConvertidaEnString = JSON.stringify(condicionesIniciales.tablaParticiones); // convierte el array de particiones en un string de un jota son
     var tamanoMemoria = document.getElementById("mp").value; // obtiene el tamaño de la memoria
     var porcentajeSO = document.getElementById("myRange").value; // obtiene el porcentaje ocupado por el SO
     var algoritmo; //declara una variable para guardar el algoritmo
@@ -73,10 +57,21 @@ function guardarParticiones(nombre) {
     var stringDeConsulta = "INSERT INTO ParticionesFijas (nombre, tamanoMemoria, porcentajeSO, algoritmo, listado) VALUES " +
         "'" + nombre + "', " +
         tamanoMemoria + ", " + porcentajeSO + ", '" + algoritmo + "', " +
-        "'" + tablaConvertidaEnJSON + "';"; // crea el string de la consulta
+        "'" + tablaConvertidaEnString + "';"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
-    //rs.open(stringDeConsulta, conexion); // ejecuta la consulta
     alert(stringDeConsulta);
+    sql.connect(config, function (err) { // ejecuta la conexion
+        if (err) { // si falla al conectarse tira el error en un alert
+            alert(err);
+        }
+        var request = new sql.Request(); // crea el objeto de la consulta
+        request.query(stringDeConsulta, function (err, resultado) { // ejecuta una consulta de ejemplo
+            if (err) { // si hay error en la consulta lo tira como un alert
+                alert(err);
+            }
+            // aca tiene que ir un mensaje que diga que se guardo exitosamente
+        });
+    });    
 }
 
 // recupera una lista de particiones de la db y la carga en la tabla del html
