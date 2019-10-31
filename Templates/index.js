@@ -25,7 +25,7 @@ var app = new express();
 app.use('/Static', express.static('Static'))
 
 app.get('/', function(request, response){
-    response.sendFile('C:/Users/emmah/OneDrive/Facultad/sistemas operativos/repositorio local del tpi/Templates/Template2.html');
+    response.sendFile('C:/Users/emmah/OneDrive/Facultad/sistemas operativos/repositorio local del tpi/Templates/index.html');
 });
 
 app.listen(8000, () => {
