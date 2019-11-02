@@ -40,57 +40,24 @@
             <div class="tab-content border-0 pb-4">
                 <div id="workload" class="container tab-pane active"><br>
                     <h4 style="color: black">Lista de Procesos</h4>
-                    <table class="table table-bordered bg-white" id="tabla-procesos">
-                        <thead class="text-white">
-                          <tr>
-                            <th scope="col" id="idProc">Id</th>
-                            <th scope="col" id="tamProc">Tamaño</th>
-                            <th scope="col" id="prioProc">Prioridad</th>
-                            <th scope="col" id="tArrProc">Tiempo de Arribo</th>
-                            <th scope="col" id="cvProc"> Ciclo de Vida</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>
-                              <div class="form-group">
-                                <input type="text" class="form-control" id="tamProc1" placeholder="Tamaño del Proceso">
-                              </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="prioProc1">
-                                      <option>1</option>
-                                      <option>2</option>
-                                      <option>3</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                              <div class="form-group">
-                                <input type="text" class="form-control" id="tArrProc1" placeholder="Tiempo de Arribo">
-                              </div>
-                            </td>
-                            <td>
-                              <div class="form-group" id="cvp">
-                                <input type="text" class="form-control" id="cvProc1" placeholder="CPU-E-CPU-S-CPU">
-                              </div>
-                            </td>
-                        </tbody>
-                    </table>
+                    
+					<table class="table table-bordered bg-white" id="tabla-procesos">
+					</table>
+					
                     <div class="contenedorMensajes" id="mensajesCargaDeTrabajo">
-                      <div class="mensajeAviso" id="avisoCargaDeTrabajo"></div>
-                      <div class="mensajeError" id="errorCargaDeTrabajo"></div>
+						<div class="mensajeAviso" id="avisoCargaDeTrabajo" align="center"></div>
+						<div class="mensajeError" id="errorCargaDeTrabajo" align="center"></div>
+						<div class="mensajeAlerta" id="alertaCargaDeTrabajo" align="center"></div>
                     </div>
+					
                     <div class="d-flex">
-                      <div class="p-2 flex-fill mr-5" id="botonesCargaDeTrabajo">
-                        <button type="button" class="btn btn-secondary" id="botonNuevoProceso" onclick="agregarProc()">Nuevo Proceso</button>
-                        <button type="button" class="btn btn-secondary" id="botonGuardarLista" onclick="guardarEnDB()">Guardar Lista</button>
-                        <div align="right"><button type="button" class="btn btn-secondary" id="botonCargarLista" onclick="cargarDesdeDB()">Cargar Lista</button></div>
-                      </div>
+						<div class="p-2 flex-fill mr-5" id="botonesCargaDeTrabajo">
+							<button type="button" class="btn btn-secondary" id="botonNuevaLista" onclick="nuevaLista()">Nueva Lista</button>
+							<button type="button" class="btn btn-secondary" id="botonCargarLista" data-toggle="modal" data-target="#frombdlistproc">Listas Almacenadas</button>
+						</div>
                     </div>
-                </div>        
+                </div>
+				
                 <div id="icondition" class="container tab-pane fade"><br>
                   <form class="form-inline">
                       <div class="form-group mx-sm-3 mb-2">
@@ -228,7 +195,7 @@
                     <div class="p-2 flex-fill mr-5">
                       <button type="button" class="btn btn-secondary">Agregar</button>
                       <button type="button" class="btn btn-secondary">Guardar en DB</button>
-                      <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#frombd">Cargar desde DB</button>
+                      <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#frombdlistproc">Cargar desde DB</button>
                     </div>
                   </div>
                 </div>
@@ -265,19 +232,19 @@
       </div>
     </div>
 
-    <div class="modal fade" id="frombd">
+    <div class="modal fade" id="frombdlistproc">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">            
           <div class="modal-header">
-            <h4 class="modal-title" style="color: #232323" >Cargar desde Base de Datos</h4>
+            <h4 class="modal-title" style="color: #232323">Listas de Procesos Almacenadas</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>              
           <div class="modal-body">
             <form class="form">
               <div class="form-group mx-sm-3 mb-2">
-                <label for="szmem">Nombre de la lista de Procesos</label>
+                <label for="szmem">Seleccione la lista de procesos a cargar:</label>
                 <select class="form-control ml-2" id="sel1">
-                  <option>Selecciona</option>
+                  <option>Seleccionar</option>
                 </select>
               </div>
             </form>
