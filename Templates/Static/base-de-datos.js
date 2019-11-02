@@ -6,34 +6,9 @@
 // despues tenes que estar en la carpeta Templates
 // despues ejecutar npm init -y (no creo que sea necesario, ya hice y subi al git)
 // y despues npm install mssql (idem)
-// y despues ejecutar el script con node base-de-datos.js
 
 // FALTA HACER:
 // QUE DE ALGUN MODO SE CREE LA DB Y LAS TABLAS ANTES DE ARRANCAR EL PROGRAMA
-
-// abre la conexion con la base de datos
-// el nombre de usuario y la contraseña dependen de como configuraste tu maquina
-// ver como hacer para que ande en cualquier maquina sin tocar nada
-var sql = require("mssql"); // solicita el modulo de sql server
-var config = { // establece los parametros para conectarse a la db
-    user: 'sa',
-    password: 'Intel80386!',
-    server: 'localhost', 
-    database: 'Simulador' 
-};
-
-sql.connect(config, function (err) { // ejecuta la conexion
-    if (err) { // si falla al conectarse tira el error
-        throw err;
-    }
-    var request = new sql.Request(); // crea el objeto de la consulta
-    request.query('select * from dbo.ParticionesFijas', function (err, resultado) { // ejecuta una consulta de ejemplo
-        if (err) { // si hay error en la consulta lo tira en la consola
-            console.log(err)
-        }
-        console.log(resultado.recordset); // tira en la consola el resultado de la consulta
-    });
-});
 
 // cierra la conexion con la base de datos
 // se ejecuta al cerrar la pagina o al recargar
@@ -135,13 +110,21 @@ function cargarParticiones(nombre) {
 // guarda la lista de procesos que esta en el html en la db
 // con info de https://stackoverflow.com/questions/13137597/how-to-get-element-inside-a-td-using-row-index-and-td-index
 function guardarProcesos(nombre) {
+    var xhttp = new XMLHttpRequest();
     var tablaConvertidaEnJSON = JSON.stringify(tablaProcesos); // convierte el listado de procesos en un string de un jota son
     var stringDeConsulta = "INSERT INTO Procesos (nombre, listado) VALUES " +
         "'" + nombre + "', " +
         "'" + tablaConvertidaEnJSON + "'"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
     alert(stringDeConsulta);
-    sql.connect(config, function (err) { // ejecuta la conexion
+    /*xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("demo").innerHTML = this.responseText;
+        }
+    };*/
+    xhttp.open("POST", "/guardarProcesos?stringDeConsulta=" + stringDeConsulta, true);
+    xhttp.send();
+    /*sql.connect(config, function (err) { // ejecuta la conexion
         if (err) { // si falla al conectarse tira el error en un alert
             alert(err);
         }
@@ -152,7 +135,7 @@ function guardarProcesos(nombre) {
             }
             // aca tiene que ir un mensaje que diga que se guardo exitosamente
         });
-    });    
+    });*/
 }
 
 // recupera una lista de procesos de la db y la carga en la tabla del html
