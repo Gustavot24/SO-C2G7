@@ -110,51 +110,38 @@ function cargarParticiones(nombre) {
 // guarda la lista de procesos que esta en el html en la db
 // con info de https://stackoverflow.com/questions/13137597/how-to-get-element-inside-a-td-using-row-index-and-td-index
 function guardarProcesos(nombre) {
-    var xhttp = new XMLHttpRequest();
     var tablaConvertidaEnJSON = JSON.stringify(tablaProcesos); // convierte el listado de procesos en un string de un jota son
-    var stringDeConsulta = "INSERT INTO Procesos (nombre, listado) VALUES " +
+    var stringDeConsulta = "INSERT INTO Simulador.dbo.Procesos (nombre, listado) VALUES (" +
         "'" + nombre + "', " +
-        "'" + tablaConvertidaEnJSON + "'"; // crea el string de la consulta
+        "'" + tablaConvertidaEnJSON + "')"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
     alert(stringDeConsulta);
-    /*xhttp.onreadystatechange = function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("demo").innerHTML = this.responseText;
+            alert(this.responseText);
         }
-    };*/
-    xhttp.open("POST", "/guardarProcesos?stringDeConsulta=" + stringDeConsulta, true);
+        mostrarMensaje("avisoCargaDeTrabajo", "Se guardó la lista de procesos");
+    };
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
     xhttp.send();
-    /*sql.connect(config, function (err) { // ejecuta la conexion
-        if (err) { // si falla al conectarse tira el error en un alert
-            alert(err);
-        }
-        var request = new sql.Request(); // crea el objeto de la consulta
-        request.query(stringDeConsulta, function (err, resultado) { // ejecuta una consulta de ejemplo
-            if (err) { // si hay error en la consulta lo tira como un alert
-                alert(err);
-            }
-            // aca tiene que ir un mensaje que diga que se guardo exitosamente
-        });
-    });*/
 }
 
 // recupera una lista de procesos de la db y la carga en la tabla del html
 function cargarProcesos(nombre) {
     var tabla = document.getElementById("tabla-procesos"); // variable que apunta a la tabla de procesos
-    var stringDeConsulta = "SELECT * FROM Procesos WHERE nombre = '" + nombre + "'"; // crea el string de la consulta
-    sql.connect(config, function (err) { // ejecuta la conexion
-        if (err) { // si falla al conectarse tira el error en un alert
-            alert(err);
+    var tablaConvertidaEnJSON;
+    var stringDeConsulta = "SELECT * FROM Simulador.dbo.Procesos WHERE nombre = '" + nombre + "'"; // crea el string de la consulta
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            alert(this.responseText);
+            tablaConvertidaEnJSON = JSON.parse(this.responseText);
         }
-        var request = new sql.Request(); // crea el objeto de la consulta
-        request.query(stringDeConsulta, function (err, resultado) { // ejecuta una consulta de ejemplo
-            if (err) { // si hay error en la consulta lo tira como un alert
-                alert(err);
-            }
-            tablaProcesos = resultado.recordset[0].listado; // guarda el campo listado en la variable tablaProcesos de lista-de-procesos.js
-        });
-    });    
-    var tablaProcesos = JSON.parse(tablaProcesos); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
+    };
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
+    xhttp.send();
+    tablaProcesos = tablaConvertidaEnJSON.recordset[0].listado; // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
     for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
         var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
         var celdaIdProceso = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
@@ -162,20 +149,21 @@ function cargarProcesos(nombre) {
         var celdaPrioridad = nuevaFila.insertCell(2);
         var celdaTiempoDeArribo = nuevaFila.insertCell(3);
         var celdaCicloDeVida = nuevaFila.insertCell(4);
-        celdaIdProceso.innerHTML = tablaConvertidaEnJSON[i].idProceso; // le va cargando los datos a cada una de las celdas
-        celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamaño;
-        celdaPrioridad.innerHTML = tablaConvertidaEnJSON[i].prioridad;
-        celdaTiempoDeArribo.innerHTML = tablaConvertidaEnJSON[i].tiempoArribo;
-        celdaCicloDeVida.innerHTML = tablaConvertidaEnJSON[i].cicloVida;
+        celdaIdProceso.innerHTML = tablaProcesos[i].idProceso; // le va cargando los datos a cada una de las celdas
+        celdaTamano.innerHTML = tablaProcesos[i].tamaño;
+        celdaPrioridad.innerHTML = tablaProcesos[i].prioridad;
+        celdaTiempoDeArribo.innerHTML = tablaProcesos[i].tiempoArribo;
+        celdaCicloDeVida.innerHTML = tablaProcesos[i].cicloVida;
     }
+    mostrarMensaje("avisoCargaDeTrabajo", "Se cargó la lista de procesos");
 }
 
-// guarda la lista de colas que esta en el html (y los algoritmos de las otras colas) en la db
+// guarda la lista de colas que esta en el html en la db
 function guardarColas() {
     // falta hacer
 }
 
-// recupera una lista de colas de la db (y los algoritmos de las otras colas) y la carga en la tabla del html
+// recupera una lista de colas de la db y la carga en la tabla del html
 function cargarColas() {
     // falta hacer
 }

@@ -43,17 +43,18 @@ app.get('/', function(request, response) {
 // hace que se acceda a la pagina desde el puerto 8000
 // e imprime eso en consola
 app.listen(8000, () => {
-    console.log("El servidor está inicializado en el puerto 8000");
+    console.log("Entrá en el puerto 8000 desde el navegador (localhost:8000)");
 });
 
 // guarda la lista de procesos en la db
 // con info de https://www.w3schools.com/js/js_ajax_http_send.asp
-app.post("/guardarProcesos", function() {
-    var request = new sql.Request(); // crea el objeto de la consulta
-    request.query("insert into Simulador.dbo.Procesos (nombre, listado) values ('coso', 'listado');", function (err, resultado) { // ejecuta una consulta de ejemplo
+app.post("/ejecutarConsulta", function(request, response) {
+    var consulta = new sql.Request(); // crea el objeto de la consulta
+    consulta.query(request.query.stringDeConsulta, function (err, resultado) { // ejecuta una consulta de ejemplo
         if (err) { // si hay error en la consulta lo tira en la consola
             console.log(err)
         }
         console.log(resultado); // tira en la consola el resultado de la consulta
+        response.send(resultado);
     });
 });
