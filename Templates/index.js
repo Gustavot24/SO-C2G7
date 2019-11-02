@@ -7,7 +7,7 @@
 var express = require('express');
 var app = new express();
 
-app.use('/Static', express.static('Static'));
+app.use('/Static', express.static('Static')); // esto es para que agarre los js, los css y las imagenes
 
 // abre la conexion con la base de datos
 // el nombre de usuario y la contraseña dependen de como configuraste tu maquina
@@ -24,34 +24,36 @@ sql.connect(config, function (err) { // ejecuta la conexion
     if (err) { // si falla al conectarse tira el error
         throw err;
     }
-    var request = new sql.Request(); // crea el objeto de la consulta
+});
+
+// esto es un ejemplo de como hacer una consulta
+/*var request = new sql.Request(); // crea el objeto de la consulta
     request.query('select * from dbo.ParticionesFijas', function (err, resultado) { // ejecuta una consulta de ejemplo
         if (err) { // si hay error en la consulta lo tira en la consola
             console.log(err)
         }
         console.log(resultado.recordset); // tira en la consola el resultado de la consulta
-    });
-});
+    });*/
 
+// hace un get para devolver el html al cargar la pagina
 app.get('/', function(request, response) {
     response.sendFile('C:/Users/emmah/OneDrive/Facultad/sistemas operativos/repositorio local del tpi/Templates/index.html');
 });
 
+// hace que se acceda a la pagina desde el puerto 8000
+// e imprime eso en consola
 app.listen(8000, () => {
     console.log("El servidor está inicializado en el puerto 8000");
 });
 
+// guarda la lista de procesos en la db
+// con info de https://www.w3schools.com/js/js_ajax_http_send.asp
 app.post("/guardarProcesos", function() {
-    /*sql.connect(config, function (err) { // ejecuta la conexion
-        if (err) { // si falla al conectarse tira el error
-            throw err;
-        }*/
-        var request = new sql.Request(); // crea el objeto de la consulta
-        request.query("insert into Simulador.dbo.Procesos (nombre, listado) values ('coso', 'listado');", function (err, resultado) { // ejecuta una consulta de ejemplo
-            if (err) { // si hay error en la consulta lo tira en la consola
-                console.log(err)
-            }
-            console.log(resultado); // tira en la consola el resultado de la consulta
-        });
-    //});
+    var request = new sql.Request(); // crea el objeto de la consulta
+    request.query("insert into Simulador.dbo.Procesos (nombre, listado) values ('coso', 'listado');", function (err, resultado) { // ejecuta una consulta de ejemplo
+        if (err) { // si hay error en la consulta lo tira en la consola
+            console.log(err)
+        }
+        console.log(resultado); // tira en la consola el resultado de la consulta
+    });
 });
