@@ -105,3 +105,12 @@ a:link, a:visited {
     color: #DD3C03;
     display: none;
 }
+
+.divProgress{
+	margin-top: 94px;
+	margin-bottom: 30px
+}
+
+.progress{
+    height: 30px;
+}

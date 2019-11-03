@@ -38,25 +38,26 @@ var proceso = {
     "tamaño": 15,
     "prioridad": 1,
     "tiempoArribo": 0,
-    "cicloVida": 5,
+    "cicloVida": [1,3,4,3,1],
 };
 tablaProcesos.push(proceso);
 var proceso = {
     "idProceso": 2,
     "tamaño": 20,
     "prioridad": 1,
-    "tiempoArribo": 0,
-    "cicloVida": 4,
+    "tiempoArribo": 3,
+    "cicloVida": [1,2,3,2,1],
 };
 tablaProcesos.push(proceso);
 var proceso = {
     "idProceso": 3,
     "tamaño": 12,
     "prioridad": 1,
-    "tiempoArribo": 0,
-    "cicloVida": 10,
+    "tiempoArribo": 5,
+    "cicloVida": [1,3,2,1,1],
 };
 tablaProcesos.push(proceso);
+/*
 var proceso = {
     "idProceso": 4,
     "tamaño": 5,
@@ -97,6 +98,7 @@ var proceso = {
     "cicloVida": 5,
 };
 tablaProcesos.push(proceso);
+*/
 console.log(tablaProcesos);
 
 var tTotalIrrupcion = 0;
@@ -108,6 +110,7 @@ tiempoSimulacion=0;
 var bandera =true;
 var colaListo =[];
 var colaEjecutando =[];
+/*
 function prueba() {
     document.getElementById("resultados").style.display ="";
     if (bandera == true) {
@@ -148,7 +151,7 @@ function prueba() {
             
         }
     }
-    /*
+    //estaba comentado
     do {
         if (tiempoSimulacion == 0) {
             var htmlTags = '<tr>' + ' <td>MP</td>' + '<td>SO (32K)</td>' + '<td>P1 (6K)</td>' +
@@ -157,9 +160,10 @@ function prueba() {
         }
         tiempoSimulacion= tiempoSimulacion-1;
     } while (tiempoSimulacion > 0);
-    */
+    
     
 }
+*/
 function firstfit(element) {
     var exito= false;
     var idParti =0;
