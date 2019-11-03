@@ -21,6 +21,7 @@ function variable (){
         document.getElementById("prtfixed").removeAttribute("disable");
     }
 }
+
 // muestra un mensaje que da un aviso o un error
 // ej: al guardar algo en la db o cuando ingresas algo mal
 // se le pasa el id del elemento html y el contenido del mensaje
@@ -48,4 +49,3 @@ function mostrarMensaje(id, mensaje) {
         }, 30);
     }, 3000);
 }
-
