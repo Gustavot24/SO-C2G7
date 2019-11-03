@@ -4,17 +4,21 @@ html {
 }
 
 body{
+<<<<<<< HEAD
     background-image: url("images/image.png");
+=======
+    background-image: url("images/wallpaper3.jpg");
+>>>>>>> 7eaade880373b9ab2bea4230d7bcd7d08e085c6b
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
-    background-color: black;
+    background-color: #154360;
     font-family: 'Hind Madurai', sans-serif;
     margin-bottom: 8%;
 }
 
 hr{
-    border-top: 1px solid #CCD1D1 ;
+    border-top: 1px solid white ;
 }
 
 thead{
@@ -25,16 +29,24 @@ thead{
     padding-right: 0%;
 }
 
+.nav-tabs .nav-item .nav-link{
+    background-color: white;
+    border-top-color: gray;
+    border-left-color: gray;
+    border-right-color: gray;
+}
+
 .nav-tabs .nav-item .nav-link.active {
-    background-color: black !important;
-    color: #CCD1D1;
+    background-color: #154360 !important;
+    color: white;
     border-style: none;  
     
 }
+/*
 .nav-tabs .nav-item{
     background-color: white;
-
 }
+*/
 .tab-content{
     background-color: white;
     
@@ -48,14 +60,14 @@ a:link, a:visited {
 }
 
 .dropdown-item.active, .dropdown-item:active{
-    background-color: black;
-    color: #CCD1D1;
+    background-color: #154360;
+    color: white;
 }
-
+/*
 .nav-item, .dropdown, .dropdown-menu :hover{
     background-color: black;
-    color: #CCD1D1;
-}
+    color: white;
+}*/
 
 .btn{
     background-color: #154360 ;
@@ -71,5 +83,38 @@ a:link, a:visited {
     bottom: 0;
     width: 100%;
     /* Set the fixed height of the footer here */
-    background-color: black;
+    background-color: #154360;
+}
+
+.mensajeAviso {
+    border: 1px solid green;
+    border-radius: 5px;
+    background-color: #c0e0b8;
+    color: green;
+    display: none;
+}
+
+.mensajeError {
+    border: 1px solid #ce0000;
+    border-radius: 5px;
+    background-color: #ffb3b3;
+    color: #ce0000;
+    display: none;
+}
+
+.mensajeAlerta {
+    border: 1px solid #DD3C03;
+    border-radius: 5px;
+    background-color: #f9c16d;
+    color: #DD3C03;
+    display: none;
+}
+
+.divProgress{
+	margin-top: 94px;
+	margin-bottom: 30px
+}
+
+.progress{
+    height: 30px;
 }
