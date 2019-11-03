@@ -48,13 +48,14 @@ app.listen(8000, () => {
 
 // guarda la lista de procesos en la db
 // con info de https://www.w3schools.com/js/js_ajax_http_send.asp
+// y de https://stackoverflow.com/questions/20089582/how-to-get-a-url-parameter-in-express
 app.post("/ejecutarConsulta", function(request, response) {
     var consulta = new sql.Request(); // crea el objeto de la consulta
-    consulta.query(request.query.stringDeConsulta, function (err, resultado) { // ejecuta una consulta de ejemplo
+    consulta.query(request.query.stringDeConsulta, function (err, resultado) { // ejecuta la consulta sacandola de la url
         if (err) { // si hay error en la consulta lo tira en la consola
             console.log(err)
         }
         console.log(resultado); // tira en la consola el resultado de la consulta
-        response.send(resultado);
+        response.send(resultado); // devuelve el resultado al navegador
     });
 });

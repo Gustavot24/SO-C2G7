@@ -29,10 +29,10 @@ function guardarParticiones(nombre) {
     else {
         algoritmo = "bestfit";
     }
-    var stringDeConsulta = "INSERT INTO ParticionesFijas (nombre, tamanoMemoria, porcentajeSO, algoritmo, listado) VALUES " +
+    var stringDeConsulta = "INSERT INTO ParticionesFijas (nombre, tamanoMemoria, porcentajeSO, algoritmo, listado) VALUES (" +
         "'" + nombre + "', " +
         tamanoMemoria + ", " + porcentajeSO + ", '" + algoritmo + "', " +
-        "'" + tablaConvertidaEnString + "';"; // crea el string de la consulta
+        "'" + tablaConvertidaEnString + "');"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
     alert(stringDeConsulta);
     sql.connect(config, function (err) { // ejecuta la conexion
@@ -137,25 +137,25 @@ function cargarProcesos(nombre) {
         if (this.readyState == 4 && this.status == 200) {
             alert(this.responseText);
             tablaConvertidaEnJSON = JSON.parse(this.responseText);
+            tablaProcesos = tablaConvertidaEnJSON.recordset[0].listado; // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
+            for (var i = 0; i < tablaProcesos.length; i++) { // itera  sobre el array de objects
+                var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
+                var celdaIdProceso = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
+                var celdaTamano = nuevaFila.insertCell(1);
+                var celdaPrioridad = nuevaFila.insertCell(2);
+                var celdaTiempoDeArribo = nuevaFila.insertCell(3);
+                var celdaCicloDeVida = nuevaFila.insertCell(4);
+                celdaIdProceso.innerHTML = tablaProcesos[i].idProceso; // le va cargando los datos a cada una de las celdas
+                celdaTamano.innerHTML = tablaProcesos[i].tamaño;
+                celdaPrioridad.innerHTML = tablaProcesos[i].prioridad;
+                celdaTiempoDeArribo.innerHTML = tablaProcesos[i].tiempoArribo;
+                celdaCicloDeVida.innerHTML = tablaProcesos[i].cicloVida;
+            }
+            mostrarMensaje("avisoCargaDeTrabajo", "Se cargó la lista de procesos");        
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
     xhttp.send();
-    tablaProcesos = tablaConvertidaEnJSON.recordset[0].listado; // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
-    for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
-        var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
-        var celdaIdProceso = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
-        var celdaTamano = nuevaFila.insertCell(1);
-        var celdaPrioridad = nuevaFila.insertCell(2);
-        var celdaTiempoDeArribo = nuevaFila.insertCell(3);
-        var celdaCicloDeVida = nuevaFila.insertCell(4);
-        celdaIdProceso.innerHTML = tablaProcesos[i].idProceso; // le va cargando los datos a cada una de las celdas
-        celdaTamano.innerHTML = tablaProcesos[i].tamaño;
-        celdaPrioridad.innerHTML = tablaProcesos[i].prioridad;
-        celdaTiempoDeArribo.innerHTML = tablaProcesos[i].tiempoArribo;
-        celdaCicloDeVida.innerHTML = tablaProcesos[i].cicloVida;
-    }
-    mostrarMensaje("avisoCargaDeTrabajo", "Se cargó la lista de procesos");
 }
 
 // guarda la lista de colas que esta en el html en la db
