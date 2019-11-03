@@ -9,22 +9,22 @@
     <link rel="stylesheet" type="text/css" href="Static/main.css">
     <link href="https://fonts.googleapis.com/css?family=Hind+Madurai:500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="icon" type="image/png" href="Static/images/favicon.png">
+    <link rel="icon" type="image/png" href="Static/images/logo.png">
   </head>
 <body>
   <div class="container px-lg-5">
     <div class="row mx-lg-n5 mt-5 justify-content-center align-items-center">
-      <div class="col pl-0" style="background-color:black">
-        <h3 style="color: #CCD1D1;">C2G7- Simulador de Memoria</h3>
+      <div class="col pl-0" >
+        <h3 style="color:white;">C2G7- Simulador de Planificación de Memoria y Procesos</h3>
         <hr>
       </div>
     </div>
 
     <div class="row mx-lg-n5 mt-4 align-items-center justify-content-center">
         <div class="col-9 m-0">
-          <ul class="nav nav-tabs rounded border-0" role="tablist">
+          <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" data-toggle="dropdown">Carga de Trabajo</a>
+              <a class="nav-link active dropdown-toggle" data-toggle="dropdown">Carga de Trabajo</a>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" data-toggle="tab" href="#workload">Carga de Proceso</a>
                   <a class="dropdown-item" data-toggle="tab" href="#algmn">Algoritmo Multinivel</a>
@@ -37,25 +37,22 @@
               <a class="nav-link" data-toggle="tab" href="#result">Resultados</a>
             </li>
           </ul>
+
             <div class="tab-content border-0 pb-4">
                 <div id="workload" class="container tab-pane active"><br>
-                    <h4 style="color: black">Lista de Procesos</h4>
-                    
-					<table class="table table-bordered bg-white" id="tabla-procesos">
-					</table>
-					
-                    <div class="contenedorMensajes" id="mensajesCargaDeTrabajo">
-						<div class="mensajeAviso" id="avisoCargaDeTrabajo" align="center"></div>
-						<div class="mensajeError" id="errorCargaDeTrabajo" align="center"></div>
-						<div class="mensajeAlerta" id="alertaCargaDeTrabajo" align="center"></div>
+                  <h4 style="color: black">Lista de Procesos</h4>
+                  <table class="table table-bordered bg-white" id="tabla-procesos"></table>					
+                  <div class="contenedorMensajes" id="mensajesCargaDeTrabajo">
+                    <div class="mensajeAviso" id="avisoCargaDeTrabajo" align="center"></div>
+                    <div class="mensajeError" id="errorCargaDeTrabajo" align="center"></div>
+                    <div class="mensajeAlerta" id="alertaCargaDeTrabajo" align="center"></div>
+                  </div>					
+                  <div class="d-flex">
+                    <div class="p-2 flex-fill mr-5" id="botonesCargaDeTrabajo">
+                      <button type="button" class="btn btn-secondary" id="botonNuevaLista" onclick="nuevaLista()">Nueva Lista</button>
+                      <button type="button" class="btn btn-secondary" id="botonCargarLista" data-toggle="modal" data-target="#frombdlistproc">Listas Almacenadas</button>
                     </div>
-					
-                    <div class="d-flex">
-						<div class="p-2 flex-fill mr-5" id="botonesCargaDeTrabajo">
-							<button type="button" class="btn btn-secondary" id="botonNuevaLista" onclick="nuevaLista()">Nueva Lista</button>
-							<button type="button" class="btn btn-secondary" id="botonCargarLista" data-toggle="modal" data-target="#frombdlistproc">Listas Almacenadas</button>
-						</div>
-                    </div>
+                  </div>
                 </div>
 				
                 <div id="icondition" class="container tab-pane fade"><br>
@@ -284,7 +281,7 @@
     <div class="container ml-0">
       <div class="row align-items-center justify-content-start">
         <div class="col-2">
-          <img src="Static/images/utn.jpg" class="img-fluid rounded float-left" alt="" width="100%" height="160%">
+          <img src="Static/images/logo-utn.png" class="img-fluid rounded float-left" alt="" width="100%" height="160%">
         </div>
         <div class="col-10 text-center">
           <small>Copyright &copy; 2019 - C2G7</small>
@@ -296,7 +293,7 @@
     <script type="text/javascript" src="Static/algoritmo.js"></script>
     <script type="text/javascript" src="Static/base-de-datos.js"></script>
     <script type="text/javascript" src="Static/lista-de-procesos.js"></script>
-    <script type="text/javascript" src="Static/prueba.js"></script>
+    <!--<script type="text/javascript" src="Static/prueba.js"></script>-->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
