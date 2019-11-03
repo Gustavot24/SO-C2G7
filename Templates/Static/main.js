@@ -16,9 +16,9 @@ function variable (){
     document.getElementById("lfrtfit").style.display ="inline-flex";
     document.getElementById("lbstfit").style.display ="none";
     if(document.getElementById("prtvar").checked = true){
+        document.getElementById("prtvar").checked;
         document.getElementById("prtfixed").disabled = true;
     } else{
         document.getElementById("prtfixed").removeAttribute("disable");
     }
 }
-
