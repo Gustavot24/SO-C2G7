@@ -124,6 +124,11 @@ function cargarParticiones(nombre) {
 // guarda la lista de procesos que esta en el html en la db
 // con info de https://stackoverflow.com/questions/13137597/how-to-get-element-inside-a-td-using-row-index-and-td-index
 function guardarProcesos(nombre) {
+    if (nombre == "") {
+        $('#guardarLista').modal('hide');
+        mostrarMensaje("errorCargaDeTrabajo", "El nombre de la lista de procesos no puede estar en blanco");
+        return;
+    }
     var tablaConvertidaEnString = JSON.stringify(tablaProcesos); // convierte el listado de procesos en un string de un jota son
     var stringDeConsulta = "INSERT INTO Simulador.dbo.Procesos (nombre, listado) VALUES (" +
         "'" + nombre + "', " +
@@ -134,6 +139,7 @@ function guardarProcesos(nombre) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             alert(this.responseText);
+            $('#guardarLista').modal('hide');
             mostrarMensaje("avisoCargaDeTrabajo", "Se guardó la lista de procesos");
         }
     };
