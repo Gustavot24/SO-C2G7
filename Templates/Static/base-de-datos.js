@@ -19,7 +19,13 @@
 
 // guarda la lista de particiones que esta en el html en la db
 function guardarParticiones(nombre) {
-    var tablaConvertidaEnString = JSON.stringify(condicionesInciales.tablaParticiones); // convierte el array de particiones en un string de un jota son
+    var tablaConvertidaEnString = condicionesInciales.tablaParticiones; // convierte el array de particiones en un string de un jota son
+    for (var i = 0; i < tablaConvertidaEnString.length; i++) {
+        delete tablaConvertidaEnString[i].estado;
+        delete tablaConvertidaEnString[i].idProceso;
+        delete tablaConvertidaEnString[i].FI;
+    }
+    tablaConvertidaEnString = JSON.stringify(tablaConvertidaEnString);
     var tamanoMemoria = document.getElementById("mp").value; // obtiene el tamaño de la memoria
     var porcentajeSO = document.getElementById("myRange").value; // obtiene el porcentaje ocupado por el SO
     var algoritmo; //declara una variable para guardar el algoritmo
