@@ -19,7 +19,7 @@
 
 // guarda la lista de particiones que esta en el html en la db
 function guardarParticiones(nombre) {
-    var tablaConvertidaEnString = JSON.stringify(condicionesIniciales.tablaParticiones); // convierte el array de particiones en un string de un jota son
+    var tablaConvertidaEnString = JSON.stringify(condicionesInciales.tablaParticiones); // convierte el array de particiones en un string de un jota son
     var tamanoMemoria = document.getElementById("mp").value; // obtiene el tamaño de la memoria
     var porcentajeSO = document.getElementById("myRange").value; // obtiene el porcentaje ocupado por el SO
     var algoritmo; //declara una variable para guardar el algoritmo
@@ -29,24 +29,21 @@ function guardarParticiones(nombre) {
     else {
         algoritmo = "bestfit";
     }
-    var stringDeConsulta = "INSERT INTO ParticionesFijas (nombre, tamanoMemoria, porcentajeSO, algoritmo, listado) VALUES (" +
+    var stringDeConsulta = "INSERT INTO Simulador.dbo.ParticionesFijas (nombre, tamanoMemoria, porcentajeSO, algoritmo, listado) VALUES (" +
         "'" + nombre + "', " +
         tamanoMemoria + ", " + porcentajeSO + ", '" + algoritmo + "', " +
         "'" + tablaConvertidaEnString + "');"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
     alert(stringDeConsulta);
-    sql.connect(config, function (err) { // ejecuta la conexion
-        if (err) { // si falla al conectarse tira el error en un alert
-            alert(err);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            alert(this.responseText);
+            mostrarMensaje("avisoCondicionesIniciales", "Se guardó la configuración de la memoria principal");
         }
-        var request = new sql.Request(); // crea el objeto de la consulta
-        request.query(stringDeConsulta, function (err, resultado) { // ejecuta una consulta de ejemplo
-            if (err) { // si hay error en la consulta lo tira como un alert
-                alert(err);
-            }
-            // aca tiene que ir un mensaje que diga que se guardo exitosamente
-        });
-    });    
+    };
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
+    xhttp.send();
 }
 
 // recupera una lista de particiones de la db y la carga en la tabla del html
@@ -110,18 +107,18 @@ function cargarParticiones(nombre) {
 // guarda la lista de procesos que esta en el html en la db
 // con info de https://stackoverflow.com/questions/13137597/how-to-get-element-inside-a-td-using-row-index-and-td-index
 function guardarProcesos(nombre) {
-    var tablaConvertidaEnJSON = JSON.stringify(tablaProcesos); // convierte el listado de procesos en un string de un jota son
+    var tablaConvertidaEnString = JSON.stringify(tablaProcesos); // convierte el listado de procesos en un string de un jota son
     var stringDeConsulta = "INSERT INTO Simulador.dbo.Procesos (nombre, listado) VALUES (" +
         "'" + nombre + "', " +
-        "'" + tablaConvertidaEnJSON + "')"; // crea el string de la consulta
+        "'" + tablaConvertidaEnString + "')"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
     alert(stringDeConsulta);
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             alert(this.responseText);
+            mostrarMensaje("avisoCargaDeTrabajo", "Se guardó la lista de procesos");
         }
-        mostrarMensaje("avisoCargaDeTrabajo", "Se guardó la lista de procesos");
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
     xhttp.send();
@@ -160,7 +157,17 @@ function cargarProcesos(nombre) {
 
 // guarda la lista de colas que esta en el html en la db
 function guardarColas() {
-    // falta hacer
+    var tablaConvertidaEnString = 0;
+    alert(stringDeConsulta);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            alert(this.responseText);
+            mostrarMensaje("avisoColasMultinivel", "Se guardó la lista de colas de CPU");
+        }
+    };
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
+    xhttp.send();
 }
 
 // recupera una lista de colas de la db y la carga en la tabla del html

@@ -28,16 +28,16 @@ sql.connect(config, function (err) { // ejecuta la conexion
 
 // esto es un ejemplo de como hacer una consulta
 /*var request = new sql.Request(); // crea el objeto de la consulta
-    request.query('select * from dbo.ParticionesFijas', function (err, resultado) { // ejecuta una consulta de ejemplo
-        if (err) { // si hay error en la consulta lo tira en la consola
-            console.log(err)
-        }
-        console.log(resultado.recordset); // tira en la consola el resultado de la consulta
-    });*/
+request.query('select * from dbo.ParticionesFijas', function (err, resultado) { // ejecuta una consulta de ejemplo
+    if (err) { // si hay error en la consulta lo tira en la consola
+        console.log(err)
+    }
+    console.log(resultado.recordset); // tira en la consola el resultado de la consulta
+});*/
 
 // hace un get para devolver el html al cargar la pagina
 app.get('/', function(request, response) {
-    response.sendFile('C:/Users/emmah/OneDrive/Facultad/sistemas operativos/repositorio local del tpi/Templates/index.html');
+    response.sendFile('C:/Users/emmah/repositorio local del tpi/Templates/index.html');
 });
 
 // hace que se acceda a la pagina desde el puerto 8000
