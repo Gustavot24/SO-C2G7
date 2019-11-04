@@ -116,9 +116,9 @@ function nuevaLista() {
 		//Se agrega el botón para añadir nuevo proceso, el botón para guardar la lista de procesos, y el botón Siguiente
 		htmlTags = '<button type="button" class="btn btn-secondary" id="botonNuevoProceso" onclick="generarFila()">Nuevo Proceso</button>'+
 				   '<button type="button" class="btn btn-secondary" id="botonGuardarLista" onclick="guardarEnDB()">Guardar Lista</button>'+
-				   '<div align="right">'+
-						'<button type="button"  class="btn btn-secondary"  id="botonSiguiente" onclick="siguiente()">Siguiente</button>'+
-				   '</div>'
+				   '<div class="d-flex align-content-left m-2">'+
+				   `<button type="button" class="btn btn-secondary nav-link" data-toggle="tab" href="#algmn" id="boton6" style="visibility: visible">Siguiente</button>`+
+				  '</div>'
 		$('#botonesCargaDeTrabajo').append(htmlTags);
 	}
 }
