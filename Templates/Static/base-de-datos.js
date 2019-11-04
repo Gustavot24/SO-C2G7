@@ -18,12 +18,23 @@
 //}, false); 
 
 // guarda la lista de particiones que esta en el html en la db
+// con info de https://stackoverflow.com/questions/208105/how-do-i-remove-a-property-from-a-javascript-object
 function guardarParticiones(nombre) {
-    var tablaConvertidaEnString = condicionesInciales.tablaParticiones; // convierte el array de particiones en un string de un jota son
+    /*var tablaConvertidaEnString = condicionesInciales.tablaParticiones; // convierte el array de particiones en un string de un jota son
     for (var i = 0; i < tablaConvertidaEnString.length; i++) {
         delete tablaConvertidaEnString[i].estado;
         delete tablaConvertidaEnString[i].idProceso;
         delete tablaConvertidaEnString[i].FI;
+    }*/
+    var tablaDeParticiones = document.getElementById("tabla-particiones").tBodies.item(0);
+    var tablaConvertidaEnString = [];
+    for (var i = 0; i < tablaDeParticiones.length; i++) { //FALTA HACER
+        var particion = {
+            "idParticion": idPart,
+            "dirInicio": direccionLibre,
+            "dirFin": dirfin,
+            "tamaño": tamano,            
+        }
     }
     tablaConvertidaEnString = JSON.stringify(tablaConvertidaEnString);
     var tamanoMemoria = document.getElementById("mp").value; // obtiene el tamaño de la memoria
@@ -105,7 +116,7 @@ function cargarParticiones(nombre) {
         celdaIdParticion.innerHTML = tablaConvertidaEnJSON[i].idParticion; // le va cargando los datos a cada una de las celdas
         celdaDirInicio.innerHTML = tablaConvertidaEnJSON[i].dirInicio;
         celdaDirFin.innerHTML = tablaConvertidaEnJSON[i].dirFin;
-        celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamano;
+        celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamaño;
     }
     cargarParticionesVbles(); // ejecuta esta funcion de algoritmo.js para crear el object que tiene todos los datos de la pagina
 }
