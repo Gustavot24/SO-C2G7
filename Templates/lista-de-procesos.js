@@ -327,7 +327,3 @@ function guardarEnDB() {
 function cargarDesdeDB() {
 	//Cargar lista de procesos desde la DB
 }
-
-function siguiente() {
-	//Acción del botón "Siguiente"
-}
