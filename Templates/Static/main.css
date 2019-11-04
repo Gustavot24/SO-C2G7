@@ -85,7 +85,7 @@ a:link, a:visited {
 .mensajeAviso {
     border: 1px solid green;
     border-radius: 5px;
-    background-color: white;
+    background-color: #9ee99a;
     color: green;
     display: none;
 }
@@ -93,7 +93,7 @@ a:link, a:visited {
 .mensajeError {
     border: 1px solid #ce0000;
     border-radius: 5px;
-    background-color: white;
+    background-color: #ffb3b3;
     color: #ce0000;
     display: none;
 }
@@ -101,7 +101,7 @@ a:link, a:visited {
 .mensajeAlerta {
     border: 1px solid #DD3C03;
     border-radius: 5px;
-    background-color: white;
+    background-color: #fcb49c;
     color: #DD3C03;
     display: none;
 }
