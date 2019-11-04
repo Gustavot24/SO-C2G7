@@ -87,6 +87,7 @@ a:link, a:visited {
     border-radius: 5px;
     background-color: #9ee99a;
     color: green;
+    text-align: center;
     display: none;
 }
 
@@ -95,6 +96,7 @@ a:link, a:visited {
     border-radius: 5px;
     background-color: #ffb3b3;
     color: #ce0000;
+    text-align: center;
     display: none;
 }
 
@@ -103,6 +105,7 @@ a:link, a:visited {
     border-radius: 5px;
     background-color: #fcb49c;
     color: #DD3C03;
+    text-align: center;
     display: none;
 }
 
