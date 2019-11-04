@@ -315,8 +315,8 @@ function guardarEnDB() {
 			botones.removeChild(botones.firstChild);
 		}
 		// Y se agrega el botón "Siguiente"
-		var htmlTags = '<div align="right">'+
-                        `<button type="button"  class="btn btn-secondary"  style="visibility: visible" onclick="siguiente()">Siguiente</button>`+
+		var htmlTags = '<div class="d-flex align-content-left m-2">'+
+                        `<button type="button" class="btn btn-secondary nav-link" data-toggle="tab" href="#algmn" id="boton6" style="visibility: visible">Siguiente</button>`+
                        '</div>'
 			$('#botonesCargaDeTrabajo').append(htmlTags);
 			
