@@ -10,33 +10,23 @@
 // FALTA HACER:
 // QUE DE ALGUN MODO SE CREE LA DB Y LAS TABLAS ANTES DE ARRANCAR EL PROGRAMA
 
-// cierra la conexion con la base de datos
-// se ejecuta al cerrar la pagina o al recargar
-// con info de https://stackoverflow.com/questions/13443503/run-javascript-code-on-window-close-or-page-refresh
-//window.addEventListener("beforeunload", function(e){
-//    
-//}, false); 
-
 // guarda la lista de particiones que esta en el html en la db
-// con info de https://stackoverflow.com/questions/208105/how-do-i-remove-a-property-from-a-javascript-object
+// con info de https://stackoverflow.com/questions/13137597/how-to-get-element-inside-a-td-using-row-index-and-td-index
 function guardarParticiones(nombre) {
-    /*var tablaConvertidaEnString = condicionesInciales.tablaParticiones; // convierte el array de particiones en un string de un jota son
-    for (var i = 0; i < tablaConvertidaEnString.length; i++) {
-        delete tablaConvertidaEnString[i].estado;
-        delete tablaConvertidaEnString[i].idProceso;
-        delete tablaConvertidaEnString[i].FI;
-    }*/
-    var tablaDeParticiones = document.getElementById("tabla-particiones").tBodies.item(0);
-    var tablaConvertidaEnString = [];
-    for (var i = 0; i < tablaDeParticiones.length; i++) { //FALTA HACER
-        var particion = {
-            "idParticion": idPart,
-            "dirInicio": direccionLibre,
-            "dirFin": dirfin,
-            "tamaño": tamano,            
+    var tablaDeParticiones = document.getElementById("tabla-particiones").tBodies.item(0); // variable que apunta al body de la lista de procesos
+    var tablaConvertidaEnString = []; // array que va a contener las particiones
+    for (var i = 0; i < tablaDeParticiones.rows.length; i++) { // itera para cada fila de la tabla
+        if (tablaDeParticiones.rows[i].cells[0].innerHTML != "#") { // esto es para evitar que se guarde la fila donde se cargan los datos manualmente
+            var particion = { // crea un objeto de una particion y le carga los datos
+                "idParticion": tablaDeParticiones.rows[i].cells[0].innerHTML,
+                "dirInicio": tablaDeParticiones.rows[i].cells[1].innerHTML,
+                "dirFin": tablaDeParticiones.rows[i].cells[2].innerHTML,
+                "tamaño": tablaDeParticiones.rows[i].cells[3].innerHTML,
+            }
+            tablaConvertidaEnString.push(particion); // agrega esa particion al array
         }
     }
-    tablaConvertidaEnString = JSON.stringify(tablaConvertidaEnString);
+    tablaConvertidaEnString = JSON.stringify(tablaConvertidaEnString); // convierte el array en un string en yeison
     var tamanoMemoria = document.getElementById("mp").value; // obtiene el tamaño de la memoria
     var porcentajeSO = document.getElementById("myRange").value; // obtiene el porcentaje ocupado por el SO
     var algoritmo; //declara una variable para guardar el algoritmo
@@ -51,16 +41,16 @@ function guardarParticiones(nombre) {
         tamanoMemoria + ", " + porcentajeSO + ", '" + algoritmo + "', " +
         "'" + tablaConvertidaEnString + "');"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
-    alert(stringDeConsulta);
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            alert(this.responseText);
-            mostrarMensaje("avisoCondicionesIniciales", "Se guardó la configuración de la memoria principal");
+    alert(stringDeConsulta); // SOLO PARA PRUEBAS, SE BORRA DESPUES
+    var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
+    xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
+        if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
+            alert(this.responseText); // SOLO PARA PRUEBAS, SE BORRA DESPUES
+            mostrarMensaje("avisoCondicionesIniciales", "Se guardó la configuración de la memoria principal"); // muestra el mensaje de que todo salio bien
         }
     };
-    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
-    xhttp.send();
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
+    xhttp.send(); // manda la peticion al servidor
 }
 
 // recupera una lista de particiones de la db y la carga en la tabla del html
@@ -122,29 +112,26 @@ function cargarParticiones(nombre) {
 }
 
 // guarda la lista de procesos que esta en el html en la db
-// con info de https://stackoverflow.com/questions/13137597/how-to-get-element-inside-a-td-using-row-index-and-td-index
 function guardarProcesos(nombre) {
-    if (nombre == "") {
-        $('#guardarLista').modal('hide');
-        mostrarMensaje("errorCargaDeTrabajo", "El nombre de la lista de procesos no puede estar en blanco");
-        return;
+    if (nombre == "") { // si no se ingreso un nombre no deberia guardar
+        mostrarMensaje("errorCargaDeTrabajo", "El nombre de la lista de procesos no puede estar en blanco"); // muestra el mensaje de error
+        return; // termina la funcion
     }
     var tablaConvertidaEnString = JSON.stringify(tablaProcesos); // convierte el listado de procesos en un string de un jota son
     var stringDeConsulta = "INSERT INTO Simulador.dbo.Procesos (nombre, listado) VALUES (" +
         "'" + nombre + "', " +
         "'" + tablaConvertidaEnString + "')"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
-    alert(stringDeConsulta);
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            alert(this.responseText);
-            $('#guardarLista').modal('hide');
-            mostrarMensaje("avisoCargaDeTrabajo", "Se guardó la lista de procesos");
+    alert(stringDeConsulta); // SOLO PARA PRUEBAS, SE BORRA DESPUES
+    var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
+    xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
+        if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
+            alert(this.responseText); // SOLO PARA PRUEBAS, SE BORRA DESPUES
+            mostrarMensaje("avisoCargaDeTrabajo", "Se guardó la lista de procesos"); // muestra el mensaje de que todo salio bien
         }
     };
-    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
-    xhttp.send();
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
+    xhttp.send(); // manda la peticion al servidor
 }
 
 // recupera una lista de procesos de la db y la carga en la tabla del html
