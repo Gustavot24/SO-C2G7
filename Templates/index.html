@@ -53,6 +53,46 @@
                 <button type="button" class="btn btn-secondary" id="botonCargarLista" data-toggle="modal" data-target="#frombdlistproc">Listas Almacenadas</button>
               </div>
             </div>
+			
+			<!-- Modales -->
+			<div class="modal fade" id="modalContinuar" role="dialog">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-body">
+							<p>Si continúa con ésta operación no se guardará la lista de procesos.</p>
+						</div>
+						<div class="modal-footer">
+							<div class="d-flex align-content-left m-2">
+								<button type="button" class="btn btn-secondary nav-link" data-toggle="tab" data-dismiss="modal" href="#algmn" id="boton6" style="visibility: visible" onclick="obtenerLista()">Continuar</button>
+							</div>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+						</div>
+					</div>
+				</div>
+			 </div>
+			 
+			 <div class="modal fade" id="guardarLista" role="dialog">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">            
+						<div class="modal-header">
+							<h4 class="modal-title" style="color: #232323">Guardar Lista de Procesos</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>              
+						<div class="modal-body">
+						
+							<div class="form-group">
+								<label for="nombList" class="form-control-label">Ingrese el nombre de la lista a guardar:</label>
+								<input type="text" class="form-control" id="nombList" placeholder="Nombre de Lista de Procesos">
+							</div>
+							
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary m-3" id="aceptarNombList">Aceptar</button>
+							<button type="button" class="btn btn-secondary m-3" id="cancelarNombList" data-dismiss="modal">Cancelar</button>
+						</div>                      
+					</div>
+				</div>
+			</div>
           </div>
   
           <div id="icondition" class="container tab-pane active"><br>

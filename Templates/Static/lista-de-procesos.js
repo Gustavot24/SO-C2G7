@@ -115,10 +115,8 @@ function nuevaLista() {
 		
 		//Se agrega el botón para añadir nuevo proceso, el botón para guardar la lista de procesos, y el botón Siguiente
 		htmlTags = '<button type="button" class="btn btn-secondary" id="botonNuevoProceso" onclick="generarFila()">Nuevo Proceso</button>'+
-				   '<button type="button" class="btn btn-secondary" id="botonGuardarLista" onclick="guardarEnDB()">Guardar Lista</button>'+
-				   '<div class="d-flex align-content-left m-2">'+
-				   `<button type="button" class="btn btn-secondary nav-link" data-toggle="tab" href="#algmn" id="boton6" style="visibility: visible">Siguiente</button>`+
-				  '</div>'
+				   '<button type="button" class="btn btn-secondary" id="botonGuardarLista" onclick="guardarEnDB()">Guardar Lista y Continuar</button>'+
+				   '<button type="button" class="btn btn-secondary" id="botonContinuarSinGuardar" onclick="continuarSinGuardar()">Continuar sin Guardar</button>'
 		$('#botonesCargaDeTrabajo').append(htmlTags);
 	}
 }
@@ -480,45 +478,11 @@ function cancelarEd() {
 }
 
 var tablaProcesos = []; //Array de la nueva lista de procesos a almacenar
-var listaEnDB = false; //Variable booleana para controlar si se almacenó la nueva lista
 
-function guardarEnDB() {
-	guardarEnDB:{
-		
-		//Si ya se está cargando o editando un proceso no se continúa
-		if ((cargando == true) || (editando == true)) {
-			mostrarMensaje("alertaCargaDeTrabajo", "Primero termine la operación pendiente.");
-			break guardarEnDB;
-		}
-		
-		//Si la lista está vacia
-		if (cantProc == 0) {
-			mostrarMensaje("errorCargaDeTrabajo", "La lista está vacia. Primero agregue procesos.");
-			break guardarEnDB;
-		}
-		
-		//Se solicita el ingreso del nombre de la lista a guardar
-		var nombreLista = prompt("Ingrese el nombre de la lista: ", "Lista de Procesos 1");
-		
-		//Luego se verifica si la operación fue cancelada, en cuyo caso se puede seguir editando la lista e intentar guardarla nuevamente...
-		if (nombreLista == null) {
-			alert("La operación ha sido cancelada.");
-			break guardarEnDB;
-		} else {
-				//Se controla que el nombre de la lista a guardar sea valido
-				if (nombreLista == "") {
-					while (nombreLista == "") {
-						alert("No se ha ingresado el nombre de la lista. Inténtelo nuevamente.");
-						nombreLista = prompt("Ingrese el nombre de la lista: ", "Lista de Procesos 1");
-						if (nombreLista == null) {
-							alert("La operación ha sido cancelada.");
-							break guardarEnDB;
-						}
-					}
-				}
-			}
-			
-		//Estructura del object donde se almacenará los datos de un proceso
+function obtenerLista() {
+	//La lista de procesos quedará almacenada en el array "tablaProcesos"
+	
+	//Estructura del object donde se almacenará los datos de un proceso
 		var proceso = {
 				idProceso: 0,
 				tamaño: 0,
@@ -574,47 +538,56 @@ function guardarEnDB() {
 			i++;
 		}
 		
-		//Se informa el resultado de la operación Guardar Lista
-		mostrarMensaje("avisoCargaDeTrabajo", "Lista de Procesos almacenada con éxito.");
-		
-		listaEnDB = true;
-		
 		//Se oculta el encabezado de la tabla correspondiente a la columna Opciones
 		document.getElementById("opciones").style.display = "none";
 		
-		//Se ocultan los botones "Nuevo Proceso" y "Guardar Lista"
-		document.getElementById("botonGuardarLista").style.display = "none";
+		//Se ocultan los botones "Nuevo Proceso", "Guardar Lista y Continuar" y "Continuar sin Guardar"
 		document.getElementById("botonNuevoProceso").style.display = "none";
-	
-		//La lista de procesos queda almacenada en el array "tablaProcesos"
-	}
+		document.getElementById("botonGuardarLista").style.display = "none";
+		document.getElementById("botonContinuarSinGuardar").style.display = "none";
+		
 }
 
-function cargarDesdeDB() {
-	//Cargar lista de procesos desde la DB
-}
-
-function siguiente() {
-		//Acción del botón "Siguiente"
-	siguiente:{
+function continuarSinGuardar() {
+		//Se continuará pero no se almacenará la lista de procesos en DB
+	continuarSinGuardar:{
 		
 		//Si ya se está cargando o editando un proceso no se continúa
 		if ((cargando == true) || (editando == true)) {
 			mostrarMensaje("alertaCargaDeTrabajo", "Primero termine la operación pendiente.");
-			break siguiente;
+			break continuarSinGuardar;
 		}
 		
 		//Si la lista está vacia
 		if (cantProc == 0) {
 			mostrarMensaje("errorCargaDeTrabajo", "La lista está vacia. Primero agregue procesos.");
-			break siguiente;
+			break continuarSinGuardar;
 		}
 		
-		//Se pregunta si se desea continuar sin guardar la lista
-		if (listaEnDB == false) {
-			confirm("¿Está seguro que desea continuar sin guardar la lista?");
+		$("#modalContinuar").modal();
+		
+	}
+}
+
+function guardarEnDB() {
+	
+	//Si ya se está cargando o editando un proceso no se continúa
+	if ((cargando == true) || (editando == true)) {
+		mostrarMensaje("alertaCargaDeTrabajo", "Primero termine la operación pendiente.");
+	} else {		
+		//Si la lista está vacia
+		if (cantProc == 0) {
+			mostrarMensaje("errorCargaDeTrabajo", "La lista está vacia. Primero agregue procesos.");
+		} else {
+			//Se solicita el ingreso del nombre de la lista a guardar
+			$("#guardarLista").modal();
+			
+			//
 			
 		}
 	}
-	
+}
+
+function cargarDesdeDB() {
+	//Cargar lista de procesos desde la DB
 }
