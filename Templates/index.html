@@ -172,15 +172,16 @@
                 </tfoot>
               </table>
             </div>
-            <button type="button" class="btn btn-secondary" id="boton5" style="visibility: collapse">Guardar en DB</button>
+            <button type="button" class="btn btn-secondary" id="boton5" style="visibility: collapse" onclick="$('#guardarParticiones').modal()">Guardar en DB</button>
             <div class="contenedorMensajes" id="mensajesCondicionesIniciales">
               <div class="mensajeAviso" id="avisoCondicionesIniciales"></div>
               <div class="mensajeError" id="errorCondicionesIniciales"></div>
             </div>
             <div class="d-flex align-content-left m-2">
-              <button type="button" class="btn btn-secondary nav-link" data-toggle="tab" href="#workload" id="boton6"  style="visibility: visible" onclick="prueba2()">Siguiente</button>
+              <button type="button" class="btn btn-secondary nav-link" data-toggle="tab" href="#workload" id="boton6" style="visibility: visible" onclick="prueba2()">Siguiente</button>
             </div>
 
+            <!-- Modales -->
             <div class="modal fade" id="guardarParticiones" role="dialog">
 		      		<div class="modal-dialog modal-dialog-centered">
       					<div class="modal-content">            
@@ -195,7 +196,7 @@
 						        </div>
 					        </div>
 					        <div class="modal-footer">
-						        <button type="button" class="btn btn-secondary m-3" id="aceptarNombreParticiones" data-dismiss="modal" onclick="guardarProcesos(document.getElementById('nombreParticiones').value)">Aceptar</button>
+						        <button type="button" class="btn btn-secondary m-3" id="aceptarNombreParticiones" data-dismiss="modal" onclick="guardarParticiones(document.getElementById('nombreParticiones').value)">Aceptar</button>
 						        <button type="button" class="btn btn-secondary m-3" id="cancelarNombreParticiones" data-dismiss="modal">Cancelar</button>
 					        </div>
 					      </div>
