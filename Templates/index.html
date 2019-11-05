@@ -142,7 +142,7 @@
             <div class="form-inline">
               <button type="button" class="btn btn-secondary ml-3" data-toggle="modal" data-target="#addprt" id="boton1">Agregar varias particiones iguales</button>
               <button type="button" class="btn btn-secondary ml-3" id="boton2" onclick="setVisible()">Agregar particiones manualmente</button>
-              <button type="button" class="btn btn-secondary ml-3" id="boton3" data-toggle="modal" data-target="#fromdbprt">Cargar desde DB</button>
+              <button type="button" class="btn btn-secondary ml-3" id="boton3" onclick="modalCargarParticiones()">Cargar desde DB</button>
             </div>        
             <div id="div-particiones" class="d-flex align-items-center mt-4" style="visibility: collapse">
               <table class="table table-bordered bg-white" id="tabla-particiones">
@@ -181,7 +181,7 @@
               <button type="button" class="btn btn-secondary nav-link" data-toggle="tab" href="#workload" id="boton6" style="visibility: visible" onclick="prueba2()">Siguiente</button>
             </div>
 
-            <!-- Modales -->
+            <!-- modal de guardar particiones -->
             <div class="modal fade" id="guardarParticiones" role="dialog">
 		      		<div class="modal-dialog modal-dialog-centered">
       					<div class="modal-content">            
@@ -204,6 +204,7 @@
 			      </div>
           </div>
 
+          <!-- pestaña de resultados -->
           <div id="result" class="container tab-pane fade"><br>
             <div class="form-inline m-3">
               <label for="time">Duracion de cada Batido del Reloj</label>
@@ -237,7 +238,7 @@
             </div>
           </div>
 
-          
+          <!-- pestaña de colas multinivel -->
           <div id="algmn" class="container tab-pane fade"><br>
             <h4>Colas de Cpu</h4>
             <table class="table table-bordered bg-white">
@@ -255,6 +256,7 @@
                       <select class="form-control" id="typealgm">
                         <option>FCFS</option>
                         <option>SJF</option>
+                        <option>SRTF</option>
                         <option>Round Robin</option>
                         <option>Por Prioridad</option>
                       </select>
@@ -277,7 +279,8 @@
         </div>
       </div>
     </div>
-    <!-- The Modal -->
+
+    <!-- modal para cargar varias particiones fijas de igual tamaño -->
     <div class="modal fade" id="addprt">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">            
@@ -329,32 +332,33 @@
         </div>
       </div>
     </div>
-        
+
+    <!-- modal para cargar particiones desde base de datos -->
     <div class="modal fade" id="fromdbprt">
       <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">            
-              <div class="modal-header">
-                <h4 class="modal-title" style="color: #232323" >Cargar desde Base de Datos</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-              </div>              
-              <div class="modal-body">
-                <form class="form">
-                  <div class="form-group mx-sm-3 mb-2">
-                    <label for="szmem">Nombre de la lista de Particiones</label>
-                    <select class="form-control ml-2" id="sel1">
-                      <option>Selecciona</option>
-                    </select>
-                  </div>
-                </form>
-                <button type="button" class="btn btn-secondary m-3">Aceptar</button>
-                <button type="button" class="btn btn-secondary m-3" data-dismiss="modal">Cancelar</button>
-              </div>                      
-            </div>
+          <div class="modal-content">            
+            <div class="modal-header">
+              <h4 class="modal-title" style="color: #232323" >Cargar desde Base de Datos</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>              
+            <div class="modal-body">
+              <form class="form">
+                <div class="form-group mx-sm-3 mb-2">
+                  <label for="szmem">Nombre de la lista de Particiones</label>
+                  <select class="form-control ml-2" id="selectParticiones">
+                    <option disabled="true" selected="true">Selecciona</option>
+                  </select>
+                </div>
+              </form>
+              <button type="button" class="btn btn-secondary m-3" onclick="cargarParticiones(document.getElementById('selectParticiones').value)">Aceptar</button>
+              <button type="button" class="btn btn-secondary m-3" data-dismiss="modal">Cancelar</button>
+            </div>                      
+          </div>
       </div>
     </div>
- 
   </div>
 
+  <!-- pie de pagina -->
   <footer id="sticky-footer" class="py-4 text-white-50 sticky-bottom">
     <div class="container ml-0">
       <div class="row align-items-center justify-content-start">
@@ -367,13 +371,15 @@
       </div>
     </div>
   </footer>
-    <script type="text/javascript" src="Static/main.js"></script>
-    <script type="text/javascript" src="Static/algoritmo.js"></script>
-    <script type="text/javascript" src="Static/base-de-datos.js"></script>
-    <script type="text/javascript" src="Static/lista-de-procesos.js"></script>
-    <script type="text/javascript" src="Static/prueba.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <!-- scripts que usa la pagina -->
+  <script type="text/javascript" src="Static/main.js"></script>
+  <script type="text/javascript" src="Static/algoritmo.js"></script>
+  <script type="text/javascript" src="Static/base-de-datos.js"></script>
+  <script type="text/javascript" src="Static/lista-de-procesos.js"></script>
+  <script type="text/javascript" src="Static/prueba.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
