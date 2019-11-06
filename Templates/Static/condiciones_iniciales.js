@@ -1,6 +1,5 @@
 //Pestaña:Carga de condiciones iniciales
 
-
 //Esto es para el slider que muestra el porcentaje del SO
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
@@ -41,11 +40,17 @@ var tamanoLibre =0;
 //Cuando presiona el boton Agregar Particiones Manualmente
 function cargarParticionesVbles() {
     //Carga los datos: tipo de particion y algortimo
-    if($('#prtfixed').is(':checked')) { condicionesInciales.tipoParticion="F" }
-    if($('#prtvar').is(':checked')) { condicionesInciales.tipoParticion="V"  }
-    if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="F"}
-    if($('#wrtfit').is(':checked')) { condicionesInciales.algoritmo="W"}
-    if($('#bstfit').is(':checked')) { condicionesInciales.algoritmo="B" }
+    if($('#prtfixed').is(':checked')) { //F de fija
+        condicionesInciales.tipoParticion="F" 
+        if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="FF"} //FF Firstfit para fija
+        if($('#bstfit').is(':checked')) { condicionesInciales.algoritmo="B"}
+    }
+    if($('#prtvar').is(':checked')) { //V es de variable
+        condicionesInciales.tipoParticion="V"  
+        if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="FV"} //FV Firstfit para variable
+        if($('#wrtfit').is(':checked')) { condicionesInciales.algoritmo="W"}
+    }
+    
     
     //La primera vez realiza calculos necesarios para dsps (tamanoLibre, direccionLibre, etc)
     if (idPart==1) {

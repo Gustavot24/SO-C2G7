@@ -489,6 +489,7 @@ function obtenerLista() {
 				prioridad: 0,
 				tiempoArribo: 0,
 				cicloVida: 0,
+				condicion:0,
 			};
 		
 		var i = 1; //Índice para recorrer toda la lista, proceso a proceso
