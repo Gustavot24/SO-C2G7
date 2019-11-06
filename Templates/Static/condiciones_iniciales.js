@@ -112,11 +112,17 @@ function cargarParticionesFijas() {
     document.getElementById("boton2").disabled=true;
     document.getElementById("boton3").disabled=true;
     document.getElementById("boton4").style.visibility="hidden";
-    if($('#prtfixed').is(':checked')) { condicionesInciales.tipoParticion="F" }
-    if($('#prtvar').is(':checked')) { condicionesInciales.tipoParticion="V"  }
-    if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="F"}
-    if($('#wrtfit').is(':checked')) { condicionesInciales.algoritmo="W"}
-    if($('#bstfit').is(':checked')) { condicionesInciales.algoritmo="B" }
+    if($('#prtfixed').is(':checked')) { //F de fija
+        condicionesInciales.tipoParticion="F" 
+        if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="FF"} //FF Firstfit para fija
+        if($('#bstfit').is(':checked')) { condicionesInciales.algoritmo="B"}
+    }
+    if($('#prtvar').is(':checked')) { //V es de variable
+        condicionesInciales.tipoParticion="V"  
+        if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="FV"} //FV Firstfit para variable
+        if($('#wrtfit').is(':checked')) { condicionesInciales.algoritmo="W"}
+    }
+    
     var tamanoMP = parseInt(document.getElementById("mp").value);
     var porcentaje =parseInt(document.getElementById("myRange").value)/100;
     var tamanoSO = Math.ceil(tamanoMP* porcentaje);

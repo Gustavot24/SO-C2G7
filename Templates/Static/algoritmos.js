@@ -11,10 +11,11 @@ var cola_terminado=[];
 var cola_cpu=[];
 var cola_es=[];
 var tablaParticiones=condicionesInciales.tablaParticiones;
-var algoritmo= toString(condicionesInciales.algoritmo);
 
 //Algoritmo FCFS para particiones Fijas
-function FCFS() {
+function FCFS() {    
+    var algoritmo= toString(condicionesInciales.algoritmo);
+    var tipoPart=toString(condicionesInciales.tipoParticion);
     do {
         //Buscar un proceso donde TA=TSimulacion y agregarlo cola nuevo
         for (let i = 0; i < tablaProcesos.length; i++) {
@@ -63,7 +64,14 @@ function FCFS() {
                             cola_listo.shift();
                             exito = true;
                             idProceso=proceso.idProceso;
-                            quitar_MP(idProceso); //cuando termina de ejecutar su ciclo de vida. Debe ser eliminado de mp
+                            switch (tipoPart) {
+                                case "F":
+                                    quitar_MP(idProceso); //cuando termina de ejecutar su ciclo de vida. Debe ser eliminado de mp
+                                break;                            
+                                case "V":
+                                    quitarVariable(idProceso);
+                                break;
+                            }                      
                             if (cola_nuevo.length>0) { //si significa que hay procesos para entrar a MP
                                 exito=false;
                                 continue agregarMP;                           
@@ -187,5 +195,134 @@ function quitar_MP(idProceso) {
             particion.estado=0;
             particion.FI=0;
         }
+    }
+}
+
+//FirstFit para particiones variables
+var tamanoLibre= (condicionesInciales.tamanoMP-condicionesInciales.tamanoSO);
+var direccionLibre = condicionesInciales.tamanoSO;
+function firstFitVble() {
+    for (let i = 0; i < cola_nuevo.length; i++) {
+        const proceso = cola_nuevo[i];
+        var tamanoProceso=proceso.tamano;
+        if (tablaParticiones.length==0) {
+            if (tamanoLibre>proceso.tamano) {
+                var idPart=tablaParticiones.length;
+                var particion3 ={ //se crea el object
+                    "idParticion": (idPart+1),
+                    "dirInicio": direccionLibre,
+                    "dirFin": (direccionLibre+proceso.tamano-1),
+                    "tamano": proceso.tamano,
+                    "estado": 1, //0 libre 1 ocupado
+                    "idProceso": proceso.idProceso,
+                    "FI": 0,
+                };
+                tablaParticiones.push(particion3);
+                direccionLibre=direccionLibre+tamanoProceso;
+                tamanoLibre=tamanoLibre-tamanoProceso;
+            }
+        } else {        
+            var j=0;
+            var exito=false;
+            do {
+                const particion = tablaParticiones[j];
+                var tamanoPart=particion.tamano;            
+                if (particion.estado==0 && tamanoPart>=tamanoProceso) {
+                    exito=true;
+                    var diferencia = tamanoPart-tamanoProceso;
+                    switch (diferencia) {
+                        case 0:
+                            particion.idProceso=proceso.idProceso;
+                            particion.estado=1;
+                        break;
+                        case diferencia>0:
+                            particion.idProceso=proceso.idProceso;
+                            particion.estado=1;
+                            particion.tamano=tamanoProceso;                        
+                            var direccionFin=(particion.dirInicio+tamanoProceso-1);
+                            particion.dirFin=direccionFin;
+                            var idPart=particion.idParticion;
+                            var k = tablaParticiones.length;
+                            do {
+                                const particion2 = tablaParticiones[(k-1)];
+                                particion2.idParticion=(particion2.idParticion+1);
+                                tablaParticiones.push(particion2);
+                                tablaParticiones.splice((k-1),1);
+                                k--;
+                            } while (k>idPart);
+                            var particion3 ={ //se crea el object
+                                "idParticion": (idPart+1),
+                                "dirInicio": (direccionFin+1),
+                                "dirFin": 127,
+                                "tamano": diferencia,
+                                "estado": 0, //0 libre 1 ocupado
+                                "idProceso": null,
+                                "FI": 0,
+                            };
+                            tablaParticiones.push(particion3);
+                        break;
+                    }
+                }  
+                j++;
+            } while (j < tablaParticiones.length && exito==false);
+            if (exito==false) {
+                if (tamanoLibre>proceso.tamano) {
+                    var idPart=tablaParticiones.length;
+                    var particion3 ={ //se crea el object
+                        "idParticion": (idPart+1),
+                        "dirInicio": direccionLibre,
+                        "dirFin": (direccionLibre+proceso.tamano-1),
+                        "tamano": proceso.tamano,
+                        "estado": 1, //0 libre 1 ocupado
+                        "idProceso": proceso.idProceso,
+                        "FI": 0,
+                    };
+                    tablaParticiones.push(particion3);
+                    direccionLibre=direccionLibre+tamanoProceso;
+                    tamanoLibre=tamanoLibre-tamanoProceso;
+                } 
+            }
+        }
+    }
+}
+//Quitar de MP cuando es variable
+function quitarVariable(idProceso) {
+    for (let i = 0; i < tablaParticiones.length; i++) {
+        const particion = tablaParticiones[i];
+        var exito=false;
+        if (particion.idProceso==idProceso) {
+            particion.estado=0;
+            particion.idProceso=null;
+            if ((i-1)>=0) {
+                var exito2=false;
+                const particion2 = tablaParticiones[i-1];
+                if (particion2.estado==0) {//unir
+                    particion2.dirFin=particion.dirFin;
+                    particion2.tamano=particion2.tamano+particion.tamano;
+                    exito2=true;
+                }
+                exito=true;
+                if ((i+1)<tablaParticiones.length) {
+                    const particion3 = tablaParticiones[i+1];
+                    if (particion3.estado==0) {//unir
+                        particion2.dirFin=particion3.dirFin;
+                        particion2.tamano=particion2.tamano+particion3.tamano;
+                        tablaParticiones.splice((i+1),1);
+                    }
+                }
+                if (exito2==true) {
+                    tablaParticiones.splice(i,1);
+                }
+            }
+            if ((i+1)<=tablaParticiones.length && exito==false) {
+                const particion2 = tablaParticiones[i+1];
+                if (particion2.estado==0) {//unir
+                    particion.dirFin=particion2.dirFin;
+                    particion.tamano=particion.tamano+particion2.tamano;
+                    tablaParticiones.splice((i+1),1);
+                }
+            }
+        }
+        
     }
 }
