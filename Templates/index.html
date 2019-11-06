@@ -367,6 +367,52 @@
             </div>
         </div>
       </div>
+
+      <!-- modal de guardar lista de colas -->
+      <div class="modal fade" id="todbcolas" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">            
+            <div class="modal-header">
+              <h4 class="modal-title" style="color: #232323">Guardar Lista de Colas Multinivel</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="nombreColas" class="form-control-label">Ingrese el nombre de la lista a guardar:</label>
+                <input type="text" class="form-control" id="nombreColas" placeholder="Nombre de Lista de Colas" maxlength="20">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary m-3" id="aceptarNombList" data-dismiss="modal" onclick="guardarColas(document.getElementById('nombreColas').value)">Aceptar</button>
+              <button type="button" class="btn btn-secondary m-3" id="cancelarNombList" data-dismiss="modal">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- modal para cargar colas desde base de datos -->
+      <div class="modal fade" id="fromdbcolas">
+          <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">            
+                <div class="modal-header">
+                  <h4 class="modal-title" style="color: #232323" >Cargar desde Base de Datos</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>              
+                <div class="modal-body">
+                  <form class="form">
+                    <div class="form-group mx-sm-3 mb-2">
+                      <label for="selectColas">Nombre de la lista de Particiones</label>
+                      <select class="form-control ml-2" id="selectColas">
+                        <option disabled="true" selected="true">Selecciona</option>
+                      </select>
+                    </div>
+                  </form>
+                  <button type="button" class="btn btn-secondary m-3" data-dismiss="modal" onclick="cargarColas(document.getElementById('selectColas').value)">Aceptar</button>
+                  <button type="button" class="btn btn-secondary m-3" data-dismiss="modal">Cancelar</button>
+                </div>                      
+              </div>
+          </div>
+        </div>
     </div>
 
     <!-- pie de pagina -->
