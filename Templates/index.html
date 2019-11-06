@@ -39,6 +39,7 @@
         </ul>
 
         <div class="tab-content border-0 pb-4">
+          <!-- pestaña de carga de trabajo -->
           <div id="workload" class="container tab-pane fade"><br>
             <h4 style="color: #17202A">Lista de Procesos</h4>
             <table class="table table-bordered bg-white" id="tabla-procesos"></table>					
@@ -50,11 +51,11 @@
             <div class="d-flex">
               <div class="p-2 flex-fill mr-5" id="botonesCargaDeTrabajo">
                 <button type="button" class="btn btn-secondary" id="botonNuevaLista" onclick="nuevaLista()">Nueva Lista</button>
-                <button type="button" class="btn btn-secondary" id="botonCargarLista" data-toggle="modal" data-target="#frombdlistproc">Listas Almacenadas</button>
+                <button type="button" class="btn btn-secondary" id="botonCargarLista" onclick="modalCargarProcesos()">Listas Almacenadas</button>
               </div>
             </div>
 			
-		      	<!-- Modales -->
+		      	<!-- modal de continuar sin guardar la lista de procesos -->
 		      	<div class="modal fade" id="modalContinuar" role="dialog">
       				<div class="modal-dialog modal-dialog-centered">
       					<div class="modal-content">
@@ -70,7 +71,8 @@
       					</div>
       				</div>
 	      		</div>
-			 
+       
+            <!-- modal de guardar lista de procesos -->
 		      	<div class="modal fade" id="guardarLista" role="dialog">
 		      		<div class="modal-dialog modal-dialog-centered">
       					<div class="modal-content">            
@@ -93,6 +95,7 @@
 			      </div>
           </div>
   
+          <!-- pestaña de condiciones iniciales -->
           <div id="icondition" class="container tab-pane active"><br>
             <form class="form-inline">
               <div class="form-group mx-sm-3 mb-2">
@@ -313,7 +316,8 @@
       </div>
     </div>
 
-    <div class="modal fade" id="frombdlistproc">
+    <!-- modal para cargar procesos desde base de datos -->
+    <div class="modal fade" id="fromdblistproc">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">            
           <div class="modal-header">
@@ -324,12 +328,12 @@
             <form class="form">
               <div class="form-group mx-sm-3 mb-2">
                 <label for="szmem">Seleccione la lista de procesos a cargar:</label>
-                <select class="form-control ml-2" id="sel1">
-                  <option>Seleccionar</option>
+                <select class="form-control ml-2" id="selectProcesos">
+                  <option disabled="true" selected="true">Selecciona</option>
                 </select>
               </div>
             </form>
-            <button type="button" class="btn btn-secondary m-3">Aceptar</button>
+            <button type="button" class="btn btn-secondary m-3" data-dismiss="modal" onclick="cargarProcesos(document.getElementById('selectProcesos').value)">Aceptar</button>
             <button type="button" class="btn btn-secondary m-3" data-dismiss="modal">Cancelar</button>
           </div>                      
         </div>
@@ -353,7 +357,7 @@
                   </select>
                 </div>
               </form>
-              <button type="button" class="btn btn-secondary m-3" onclick="cargarParticiones(document.getElementById('selectParticiones').value)">Aceptar</button>
+              <button type="button" class="btn btn-secondary m-3" data-dismiss="modal" onclick="cargarParticiones(document.getElementById('selectParticiones').value)">Aceptar</button>
               <button type="button" class="btn btn-secondary m-3" data-dismiss="modal">Cancelar</button>
             </div>                      
           </div>
