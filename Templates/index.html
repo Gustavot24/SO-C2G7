@@ -24,17 +24,17 @@
       <div class="col-9 m-0">
         <ul class="nav nav-tabs" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#icondition">Condiciones Iniciales</a>
+            <a class="nav-link active">Condiciones Iniciales</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown">Carga de Trabajo</a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" data-toggle="tab" href="#workload">Carga de Proceso</a>
-                <a class="dropdown-item" data-toggle="tab" href="#algmn">Algoritmo Multinivel</a>
+                <a class="dropdown-item">Carga de Proceso</a>
+                <a class="dropdown-item">Algoritmo Multinivel</a>
               </div>
           </li>  
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#result">Resultados</a>
+            <a class="nav-link">Resultados</a>
           </li>
         </ul>
 
@@ -43,9 +43,9 @@
             <h4 style="color: #17202A">Lista de Procesos</h4>
             <table class="table table-bordered bg-white" id="tabla-procesos"></table>					
             <div class="contenedorMensajes" id="mensajesCargaDeTrabajo">
-              <div class="mensajeAviso" id="avisoCargaDeTrabajo" align="center"></div>
-              <div class="mensajeError" id="errorCargaDeTrabajo" align="center"></div>
-              <div class="mensajeAlerta" id="alertaCargaDeTrabajo" align="center"></div>
+              <div class="mensajeAviso" id="avisoCargaDeTrabajo"></div>
+              <div class="mensajeError" id="errorCargaDeTrabajo"></div>
+              <div class="mensajeAlerta" id="alertaCargaDeTrabajo"></div>
             </div>					
             <div class="d-flex">
               <div class="p-2 flex-fill mr-5" id="botonesCargaDeTrabajo">
@@ -54,45 +54,43 @@
               </div>
             </div>
 			
-			<!-- Modales -->
-			<div class="modal fade" id="modalContinuar" role="dialog">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content">
-						<div class="modal-body">
-							<p>Si continúa con ésta operación no se guardará la lista de procesos.</p>
-						</div>
-						<div class="modal-footer">
-							<div class="d-flex align-content-left m-2">
-								<button type="button" class="btn btn-secondary nav-link" data-toggle="tab" data-dismiss="modal" href="#algmn" id="boton6" style="visibility: visible" onclick="obtenerLista()">Continuar</button>
-							</div>
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-						</div>
-					</div>
-				</div>
-			 </div>
+		      	<!-- Modales -->
+		      	<div class="modal fade" id="modalContinuar" role="dialog">
+      				<div class="modal-dialog modal-dialog-centered">
+      					<div class="modal-content">
+      						<div class="modal-body">
+      							<p>Si continúa con ésta operación no se guardará la lista de procesos.</p>
+      						</div>
+      						<div class="modal-footer">
+      							<div class="d-flex align-content-left m-2">
+      								<button type="button" class="btn btn-secondary nav-link" data-toggle="tab" data-dismiss="modal" href="#algmn" id="boton6" style="visibility: visible" onclick="obtenerLista()">Continuar</button>
+      							</div>
+      							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+	      					</div>
+      					</div>
+      				</div>
+	      		</div>
 			 
-			 <div class="modal fade" id="guardarLista" role="dialog">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content">            
-						<div class="modal-header">
-							<h4 class="modal-title" style="color: #232323">Guardar Lista de Procesos</h4>
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-						</div>              
-						<div class="modal-body">
-						
-							<div class="form-group">
-								<label for="nombList" class="form-control-label">Ingrese el nombre de la lista a guardar:</label>
-								<input type="text" class="form-control" id="nombList" placeholder="Nombre de Lista de Procesos">
-							</div>
-							
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary m-3" id="aceptarNombList" data-dismiss="modal" onclick="guardarProcesos(document.getElementById('nombList').value)">Aceptar</button>
-							<button type="button" class="btn btn-secondary m-3" id="cancelarNombList" data-dismiss="modal">Cancelar</button>
-						</div>                      
-					</div>
-				</div>
-			</div>
+		      	<div class="modal fade" id="guardarLista" role="dialog">
+		      		<div class="modal-dialog modal-dialog-centered">
+      					<div class="modal-content">            
+						      <div class="modal-header">
+							      <h4 class="modal-title" style="color: #232323">Guardar Lista de Procesos</h4>
+							      <button type="button" class="close" data-dismiss="modal">&times;</button>
+						      </div>
+						      <div class="modal-body">
+							      <div class="form-group">
+								      <label for="nombList" class="form-control-label">Ingrese el nombre de la lista a guardar:</label>
+						  	      <input type="text" class="form-control" id="nombList" placeholder="Nombre de Lista de Procesos">
+						        </div>
+					        </div>
+					        <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary m-3" id="aceptarNombList" data-dismiss="modal" onclick="guardarProcesos(document.getElementById('nombList').value)">Aceptar</button>
+						        <button type="button" class="btn btn-secondary m-3" id="cancelarNombList" data-dismiss="modal">Cancelar</button>
+					        </div>
+					      </div>
+				      </div>
+			      </div>
           </div>
   
           <div id="icondition" class="container tab-pane active"><br>
@@ -110,7 +108,7 @@
               </div>
             </form>
             <div class="d-flex align-items-center justify-items-start m-3">
-              <label for="rpm">Porcentaje ocupada por la S.O.</label>
+              <label for="rpm">Porcentaje ocupado por el S.O.</label>
               <form class="field-range ml-2">
                 <input class="custom-range ml-3" id="myRange" value="10" type="range" min="10" max="25" />
               </form>
@@ -144,7 +142,7 @@
             <div class="form-inline">
               <button type="button" class="btn btn-secondary ml-3" data-toggle="modal" data-target="#addprt" id="boton1">Agregar varias particiones iguales</button>
               <button type="button" class="btn btn-secondary ml-3" id="boton2" onclick="setVisible()">Agregar particiones manualmente</button>
-              <button type="button" class="btn btn-secondary ml-3" id="boton3" data-toggle="modal" data-target="#fromdbprt">Cargar desde DB</button>
+              <button type="button" class="btn btn-secondary ml-3" id="boton3" onclick="modalCargarParticiones()">Cargar desde DB</button>
             </div>        
             <div id="div-particiones" class="d-flex align-items-center mt-4" style="visibility: collapse">
               <table class="table table-bordered bg-white" id="tabla-particiones">
@@ -168,22 +166,45 @@
                 </tbody>
                 <tfoot id="boton4" style="visibility: hidden">
                   <td>
-                    <button type="button"  class="btn btn-secondary" onclick="cargarParticionesVbles()">
+                    <button type="button"  class="btn btn-outline-dark" onclick="cargarParticionesVbles()">
                     <i class="material-icons md-light align-middle" id="add">add</i></button>
                   </td>
                 </tfoot>
               </table>
             </div>
-            <button type="button" class="btn btn-secondary" id="boton5" style="visibility: collapse">Guardar en DB</button>
+            <button type="button" class="btn btn-secondary" id="boton5" style="visibility: collapse" onclick="$('#guardarParticiones').modal()">Guardar en DB</button>
             <div class="contenedorMensajes" id="mensajesCondicionesIniciales">
               <div class="mensajeAviso" id="avisoCondicionesIniciales"></div>
               <div class="mensajeError" id="errorCondicionesIniciales"></div>
             </div>
-            <div align="right">
-              <button type="button" class="btn btn-secondary nav-link" data-toggle="tab" href="#workload" id="boton6"  style="visibility: visible" onclick="prueba2()">Siguiente</button>
+            <div class="d-flex align-content-left m-2">
+              <button type="button" class="btn btn-secondary nav-link" data-toggle="tab" href="#workload" id="boton6" style="visibility: visible" onclick="prueba2()">Siguiente</button>
             </div>
+
+            <!-- modal de guardar particiones -->
+            <div class="modal fade" id="guardarParticiones" role="dialog">
+		      		<div class="modal-dialog modal-dialog-centered">
+      					<div class="modal-content">            
+						      <div class="modal-header">
+							      <h4 class="modal-title" style="color: #232323">Guardar Condiciones Iniciales</h4>
+							      <button type="button" class="close" data-dismiss="modal">&times;</button>
+						      </div>
+						      <div class="modal-body">
+							      <div class="form-group">
+								      <label for="nombreParticiones" class="form-control-label">Ingrese el nombre de la lista a guardar:</label>
+						  	      <input type="text" class="form-control" id="nombreParticiones" placeholder="Nombre de Lista de Particiones">
+						        </div>
+					        </div>
+					        <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary m-3" id="aceptarNombreParticiones" data-dismiss="modal" onclick="guardarParticiones(document.getElementById('nombreParticiones').value)">Aceptar</button>
+						        <button type="button" class="btn btn-secondary m-3" id="cancelarNombreParticiones" data-dismiss="modal">Cancelar</button>
+					        </div>
+					      </div>
+				      </div>
+			      </div>
           </div>
 
+          <!-- pestaña de resultados -->
           <div id="result" class="container tab-pane fade"><br>
             <div class="form-inline m-3">
               <label for="time">Duracion de cada Batido del Reloj</label>
@@ -218,8 +239,9 @@
                 </tbody>
               </table>
             </div>
-          </div> 
-                  
+          </div>
+
+          <!-- pestaña de colas multinivel -->
           <div id="algmn" class="container tab-pane fade"><br>
             <h4>Colas de Cpu</h4>
             <table class="table table-bordered bg-white">
@@ -237,6 +259,7 @@
                       <select class="form-control" id="typealgm">
                         <option>FCFS</option>
                         <option>SJF</option>
+                        <option>SRTF</option>
                         <option>Round Robin</option>
                         <option>Por Prioridad</option>
                       </select>
@@ -259,7 +282,8 @@
         </div>
       </div>
     </div>
-    <!-- The Modal -->
+
+    <!-- modal para cargar varias particiones fijas de igual tamaño -->
     <div class="modal fade" id="addprt">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">            
@@ -311,32 +335,33 @@
         </div>
       </div>
     </div>
-        
+
+    <!-- modal para cargar particiones desde base de datos -->
     <div class="modal fade" id="fromdbprt">
       <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">            
-              <div class="modal-header">
-                <h4 class="modal-title" style="color: #232323" >Cargar desde Base de Datos</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-              </div>              
-              <div class="modal-body">
-                <form class="form">
-                  <div class="form-group mx-sm-3 mb-2">
-                    <label for="szmem">Nombre de la lista de Particiones</label>
-                    <select class="form-control ml-2" id="sel1">
-                      <option>Selecciona</option>
-                    </select>
-                  </div>
-                </form>
-                <button type="button" class="btn btn-secondary m-3">Aceptar</button>
-                <button type="button" class="btn btn-secondary m-3" data-dismiss="modal">Cancelar</button>
-              </div>                      
-            </div>
+          <div class="modal-content">            
+            <div class="modal-header">
+              <h4 class="modal-title" style="color: #232323" >Cargar desde Base de Datos</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>              
+            <div class="modal-body">
+              <form class="form">
+                <div class="form-group mx-sm-3 mb-2">
+                  <label for="szmem">Nombre de la lista de Particiones</label>
+                  <select class="form-control ml-2" id="selectParticiones">
+                    <option disabled="true" selected="true">Selecciona</option>
+                  </select>
+                </div>
+              </form>
+              <button type="button" class="btn btn-secondary m-3" onclick="cargarParticiones(document.getElementById('selectParticiones').value)">Aceptar</button>
+              <button type="button" class="btn btn-secondary m-3" data-dismiss="modal">Cancelar</button>
+            </div>                      
+          </div>
       </div>
     </div>
- 
   </div>
 
+  <!-- pie de pagina -->
   <footer id="sticky-footer" class="py-4 text-white-50 sticky-bottom">
     <div class="container ml-0">
       <div class="row align-items-center justify-content-start">

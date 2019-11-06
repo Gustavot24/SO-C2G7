@@ -13,6 +13,10 @@
 // guarda la lista de particiones que esta en el html en la db
 // con info de https://stackoverflow.com/questions/13137597/how-to-get-element-inside-a-td-using-row-index-and-td-index
 function guardarParticiones(nombre) {
+    if (nombre == "") { // si no se ingreso un nombre no deberia guardar
+        mostrarMensaje("errorCondicionesIniciales", "El nombre de la lista de particiones no puede estar en blanco"); // muestra el mensaje de error
+        return; // termina la funcion
+    }
     var tablaDeParticiones = document.getElementById("tabla-particiones").tBodies.item(0); // variable que apunta al body de la lista de procesos
     var tablaConvertidaEnString = []; // array que va a contener las particiones
     for (var i = 0; i < tablaDeParticiones.rows.length; i++) { // itera para cada fila de la tabla

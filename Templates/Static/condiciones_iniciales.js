@@ -101,13 +101,12 @@ function cargarParticionesVbles() {
         }
     } else {
         mostrarMensaje("errorCondicionesIniciales", "El tamaño ingresado supera el tamaño disponible: " + tamanoLibre);
-        
     }
     console.log(condicionesInciales);
 }
 
 //Funcion que permite cargar el object cuando las particiones son del mismo tamaño.
-//Cuando el usuario presiona el boton Agregar Particione iguales.
+//Cuando el usuario presiona el boton Agregar Particiones iguales.
 function cargarParticionesFijas() {
     document.getElementById("boton1").disabled=true;
     document.getElementById("boton2").disabled=true;
@@ -167,3 +166,35 @@ function cargarParticionesFijas() {
     console.log(condicionesInciales);
 }
 
+// carga una lista con los nombres de todas las listas de particiones guardadas
+// y abre el modal para poder seleccionar
+// con info de https://www.w3schools.com/jsref/met_select_remove.asp
+// y de https://www.w3schools.com/jsref/met_select_add.asp
+function modalCargarParticiones() {
+    var stringDeConsulta = "SELECT nombre FROM Simulador.dbo.ParticionesFijas;"; // crea el string de la consulta
+    var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
+    xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
+        if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
+            alert(this.responseText); // SOLO PARA PRUEBAS, SE BORRA DESPUES
+            listaDeNombres = JSON.parse(this.responseText).recordset;
+            if (listaDeNombres.length == 0) { // si no devuelve ningun nombre no hay nada guardado, no abre el modal
+                mostrarMensaje("errorCondicionesIniciales", "No hay ninguna lista de particiones guardada");
+            }
+            else { // si devuelve algo hay algo guardado
+                $("#fromdbprt").modal(); // muestra el modal
+                var comboBox = document.getElementById("selectParticiones"); // variable que apunta al select para elegir lista de particiones
+                for (var i = comboBox.options.length - 1; i > 0; i--) { // elimina todas las opciones del combobox (menos la que dice "Selecciona")
+                    comboBox.remove(i); // si no se hace del ultimo al primero falla
+                }
+                for (var i = 0; i < listaDeNombres.length; i++) { // va agregando los nombres
+                    var option = document.createElement("option");
+                    option.text = listaDeNombres[i].nombre;
+                    option.value = listaDeNombres[i].nombre;
+                    comboBox.add(option);
+                }
+            }
+        }
+    };
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
+    xhttp.send(); // manda la peticion al servidor
+}
