@@ -48,7 +48,7 @@ a:link, a:visited {
 }
 
 .dropdown-item.active, .dropdown-item:active{
-    background-color: #17202A;
+    background-color:#17202A ;
     color: white;
 }
 /*
@@ -57,7 +57,7 @@ a:link, a:visited {
     color: white;
 }*/
 
-.btn{
+.btn-secondary{
     background-color: #17202A;
 }
 
@@ -87,7 +87,7 @@ a:link, a:visited {
 .mensajeError {
     border: 1px solid #ce0000;
     border-radius: 5px;
-    background-color: #ffb3b3;
+    background-color: #fae1d9;
     color: #ce0000;
     text-align: center;
     display: none;
@@ -96,7 +96,7 @@ a:link, a:visited {
 .mensajeAlerta {
     border: 1px solid #DD3C03;
     border-radius: 5px;
-    background-color: #fcb49c;
+    background-color: #fae1d9;
     color: #DD3C03;
     text-align: center;
     display: none;
