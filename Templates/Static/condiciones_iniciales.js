@@ -175,7 +175,6 @@ function modalCargarParticiones() {
     var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
     xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
         if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
-            alert(this.responseText); // SOLO PARA PRUEBAS, SE BORRA DESPUES
             listaDeNombres = JSON.parse(this.responseText).recordset;
             if (listaDeNombres.length == 0) { // si no devuelve ningun nombre no hay nada guardado, no abre el modal
                 mostrarMensaje("errorCondicionesIniciales", "No hay ninguna lista de particiones guardada");
