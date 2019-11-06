@@ -25,23 +25,16 @@ thead{
 }
 
 .nav-tabs .nav-item .nav-link{
-    background-color: white;
-    border-top-color: gray;
-    border-left-color: gray;
-    border-right-color: gray;
+    background-color: transparent;
+    color: white;
+    border-bottom-color: white;
 }
 
 .nav-tabs .nav-item .nav-link.active {
-    background-color: #17202A !important;
-    color: white;
-    border-style: none;  
-    
+    background-color: white !important;
+    color: #17202A;    
 }
-/*
-.nav-tabs .nav-item{
-    background-color: white;
-}
-*/
+
 .tab-content{
     background-color: white;
     
