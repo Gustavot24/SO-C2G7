@@ -65,6 +65,10 @@ a:link, a:visited {
     background-color: white;
     color: #17202A;
 }
+#grafica{
+    background-color:#17202A;
+    color: #D0D3D4;
+}
 
 #sticky-footer {
     position: absolute;
