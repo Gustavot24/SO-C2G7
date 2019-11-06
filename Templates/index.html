@@ -248,7 +248,7 @@
             <!-- pestaña de colas multinivel -->
             <div id="algmn" class="container tab-pane fade"><br>
               <h4>Colas de Cpu</h4>
-              <table class="table table-bordered bg-white">
+              <table class="table table-bordered bg-white" id="tabla-colas">
                 <thead class="text-white">
                   <tr>
                     <th scope="col">Cola</th>
@@ -277,9 +277,9 @@
               </div>
               <div class="d-flex">
                 <div class="p-2 flex-fill mr-5">
-                  <button type="button" class="btn btn-secondary">Agregar</button>
-                  <button type="button" class="btn btn-secondary">Guardar en DB</button>
-                  <button type="button" class="btn btn-secondary">Cargar desde DB</button>
+                  <button type="button" class="btn btn-secondary" onclick="agregarCola()">Agregar</button>
+                  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#todbcolas">Guardar en DB</button>
+                  <button type="button" class="btn btn-secondary" onclick="modalCargarColas()">Cargar desde DB</button>
                 </div>
               </div>
             </div>
@@ -431,6 +431,7 @@
     <script type="text/javascript" src="Static/algoritmos.js"></script>
     <script type="text/javascript" src="Static/base-de-datos.js"></script>
     <script type="text/javascript" src="Static/lista-de-procesos.js"></script>
+    <script type="text/javascript" src="Static/colas-multinivel.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

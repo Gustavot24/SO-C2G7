@@ -1,3 +1,23 @@
+// agrega una cola a la tabla
+function agregarCola() {
+    var tablaColas = document.getElementById("tabla-colas");
+    //var ultimoIdCola = parseInt(tablaColas.rows(tablaColas.rows.length - 1).cells(0).innerHTML);
+    var nuevaFila = tablaColas.insertRow();
+    var celdaIdCola = nuevaFila.insertCell(0);
+    var celdaAlgoritmo = nuevaFila.insertCell(1);
+    celdaIdCola.innerHTML = tablaColas.rows.length - 1;
+    celdaAlgoritmo.innerHTML = 
+        '<div class="form-group">' +
+        '  <select class="form-control" id="typealgm">' +
+        '    <option>FCFS</option>' +
+        '    <option>SJF</option>' +
+        '    <option>SRTF</option>' +
+        '    <option>Round Robin</option>' +
+        '    <option>Por Prioridad</option>' +
+        '  </select>' +
+        '</div>';
+}
+
 // carga una lista con los nombres de todas las listas de colas guardadas
 // y abre el modal para poder seleccionar
 // con info de https://www.w3schools.com/jsref/met_select_remove.asp
