@@ -1,6 +1,5 @@
 //Pestaña:Carga de condiciones iniciales
 
-
 //Esto es para el slider que muestra el porcentaje del SO
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
@@ -41,11 +40,17 @@ var tamanoLibre =0;
 //Cuando presiona el boton Agregar Particiones Manualmente
 function cargarParticionesVbles() {
     //Carga los datos: tipo de particion y algortimo
-    if($('#prtfixed').is(':checked')) { condicionesInciales.tipoParticion="F" }
-    if($('#prtvar').is(':checked')) { condicionesInciales.tipoParticion="V"  }
-    if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="F"}
-    if($('#wrtfit').is(':checked')) { condicionesInciales.algoritmo="W"}
-    if($('#bstfit').is(':checked')) { condicionesInciales.algoritmo="B" }
+    if($('#prtfixed').is(':checked')) { //F de fija
+        condicionesInciales.tipoParticion="F" 
+        if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="FF"} //FF Firstfit para fija
+        if($('#bstfit').is(':checked')) { condicionesInciales.algoritmo="B"}
+    }
+    if($('#prtvar').is(':checked')) { //V es de variable
+        condicionesInciales.tipoParticion="V"  
+        if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="FV"} //FV Firstfit para variable
+        if($('#wrtfit').is(':checked')) { condicionesInciales.algoritmo="W"}
+    }
+    
     
     //La primera vez realiza calculos necesarios para dsps (tamanoLibre, direccionLibre, etc)
     if (idPart==1) {
@@ -170,8 +175,7 @@ function modalCargarParticiones() {
     var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
     xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
         if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
-            alert(this.responseText); // SOLO PARA PRUEBAS, SE BORRA DESPUES
-            listaDeNombres = JSON.parse(this.responseText).recordset;
+            var listaDeNombres = JSON.parse(this.responseText).recordset;
             if (listaDeNombres.length == 0) { // si no devuelve ningun nombre no hay nada guardado, no abre el modal
                 mostrarMensaje("errorCondicionesIniciales", "No hay ninguna lista de particiones guardada");
             }
