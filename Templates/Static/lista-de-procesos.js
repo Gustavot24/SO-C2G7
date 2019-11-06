@@ -50,13 +50,13 @@ function generarFila() {
 										'<em>Proceso eliminado.</em>'+
 									'</td>'+
 									'<td id="opciones'+idProc+'">'+
-										'<button class="btn btn-outline-dark" id="botonGuardar'+idProc+'" style="display:block" onclick="guardarProc()">'+'<i class="material-icons">save</i>'+'</button>'+
-										'<button class="btn btn-outline-dark" id="botonAnular'+idProc+'" style="display:block" onclick="anularProc()">'+'<i class="material-icons">highlight_off</i>'+'</button>'+
-										'<button class="btn btn-outline-dark" id="botonEditar'+idProc+'" style="display:none" onclick="editar(this)">'+'<i class="material-icons">create</i>'+'</button>'+
-										'<button class="btn btn-outline-dark" id="botonEliminar'+idProc+'" style="display:none" onclick="eliminar(this)">'+'<i class="material-icons">delete_outline</i>'+'</button>'+
-										'<button class="btn btn-outline-dark" id="botonDeshacer'+idProc+'" style="display:none" onclick="deshacer(this)">'+'<i class="material-icons">undo</i>'+'</button>'+
-										'<button class="btn btn-outline-dark" id="botonAceptar'+idProc+'" style="display:none" onclick="aceptarEd()">'+'<i class="material-icons">done_outline</i>'+'</button>'+
-										'<button class="btn btn-outline-dark" id="botonCancelar'+idProc+'" style="display:none" onclick="cancelarEd()">'+'<i class="material-icons">close</i>'+'</button>'+
+										'<button class="btn btn-outline-dark" id="botonGuardar'+idProc+'" style="display:block" onclick="guardarProc()">'+'<i class="material-icons align-middle">save</i>'+'</button>'+
+										'<button class="btn btn-outline-dark" id="botonAnular'+idProc+'" style="display:block" onclick="anularProc()">'+'<i class="material-icons align-middle">highlight_off</i>'+'</button>'+
+										'<button class="btn btn-outline-dark" id="botonEditar'+idProc+'" style="display:none" onclick="editar(this)">'+'<i class="material-icons align-middle">create</i>'+'</button>'+
+										'<button class="btn btn-outline-dark" id="botonEliminar'+idProc+'" style="display:none" onclick="eliminar(this)">'+'<i class="material-icons align-middle">delete_outline</i>'+'</button>'+
+										'<button class="btn btn-outline-dark" id="botonDeshacer'+idProc+'" style="display:none" onclick="deshacer(this)">'+'<i class="material-icons align-middle">undo</i>'+'</button>'+
+										'<button class="btn btn-outline-dark" id="botonAceptar'+idProc+'" style="display:none" onclick="aceptarEd()">'+'<i class="material-icons align-middle">done_outline</i>'+'</button>'+
+										'<button class="btn btn-outline-dark" id="botonCancelar'+idProc+'" style="display:none" onclick="cancelarEd()">'+'<i class="material-icons align-middle">close</i>'+'</button>'+
 									'</td>'+
 							'</tr>'
 			$('#tabla-procesos tbody').append(htmlTags);
