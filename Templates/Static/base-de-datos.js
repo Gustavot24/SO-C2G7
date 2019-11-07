@@ -229,7 +229,7 @@ function cargarColas(nombre) {
                     '    <option value="Por Prioridad">Por Prioridad</option>' +
                     '  </select>' +
                     '</div>';
-                celdaAlgoritmo.children[0].children[0].value = tablaColas.algoritmo; // ACA NO ANDA
+                celdaAlgoritmo.children[0].children[0].value = tablaColas[i].algoritmo;
             }
             mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas");        
         }
