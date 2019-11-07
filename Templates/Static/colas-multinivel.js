@@ -12,11 +12,11 @@ function agregarCola() {
     celdaAlgoritmo.innerHTML = 
         '<div class="form-group">' +
         '  <select class="form-control" id="typealgm">' +
-        '    <option>FCFS</option>' +
-        '    <option>SJF</option>' +
-        '    <option>SRTF</option>' +
-        '    <option>Round Robin</option>' +
-        '    <option>Por Prioridad</option>' +
+        '    <option value="FCFS">FCFS</option>' +
+        '    <option value="SJF">SJF</option>' +
+        '    <option value="SRTF">SRTF</option>' +
+        '    <option value="Round Robin">Round Robin</option>' +
+        '    <option value="Por Prioridad">Por Prioridad</option>' +
         '  </select>' +
         '</div>';
 }
