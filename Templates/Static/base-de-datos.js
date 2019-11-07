@@ -202,5 +202,38 @@ function guardarColas(nombre) {
 
 // recupera una lista de colas de la db y la carga en la tabla del html
 function cargarColas(nombre) {
-    // falta hacer
+    var tabla = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
+    var tablaConvertidaEnJSON;
+    var stringDeConsulta = "SELECT * FROM Simulador.dbo.Colas WHERE nombre = '" + nombre + "';"; // crea el string de la consulta
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            tablaConvertidaEnJSON = JSON.parse(this.responseText);
+            tablaColas = tablaConvertidaEnJSON.recordset[0].listado; // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
+            tablaColas = JSON.parse(tablaColas);
+            tabla.deleteRow(0);
+            for (var i = 0; i < tablaColas.length; i++) { // itera  sobre el array de objects
+                var nuevaFila = tabla.insertRow();
+                var celdaIdCola = document.createElement("th");
+                nuevaFila.appendChild(celdaIdCola);
+                var celdaAlgoritmo = nuevaFila.insertCell(1);
+                celdaIdCola.innerHTML = tablaColas[i].idCola;
+                celdaIdCola.scope = "row";
+                celdaAlgoritmo.innerHTML = 
+                    '<div class="form-group">' +
+                    '  <select class="form-control" id="typealgm">' +
+                    '    <option>FCFS</option>' +
+                    '    <option>SJF</option>' +
+                    '    <option>SRTF</option>' +
+                    '    <option>Round Robin</option>' +
+                    '    <option>Por Prioridad</option>' +
+                    '  </select>' +
+                    '</div>';
+                celdaAlgoritmo.children[0].children[0].value = tablaColas.algoritmo;
+            }
+            mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas");        
+        }
+    };
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
+    xhttp.send();
 }
