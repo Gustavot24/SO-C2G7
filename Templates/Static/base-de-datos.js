@@ -124,7 +124,7 @@ function guardarProcesos(nombre) {
     var tablaConvertidaEnString = JSON.stringify(tablaProcesos); // convierte el listado de procesos en un string de un jota son
     var stringDeConsulta = "INSERT INTO Simulador.dbo.Procesos (nombre, listado) VALUES (" +
         "'" + nombre + "', " +
-        "'" + tablaConvertidaEnString + "')"; // crea el string de la consulta
+        "'" + tablaConvertidaEnString + "');"; // crea el string de la consulta
         // si no me equivoco esto es re vulnerable a una inyeccion sql
     alert(stringDeConsulta); // SOLO PARA PRUEBAS, SE BORRA DESPUES
     var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
@@ -170,9 +170,25 @@ function cargarProcesos(nombre) {
 }
 
 // guarda la lista de colas que esta en el html en la db
-function guardarColas() {
-    var tablaConvertidaEnString = 0;
-    alert(stringDeConsulta);
+function guardarColas(nombre) {
+    if (nombre == "") { // si no se ingreso un nombre no deberia guardar
+        mostrarMensaje("errorColasMultinivel", "El nombre de la lista de colas no puede estar en blanco"); // muestra el mensaje de error
+        return; // termina la funcion
+    }
+    var tablaConvertidaEnString = [];
+    var tablaColas = document.getElementById("tabla-colas").tBodies.item(0);
+    for (var i = 0; i < tablaColas.rows.length; i++) {
+        var cola = {
+            idCola: tablaColas.rows[i].cells[0].innerHTML,
+            algoritmo: tablaColas.rows[i].cells[1].children[0].children[0].value,
+        }
+        tablaConvertidaEnString.push(cola);
+    }
+    tablaConvertidaEnString = JSON.stringify(tablaConvertidaEnString);
+    var stringDeConsulta = "INSERT INTO Simulador.dbo.Colas (nombre, listado) VALUES ("  +
+        "'" + nombre + "', " +
+        "'" + tablaConvertidaEnString + "');";
+    alert(stringDeConsulta); // SOLO PARA PRUEBAS, SE BORRA DESPUES
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -185,6 +201,6 @@ function guardarColas() {
 }
 
 // recupera una lista de colas de la db y la carga en la tabla del html
-function cargarColas() {
+function cargarColas(nombre) {
     // falta hacer
 }

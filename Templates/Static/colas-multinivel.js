@@ -1,11 +1,14 @@
 // agrega una cola a la tabla
+// con info de https://stackoverflow.com/questions/14999927/insert-th-in-thead
 function agregarCola() {
     var tablaColas = document.getElementById("tabla-colas");
     //var ultimoIdCola = parseInt(tablaColas.rows(tablaColas.rows.length - 1).cells(0).innerHTML);
     var nuevaFila = tablaColas.insertRow();
-    var celdaIdCola = nuevaFila.insertCell(0);
+    var celdaIdCola = document.createElement("th");
+    nuevaFila.appendChild(celdaIdCola);
     var celdaAlgoritmo = nuevaFila.insertCell(1);
     celdaIdCola.innerHTML = tablaColas.rows.length - 1;
+    celdaIdCola.scope = "row";
     celdaAlgoritmo.innerHTML = 
         '<div class="form-group">' +
         '  <select class="form-control" id="typealgm">' +
