@@ -598,7 +598,6 @@ function modalCargarProcesos() {
     var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
     xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
         if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
-			alert(this.responseText);
 			var listaDeNombres = JSON.parse(this.responseText).recordset;
             if (listaDeNombres.length == 0) { // si no devuelve ningun nombre no hay nada guardado, no abre el modal
                 mostrarMensaje("errorCargaDeTrabajo", "No hay ninguna lista de procesos guardada");

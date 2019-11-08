@@ -120,7 +120,11 @@ function guardarProcesos(nombre) {
 
 // recupera una lista de procesos de la db y la carga en la tabla del html
 function cargarProcesos(nombre) {
-    var tabla = document.getElementById("tabla-procesos"); // variable que apunta a la tabla de procesos
+    // VOY A TENER QUE USAR LA FUNCION generarFila() DE SERGIO
+    // CON ESO CARGO LAS FILAS MAS RAPIDO
+    nuevaLista();
+    var tabla = document.getElementById("tabla-procesos").tBodies.item(0); // variable que apunta a la tabla de procesos
+    tabla.deleteRow(0);
     var tablaConvertidaEnJSON;
     var stringDeConsulta = "SELECT * FROM Simulador.dbo.Procesos WHERE nombre = '" + nombre + "'"; // crea el string de la consulta
     var xhttp = new XMLHttpRequest();
@@ -128,7 +132,7 @@ function cargarProcesos(nombre) {
         if (this.readyState == 4 && this.status == 200) {
             alert(this.responseText);
             tablaConvertidaEnJSON = JSON.parse(this.responseText);
-            tablaProcesos = tablaConvertidaEnJSON.recordset[0].listado; // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
+            tablaProcesos = JSON.parse(tablaConvertidaEnJSON.recordset[0].listado); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
             for (var i = 0; i < tablaProcesos.length; i++) { // itera  sobre el array de objects
                 var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
                 var celdaIdProceso = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
@@ -140,7 +144,7 @@ function cargarProcesos(nombre) {
                 celdaTamano.innerHTML = tablaProcesos[i].tamaño;
                 celdaPrioridad.innerHTML = tablaProcesos[i].prioridad;
                 celdaTiempoDeArribo.innerHTML = tablaProcesos[i].tiempoArribo;
-                celdaCicloDeVida.innerHTML = tablaProcesos[i].cicloVida;
+                celdaCicloDeVida.innerHTML = tablaProcesos[i].cicloVida.join("-");
             }
             mostrarMensaje("avisoCargaDeTrabajo", "Se cargó la lista de procesos");        
         }
