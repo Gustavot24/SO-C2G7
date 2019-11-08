@@ -120,31 +120,25 @@ function guardarProcesos(nombre) {
 
 // recupera una lista de procesos de la db y la carga en la tabla del html
 function cargarProcesos(nombre) {
-    // VOY A TENER QUE USAR LA FUNCION generarFila() DE SERGIO
-    // CON ESO CARGO LAS FILAS MAS RAPIDO
     nuevaLista();
     var tabla = document.getElementById("tabla-procesos").tBodies.item(0); // variable que apunta a la tabla de procesos
-    tabla.deleteRow(0);
     var tablaConvertidaEnJSON;
     var stringDeConsulta = "SELECT * FROM Simulador.dbo.Procesos WHERE nombre = '" + nombre + "'"; // crea el string de la consulta
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            alert(this.responseText);
             tablaConvertidaEnJSON = JSON.parse(this.responseText);
             tablaProcesos = JSON.parse(tablaConvertidaEnJSON.recordset[0].listado); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
             for (var i = 0; i < tablaProcesos.length; i++) { // itera  sobre el array de objects
-                var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
-                var celdaIdProceso = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
-                var celdaTamano = nuevaFila.insertCell(1);
-                var celdaPrioridad = nuevaFila.insertCell(2);
-                var celdaTiempoDeArribo = nuevaFila.insertCell(3);
-                var celdaCicloDeVida = nuevaFila.insertCell(4);
-                celdaIdProceso.innerHTML = tablaProcesos[i].idProceso; // le va cargando los datos a cada una de las celdas
-                celdaTamano.innerHTML = tablaProcesos[i].tamaño;
-                celdaPrioridad.innerHTML = tablaProcesos[i].prioridad;
-                celdaTiempoDeArribo.innerHTML = tablaProcesos[i].tiempoArribo;
-                celdaCicloDeVida.innerHTML = tablaProcesos[i].cicloVida.join("-");
+                tabla.rows[i].cells[0].innerHTML = tablaProcesos[i].idProceso;
+                tabla.rows[i].cells[1].children[0].value = tablaProcesos[i].tamaño;
+                tabla.rows[i].cells[2].children[0].selectedIndex = tablaProcesos[i].prioridad - 1;
+                tabla.rows[i].cells[3].children[0].value = tablaProcesos[i].tiempoArribo;
+                tabla.rows[i].cells[4].children[0].value = tablaProcesos[i].cicloVida.join("-");
+                guardarProc();
+                if (i < tablaProcesos.length - 1) {
+                    generarFila();
+                }
             }
             mostrarMensaje("avisoCargaDeTrabajo", "Se cargó la lista de procesos");        
         }
