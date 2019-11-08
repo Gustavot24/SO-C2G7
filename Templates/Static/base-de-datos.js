@@ -59,15 +59,20 @@ function cargarParticiones(nombre) {
     var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            alert(this.responseText);
+            document.getElementById("prtfixed").checked = true;
+            fixed();
+            tabla.deleteRow(0);
+            document.getElementById("div-particiones").style.visibility="visible";
             tablaParticiones = JSON.parse(this.responseText).recordset[0];
             document.getElementById("mp").value = tablaParticiones.tamanoMemoria; // asigna el valor del tamaño de memoria al select
             document.getElementById("myRange").value = tablaParticiones.porcentajeSO; // asigna el valor del porcentaje del SO al range
             document.getElementById("demo").innerHTML = tablaParticiones.porcentajeSO; // asigna el valor del porcentaje del SO al label
             if (tablaParticiones.algoritmo = "firstfit") {
+                document.getElementById("bstfit").checked = false;
                 document.getElementById("frtfit").checked = true;
             }
-            else {
+            if (tablaParticiones.algoritmo = "bestfit") {
+                document.getElementById("frtfit").checked = false;
                 document.getElementById("bstfit").checked = true;
             }
             var tablaConvertidaEnJSON = JSON.parse(tablaParticiones.listado); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
@@ -82,7 +87,7 @@ function cargarParticiones(nombre) {
                 celdaDirFin.innerHTML = tablaConvertidaEnJSON[i].dirFin;
                 celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamaño;
             }
-            cargarParticionesVbles(); // ejecuta esta funcion de algoritmo.js para crear el object que tiene todos los datos de la pagina        
+            //cargarParticionesVbles(); // ejecuta esta funcion de algoritmo.js para crear el object que tiene todos los datos de la pagina        
             mostrarMensaje("avisoCondicionesIniciales", "Se cargó la configuración de la memoria principal");
         }
     };
