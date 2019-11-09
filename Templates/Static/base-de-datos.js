@@ -188,6 +188,7 @@ function guardarColas(nombre) {
         if (this.readyState == 4 && this.status == 200) {
             alert(this.responseText);
             mostrarMensaje("avisoColasMultinivel", "Se guardó la lista de colas de CPU");
+            seGuardaronLasColas = true;
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
@@ -225,7 +226,8 @@ function cargarColas(nombre) {
                     '</div>';
                 celdaAlgoritmo.children[0].children[0].value = tablaColas[i].algoritmo;
             }
-            mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas");        
+            mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas");
+            seGuardaronLasColas = true;
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
