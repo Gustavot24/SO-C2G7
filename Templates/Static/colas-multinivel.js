@@ -62,18 +62,29 @@ function modalCargarColas() {
     xhttp.send(); // manda la peticion al servidor
 }
 
+// guarda las colas en el array para usarse en la simulacion
+// tambien comprueba si se guardaron los cambios
+// con info de https://stackoverflow.com/questions/39461076/how-to-change-active-bootstrap-tab-with-javascript
 function continuarColas() {
-    colasMultinivel = []
-    var tablaColas = document.getElementById("tabla-colas").tBodies.item(0);
-    for (var i = 0; i < tablaColas.rows.length; i++) {
-        var colaMultinivel = {
+    colasMultinivel = [] // vacia el array de colas par no guardar colas repetidas (si el usuario cliquea siguiente varias veces)
+    var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
+    for (var i = 0; i < tablaColas.rows.length; i++) { // itera para cada fila de la tabla
+        var colaMultinivel = { // crea un objeto con una cola y le agrega sus datos
             idCola: Number(tablaColas.rows[i].cells[0].innerHTML),
             algoritmo: tablaColas.rows[i].cells[1].children[0].children[0].value,
             procesos: [],
         }
-        colasMultinivel.push(colaMultinivel);
+        colasMultinivel.push(colaMultinivel); // agrega la cola al array de colas
     }
-    if (!seGuardaronLasColas) {
-        $("#modalContinuarSinGuardarColas").modal();
+    if (seGuardaronLasColas) { // si se guardo todo continua a la parte de resultados
+        $('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
     }
+    if (!seGuardaronLasColas) { // si no se guardo todo avisa al usuario
+        $("#modalContinuarSinGuardarColas").modal(); // muestra el modal que avisa que no se guardo
+    }
+}
+
+// esta cosa es porque si lo meto en el atributo onclick de un boton no anda un carajo
+function continuarQueNoAndaEnElHTML() {
+    $('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
 }
