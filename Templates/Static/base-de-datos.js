@@ -64,20 +64,26 @@ function cargarParticiones(nombre) {
             tabla.deleteRow(0);
             document.getElementById("div-particiones").style.visibility="visible";
             tablaParticiones = JSON.parse(this.responseText).recordset[0];
+            condicionesInciales.tipoParticion = "F";
             document.getElementById("mp").value = tablaParticiones.tamanoMemoria; // asigna el valor del tamaño de memoria al select
+            condicionesInciales.tamanoMP = tablaParticiones.tamanoMemoria;
             document.getElementById("myRange").value = tablaParticiones.porcentajeSO; // asigna el valor del porcentaje del SO al range
             document.getElementById("demo").innerHTML = tablaParticiones.porcentajeSO; // asigna el valor del porcentaje del SO al label
+            condicionesInciales.porcentajeSO = parseInt(tablaParticiones.porcentajeSO) / 100;
+            condicionesInciales.tamanoSO = Math.ceil(condicionesInciales.tamanoMP * condicionesInciales.porcentajeSO);
             if (tablaParticiones.algoritmo = "firstfit") {
                 document.getElementById("bstfit").checked = false;
                 document.getElementById("frtfit").checked = true;
+                condicionesInciales.algoritmo = "FF";
             }
             if (tablaParticiones.algoritmo = "bestfit") {
                 document.getElementById("frtfit").checked = false;
                 document.getElementById("bstfit").checked = true;
+                condicionesInciales.algoritmo = "B";
             }
             var tablaConvertidaEnJSON = JSON.parse(tablaParticiones.listado); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
             for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
-                var nuevaFila = tabla.insertRow(); //agrega una nueva fila a la tabla de particiones
+                var nuevaFila = tabla.insertRow(); // agrega una nueva fila a la tabla de particiones
                 var celdaIdParticion = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
                 var celdaDirInicio = nuevaFila.insertCell(1);
                 var celdaDirFin = nuevaFila.insertCell(2);
@@ -86,6 +92,16 @@ function cargarParticiones(nombre) {
                 celdaDirInicio.innerHTML = tablaConvertidaEnJSON[i].dirInicio;
                 celdaDirFin.innerHTML = tablaConvertidaEnJSON[i].dirFin;
                 celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamaño;
+                var particion = {
+                    idParticion: Number(tablaConvertidaEnJSON[i].idParticion),
+                    dirInicio: Number(tablaConvertidaEnJSON[i].dirInicio),
+                    dirFin: Number(tablaConvertidaEnJSON[i].dirFin),
+                    tamaño: Number(tablaConvertidaEnJSON[i].tamaño),
+                    estado: 0,
+                    idProceso: null,
+                    FI: 0,
+                };
+                condicionesInciales.tablaParticiones.push(particion);
             }
             //cargarParticionesVbles(); // ejecuta esta funcion de algoritmo.js para crear el object que tiene todos los datos de la pagina        
             mostrarMensaje("avisoCondicionesIniciales", "Se cargó la configuración de la memoria principal");
@@ -172,6 +188,7 @@ function guardarColas(nombre) {
         if (this.readyState == 4 && this.status == 200) {
             alert(this.responseText);
             mostrarMensaje("avisoColasMultinivel", "Se guardó la lista de colas de CPU");
+            seGuardaronLasColas = true;
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
@@ -209,7 +226,8 @@ function cargarColas(nombre) {
                     '</div>';
                 celdaAlgoritmo.children[0].children[0].value = tablaColas[i].algoritmo;
             }
-            mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas");        
+            mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas");
+            seGuardaronLasColas = true;
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);

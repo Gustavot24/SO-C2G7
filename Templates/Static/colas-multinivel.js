@@ -1,3 +1,11 @@
+// Pestaña: Colas Multinivel
+
+// variable que ve si se guardo la lista de colas o no
+var seGuardaronLasColas = false;
+
+// variable global que contiene el listado de colas
+var colasMultinivel = [];
+
 // agrega una cola a la tabla
 // con info de https://stackoverflow.com/questions/14999927/insert-th-in-thead
 function agregarCola() {
@@ -19,6 +27,7 @@ function agregarCola() {
         '    <option value="Por Prioridad">Por Prioridad</option>' +
         '  </select>' +
         '</div>';
+        seGuardaronLasColas = false;
 }
 
 // carga una lista con los nombres de todas las listas de colas guardadas
@@ -51,4 +60,20 @@ function modalCargarColas() {
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
     xhttp.send(); // manda la peticion al servidor
+}
+
+function continuarColas() {
+    colasMultinivel = []
+    var tablaColas = document.getElementById("tabla-colas").tBodies.item(0);
+    for (var i = 0; i < tablaColas.rows.length; i++) {
+        var colaMultinivel = {
+            idCola: Number(tablaColas.rows[i].cells[0].innerHTML),
+            algoritmo: tablaColas.rows[i].cells[1].children[0].children[0].value,
+            procesos: [],
+        }
+        colasMultinivel.push(colaMultinivel);
+    }
+    if (!seGuardaronLasColas) {
+        $("#modalContinuarSinGuardarColas").modal();
+    }
 }
