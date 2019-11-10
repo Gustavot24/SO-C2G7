@@ -1,3 +1,5 @@
+//import { Script } from "vm";
+
 function fixed (){
     document.getElementById("lalg").style.display = "inline-flex";
     document.getElementById("lfrtfit").style.display = "inline-flex";
@@ -21,6 +23,7 @@ function variable (){
         document.getElementById("prtfixed").removeAttribute("disable");
     }
 }
+
 
 // muestra un mensaje que da un aviso o un error
 // ej: al guardar algo en la db o cuando ingresas algo mal
