@@ -71,12 +71,12 @@ function cargarParticiones(nombre) {
             document.getElementById("demo").innerHTML = tablaParticiones.porcentajeSO; // asigna el valor del porcentaje del SO al label
             condicionesInciales.porcentajeSO = parseInt(tablaParticiones.porcentajeSO) / 100;
             condicionesInciales.tamanoSO = Math.ceil(condicionesInciales.tamanoMP * condicionesInciales.porcentajeSO);
-            if (tablaParticiones.algoritmo = "firstfit") {
+            if (tablaParticiones.algoritmo == "firstfit") {
                 document.getElementById("bstfit").checked = false;
                 document.getElementById("frtfit").checked = true;
                 condicionesInciales.algoritmo = "FF";
             }
-            if (tablaParticiones.algoritmo = "bestfit") {
+            if (tablaParticiones.algoritmo == "bestfit") {
                 document.getElementById("frtfit").checked = false;
                 document.getElementById("bstfit").checked = true;
                 condicionesInciales.algoritmo = "B";
