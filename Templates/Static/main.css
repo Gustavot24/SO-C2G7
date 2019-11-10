@@ -112,5 +112,35 @@ a:link, a:visited {
 }
 
 .progress{
-    height: 30px;
+    height: 40px;
+}
+
+#warning{
+    background-color: grey;
+}
+
+#P1{
+    background-color: blue;
+}
+
+#P2{
+    background-color: rgb(100, 5, 100);
+}
+#P3{
+    background-color: blueviolet;
+}
+#P4{
+    background-color:rgb(0, 132, 255);
+}
+#P5{
+    background-color: rgb(2, 48, 45);
+}
+#P6{
+    background-color: rgb(2, 23, 41);
+}
+#P7{
+    background-color: rgb(3, 70, 14);
+}
+#P8{
+    background-color: rgb(247, 0, 255);
 }

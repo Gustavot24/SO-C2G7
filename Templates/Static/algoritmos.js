@@ -1,5 +1,69 @@
 //Resolucion de algoritmos de planificación de procesos
+var tablaParticiones = [];
+var particion ={ //se crea el object
+    "idParticion": 1,
+    "dirInicio": 31,
+    "dirFin": 37,
+    "tamaño": 6,
+    "estado": 0, //0 libre 1 ocupado
+    "idProceso": null,
+    "FI": 0,
+};
+tablaParticiones.push(particion);
+var particion ={ //se crea el object
+    "idParticion": 2,
+    "dirInicio": 38,
+    "dirFin": 57,
+    "tamaño": 20,
+    "estado": 0, //0 libre 1 ocupado
+    "idProceso": null,
+    "FI": 0,
+};
+tablaParticiones.push(particion);
+var particion ={ //se crea el object
+    "idParticion": 3,
+    "dirInicio": 58,
+    "dirFin": 127,
+    "tamaño": 70,
+    "estado": 0, //0 libre 1 ocupado
+    "idProceso": null,
+    "FI": 0,
+};
 
+tablaParticiones.push(particion);
+console.log(tablaParticiones);
+
+var tablaProcesos=[];
+var proceso = {
+    "idProceso": 1,
+    "tamaño": 15,
+    "prioridad": 1,
+    "tiempoArribo": 0,
+    "cicloVida": [1,3,4,3,1],
+    "posicion":0,
+};
+tablaProcesos.push(proceso);
+
+var proceso = {
+    "idProceso": 2,
+    "tamaño": 20,
+    "prioridad": 1,
+    "tiempoArribo": 3,
+    "cicloVida": [1,2,3,2,1],
+    "posicion":0,
+};
+tablaProcesos.push(proceso);
+var proceso = {
+    "idProceso": 3,
+    "tamaño": 12,
+    "prioridad": 1,
+    "tiempoArribo": 5,
+    "cicloVida": [1,3,2,1,1],
+    "posicion":0,
+};
+tablaProcesos.push(proceso);
+
+console.log(tablaProcesos);
 //declaracion de variables
 var t_simulacion=0;
 var t_cpu=0;
@@ -10,12 +74,15 @@ var cola_bloqueado=[];
 var cola_terminado=[];
 var cola_cpu=[];
 var cola_es=[];
-var tablaParticiones=condicionesInciales.tablaParticiones;
+FCFS();
+//var tablaParticiones=condicionesInciales.tablaParticiones;
 
 //Algoritmo FCFS para particiones Fijas
 function FCFS() {    
-    var algoritmo= toString(condicionesInciales.algoritmo);
-    var tipoPart=toString(condicionesInciales.tipoParticion);
+    var algoritmo= "FF";//toString(condicionesInciales.algoritmo);
+    var tipoPart="F";//toString(condicionesInciales.tipoParticion);
+    var to_es=0; //tiempo oscioso e/s
+    var to_cpu=0; //tiempo oscioso cpu
     do {
         //Buscar un proceso donde TA=TSimulacion y agregarlo cola nuevo
         for (let i = 0; i < tablaProcesos.length; i++) {
@@ -47,10 +114,12 @@ function FCFS() {
                 }
             }
             //Asignar los procesos de la cola listo a la cpu
-            if (cola_listo.length>0) {
+            if (cola_listo.length>0) { //Primero pregunto si la cola contiene algun proceso.
                 if (cola_cpu.length==0) { //No hay procesos ejecutandose en cpu
                     var proceso = cola_listo[0];
-                    cola_cpu.push(proceso);
+                    cola_cpu.push(proceso);                    
+                    add_to_cpu(to_cpu);
+                    to_cpu=0;
                     var i = proceso.posicion;
                     t_cpu = proceso.cicloVida[i];
                     exito = true; //para salir del ciclo
@@ -59,6 +128,7 @@ function FCFS() {
                         var proceso = cola_listo[0];
                         proceso.posicion ++;
                         cola_cpu.shift();
+                        add_cola_cpu(proceso);
                         if (proceso.posicion==5) {//Termine de ejecutar el utlimo tiempo de cpu pasa a la cola terminado
                             cola_terminado.push(proceso);
                             cola_listo.shift();
@@ -84,29 +154,40 @@ function FCFS() {
                         exito=true;
                     }
                 }
+            }else{
+                to_cpu++;
             }
+        
     
             //Asignar los procesos de la cola de bloqueados a la e/s
             if (cola_bloqueado.length>0) {
                 if (cola_es.length==0) { //No hay procesos ejecutandose en es
+                    add_to_es(to_es);
+                    to_es=0;
                     var proceso = cola_bloqueado[0];
                     cola_es.push(proceso);
                     var i = proceso.posicion;
-                    t_es = proceso.cicloVida[i];
-                    if (cola_listo.length<0) { //hay un proceso en cola, vuelvo arriba
+                    t_es = proceso.cicloVida[i];                    
+                    if (cola_listo.length<=0) { //si hay un proceso en cola, vuelvo arriba
                         exito=true;
                     }             
                 } else { //Si hay proceso ejecutando es
                     if (t_es==0) { //Pregunto si termino de ejecutar su tiempo de es
                         var proceso = cola_bloqueado[0];
                         proceso.posicion ++;
+                        add_cola_es(proceso);
                         cola_listo.push(proceso);
                         cola_bloqueado.shift();  
-                        cola_es.shift();           
+                        cola_es.shift();   
+                        if (exito==true) {
+                            to_es++; 
+                        }                               
                     }else{
                         exito=true;
                     }
                 }
+            }else{
+                to_es++;                
             }
     
         } while (exito==false);
@@ -124,7 +205,7 @@ function FCFS() {
 }
 
 
-
+//Algoritmo FirstFit para Particiones Fijas
 function firstFit() {
     for (let i = 0; i < cola_nuevo.length; i++) {
         const proceso = cola_nuevo[i];
@@ -132,11 +213,11 @@ function firstFit() {
         var j=0;
         do {        
             const particion = tablaParticiones[j];
-            if ((particion.tamano > proceso.tamano)&&(particion.estado==0)) {  
+            if ((particion.tamaño > proceso.tamaño)&&(particion.estado==0)) {  
                 exito=true;              
                 particion.estado=1;
                 particion.idProceso=proceso.idProceso;
-                particion.FI=(particion.tamano-proceso.tamano);
+                particion.FI=(particion.tamaño-proceso.tamaño);
                 cola_listo.push(proceso);
                 cola_nuevo.splice(i,1);
             }
@@ -144,7 +225,7 @@ function firstFit() {
         } while ((exito == false) && (j < tablaParticiones.length));
     }
 }
-
+//Algoritmo BestFit para Particiones Fijas
 function bestFit() {  
     var fiTotal=0; 
     var idpart=0;
@@ -186,7 +267,7 @@ function bestFit() {
         }
     }
 }
-
+//Funcion que quita de la MP un proceso cuando es particion fija
 function quitar_MP(idProceso) {
     for (let i = 0; i < tablaParticiones.length; i++) {
         const particion = tablaParticiones[i];
@@ -199,20 +280,20 @@ function quitar_MP(idProceso) {
 }
 
 //FirstFit para particiones variables
-var tamanoLibre= (condicionesInciales.tamanoMP-condicionesInciales.tamanoSO);
-var direccionLibre = condicionesInciales.tamanoSO;
+var tamanoLibre= 921;//(condicionesInciales.tamanoMP-condicionesInciales.tamanoSO);
+var direccionLibre = 103;//condicionesInciales.tamanoSO;
 function firstFitVble() {
     for (let i = 0; i < cola_nuevo.length; i++) {
         const proceso = cola_nuevo[i];
-        var tamanoProceso=proceso.tamano;
+        var tamanoProceso=proceso.tamaño;
         if (tablaParticiones.length==0) {
-            if (tamanoLibre>proceso.tamano) {
+            if (tamanoLibre>proceso.tamaño) {
                 var idPart=tablaParticiones.length;
                 var particion3 ={ //se crea el object
                     "idParticion": (idPart+1),
                     "dirInicio": direccionLibre,
-                    "dirFin": (direccionLibre+proceso.tamano-1),
-                    "tamano": proceso.tamano,
+                    "dirFin": (direccionLibre+proceso.tamaño-1),
+                    "tamaño": proceso.tamaño,
                     "estado": 1, //0 libre 1 ocupado
                     "idProceso": proceso.idProceso,
                     "FI": 0,
@@ -226,7 +307,7 @@ function firstFitVble() {
             var exito=false;
             do {
                 const particion = tablaParticiones[j];
-                var tamanoPart=particion.tamano;            
+                var tamanoPart=particion.tamaño;            
                 if (particion.estado==0 && tamanoPart>=tamanoProceso) {
                     exito=true;
                     var diferencia = tamanoPart-tamanoProceso;
@@ -238,7 +319,7 @@ function firstFitVble() {
                         case diferencia>0:
                             particion.idProceso=proceso.idProceso;
                             particion.estado=1;
-                            particion.tamano=tamanoProceso;                        
+                            particion.tamaño=tamanoProceso;                        
                             var direccionFin=(particion.dirInicio+tamanoProceso-1);
                             particion.dirFin=direccionFin;
                             var idPart=particion.idParticion;
@@ -266,13 +347,13 @@ function firstFitVble() {
                 j++;
             } while (j < tablaParticiones.length && exito==false);
             if (exito==false) {
-                if (tamanoLibre>proceso.tamano) {
+                if (tamanoLibre>proceso.tamaño) {
                     var idPart=tablaParticiones.length;
                     var particion3 ={ //se crea el object
                         "idParticion": (idPart+1),
                         "dirInicio": direccionLibre,
-                        "dirFin": (direccionLibre+proceso.tamano-1),
-                        "tamano": proceso.tamano,
+                        "dirFin": (direccionLibre+proceso.tamaño-1),
+                        "tamano": proceso.tamaño,
                         "estado": 1, //0 libre 1 ocupado
                         "idProceso": proceso.idProceso,
                         "FI": 0,
@@ -298,7 +379,7 @@ function quitarVariable(idProceso) {
                 const particion2 = tablaParticiones[i-1];
                 if (particion2.estado==0) {//unir
                     particion2.dirFin=particion.dirFin;
-                    particion2.tamano=particion2.tamano+particion.tamano;
+                    particion2.tamano=particion2.tamano+particion.tamaño;
                     exito2=true;
                 }
                 exito=true;
@@ -318,7 +399,7 @@ function quitarVariable(idProceso) {
                 const particion2 = tablaParticiones[i+1];
                 if (particion2.estado==0) {//unir
                     particion.dirFin=particion2.dirFin;
-                    particion.tamano=particion.tamano+particion2.tamano;
+                    particion.tamaño=particion.tamaño+particion2.tamano;
                     tablaParticiones.splice((i+1),1);
                 }
             }
@@ -326,3 +407,45 @@ function quitarVariable(idProceso) {
         
     }
 }
+
+function add_cola_cpu(proceso) {
+    var t_inicio=0; //tiempo de inicio en cola
+    var t_fin=t_simulacion; //tiempo de fin en la cola
+    var duracion= proceso.cicloVida[(proceso.posicion-1)];
+    t_inicio=t_fin-duracion;
+    var idProceso= proceso.idProceso;
+    var texto= 'Desde: '+ t_inicio.toString() + ' Hasta: ' + t_fin.toString();
+    document.getElementById("cola_cpu").innerHTML+=`<div id='P${idProceso}' class="progress-bar" role="progressbar" style="width:20%">`+
+    `<a data-trigger="hover" data-placement="bottom" data-original-title='Proceso ${idProceso}' data-toggle="popover" data-content= '${texto}'>P${idProceso} </a>` +'</div>';
+
+}
+function add_to_cpu(to_cpu) {
+    if (to_cpu>0) {
+        var t_inicio=t_simulacion-to_cpu; 
+        var t_fin=t_simulacion; 
+        var texto= 'Desde: '+ t_inicio.toString() + ' Hasta: ' + t_fin.toString();
+        document.getElementById("cola_cpu").innerHTML+='<div id="warning" class="progress-bar" role="progressbar" style="width:20%">'+
+        `<a data-trigger="hover" data-placement="bottom" data-original-title='Tiempo Ocioso' data-toggle="popover" data-content= '${texto}'> ** </a>` +'</div>';
+    }
+}
+function add_to_es(to_es) {
+    if (to_es>0) {
+        var t_inicio=t_simulacion-to_es; 
+        var t_fin=t_simulacion; 
+        var texto= 'Desde: '+ t_inicio.toString() + ' Hasta: ' + t_fin.toString();
+        document.getElementById("cola_es").innerHTML+='<div id="warning" class="progress-bar" role="progressbar" style="width:20%">'+
+        `<a data-trigger="hover" data-placement="bottom" data-original-title='Tiempo Ocioso' data-toggle="popover" data-content= '${texto}'> ** </a>` +'</div>';
+    }
+}
+function add_cola_es(proceso) {
+    var t_inicio=0; //tiempo de inicio en cola
+    var t_fin=t_simulacion; //tiempo de fin en la cola
+    var duracion= proceso.cicloVida[(proceso.posicion-1)];
+    t_inicio=t_fin-duracion;
+    var idProceso= proceso.idProceso;
+    var texto= 'Desde: '+ t_inicio.toString() + ' Hasta: ' + t_fin.toString();
+    document.getElementById("cola_es").innerHTML+=`<div id='P${idProceso}' class="progress-bar" role="progressbar" style="width:20%">`+
+    `<a data-trigger="hover" data-placement="bottom" data-original-title='Proceso ${idProceso}' data-toggle="popover" data-content= '${texto}'>P${idProceso} </a>` +'</div>';
+}
+$(document).ready(function(){$('[data-toggle="popover"]').popover();});
+
