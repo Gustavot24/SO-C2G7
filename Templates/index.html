@@ -67,7 +67,7 @@
                     </div>
                     <div class="modal-footer">
                       <div class="d-flex align-content-left m-2">
-                        <button type="button" class="btn btn-secondary nav-link" data-toggle="tab" data-dismiss="modal" href="#algmn" id="boton6" style="visibility: visible" onclick="obtenerLista()">Continuar</button>
+                        <button type="button" class="btn btn-secondary btnNext" data-dismiss="modal" style="visibility: visible" onclick="obtenerLista()">Continuar</button>
                       </div>
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     </div>
@@ -289,7 +289,7 @@
                 <input class="form-check-input ml-2" type="radio" name="inlineRadioOptions" id="mnprocess" value="option2">
               </div>
               <div class="d-flex align-content-left m-2">
-                <button type="button" class="btn btn-secondary nav-link" data-toggle="tab" href="#" id="boton6" style="visibility: visible" onclick="FCFS()">Siguiente</button>    
+                <button type="button" class="btn btn-secondary" id="boton6" style="visibility: visible" onclick="FCFS()">Siguiente</button>    
               </div> 
             </div>
 
@@ -502,3 +502,13 @@
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
 </html>
+
+<script>
+  $('#boton6').click(function(){
+  $('.nav-tabs a[href="#workload"]').tab('show')
+});
+
+$('.btnNext').click(function(){
+  $('.nav-tabs > .active').next('li').find('a').trigger('click');
+});
+</script>
