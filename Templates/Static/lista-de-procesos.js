@@ -8,6 +8,8 @@ var cargando = false; //Variable booleana para saber si se están cargando los d
 var editando = false; //Variable booleana para saber si se están editando los datos un proceso 
 var anulado = false; //Variable booleana para saber si la carga de los datos de un nuevo proceso fue anulada
 
+var seGuardaronLosProcesos = false;
+
 function generarFila() {
 	
 	//Si no se está cargando o editando un proceso
@@ -115,12 +117,12 @@ function nuevaLista() {
 		
 		//Se agrega el botón para añadir nuevo proceso, el botón para guardar la lista de procesos, y el botón Siguiente
 		htmlTags = '<button type="button" class="btn btn-secondary" id="botonNuevoProceso" onclick="generarFila()">Nuevo Proceso</button>'+
-				   '<button type="button" class="btn btn-secondary btnNext" id="botonGuardarLista" onclick="guardarEnDB()">Guardar Lista y Continuar</button>'+
-				   '<button type="button" class="btn btn-secondary btnNext" id="botonContinuarSinGuardar" onclick="continuarSinGuardar()">Continuar sin Guardar</button>'
+				   '<button type="button" class="btn btn-secondary btnNext" id="botonGuardarLista" onclick="guardarEnDB()">Guardar en DB</button>'+
+				   '<button type="button" class="btn btn-secondary btnNext" id="botonContinuarSinGuardar" onclick="continuarProcesos()">Siguiente</button>'
 		$('#botonesCargaDeTrabajo').append(htmlTags);
 	}
 }
-	
+
 var caracter = "-"; //Caracter de separación del ciclo de vida
 var esValido; //Variable booleana para controlar si los datos del proceso son válidos
 
@@ -307,6 +309,8 @@ function guardarProc() {
 		
 		//Se incrementa el número de Id que corresponde al siguiente proceso
 		idProc++;
+
+		seGuardaronLosProcesos = false;
 	}
 }
 
@@ -355,6 +359,8 @@ function eliminar(nodo) {
 	
 	//Y se habilita el boton que deshace la eliminación
 	document.getElementById("botonDeshacer"+idP).style.display = "block";
+
+	seGuardaronLosProcesos = false;
 }
 
 function deshacer(nodo) {
@@ -384,6 +390,8 @@ function deshacer(nodo) {
 	
 	//Y se oculta el boton que deshacer
 	document.getElementById("botonDeshacer"+idP).style.display = "none";
+
+	seGuardaronLosProcesos = false;
 }
 
 //Variables usadas para resguardar los datos de un proceso antes de editar
@@ -427,7 +435,7 @@ function editar(nodo) {
 		
 	} else {
 		mostrarMensaje("alertaCargaDeTrabajo", "Primero termine la operación pendiente.");
-		}
+	}
 }
 
 function aceptarEd() {
@@ -448,6 +456,8 @@ function aceptarEd() {
 		
 		//Se indica que ya no se están editando los datos de un proceso
 		editando = false;
+
+		seGuardaronLosProcesos = false;
 	}
 }
 
@@ -489,7 +499,7 @@ function obtenerLista() {
 				prioridad: 0,
 				tiempoArribo: 0,
 				cicloVida: 0,
-				condicion:0,
+				condicion: 0,
 			};
 		
 		var i = 1; //Índice para recorrer toda la lista, proceso a proceso
@@ -532,25 +542,27 @@ function obtenerLista() {
 				//Se ocultan todos los botones de opciones correspondientes al proceso
 				document.getElementById("opciones"+i).style.display = "none";
 				
-			} else {
+			}// else {
 				//Se oculta la fila completa correspondiente al proceso eliminado 
-				document.getElementById(i).style.display = "none";
-				}
+				//document.getElementById(i).style.display = "none";
+				//}
 			i++;
 		}
 		
 		//Se oculta el encabezado de la tabla correspondiente a la columna Opciones
-		document.getElementById("opciones").style.display = "none";
+		//document.getElementById("opciones").style.display = "none";
 		
 		//Se ocultan los botones "Nuevo Proceso", "Guardar Lista y Continuar" y "Continuar sin Guardar"
-		document.getElementById("botonNuevoProceso").style.display = "none";
-		document.getElementById("botonGuardarLista").style.display = "none";
-		document.getElementById("botonContinuarSinGuardar").style.display = "none";
+		//document.getElementById("botonNuevoProceso").style.display = "none";
+		//document.getElementById("botonGuardarLista").style.display = "none";
+		//document.getElementById("botonContinuarSinGuardar").style.display = "none";
 		
 }
 
-function continuarSinGuardar() {
-		//Se continuará pero no se almacenará la lista de procesos en DB
+function continuarProcesos() {
+	tablaProcesos = [];
+	obtenerLista();
+	//Se continuará pero no se almacenará la lista de procesos en DB
 	continuarSinGuardar:{
 		
 		//Si ya se está cargando o editando un proceso no se continúa
@@ -563,11 +575,19 @@ function continuarSinGuardar() {
 		if (cantProc == 0) {
 			mostrarMensaje("errorCargaDeTrabajo", "La lista está vacia. Primero agregue procesos.");
 			break continuarSinGuardar;
-		}
-		
-		$("#modalContinuar").modal();
-		
+		}		
 	}
+	if (seGuardaronLosProcesos) {
+		$('a[href="#algmn"]').trigger("click"); // cambia a la pestaña colas multinivel
+	}
+	else {
+		$("#modalContinuar").modal();
+	}
+}
+
+// esta cosa es porque si lo meto en el atributo onclick de un boton no anda un carajo
+function continuarProcesosSinGuardar() {
+    $('a[href="#algmn"]').trigger("click"); // cambia a la pestaña colas multinivel
 }
 
 function guardarEnDB() {

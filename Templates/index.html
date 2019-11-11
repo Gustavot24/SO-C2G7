@@ -63,13 +63,13 @@
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-body">
-                      <p>Si continúa con ésta operación no se guardará la lista de procesos.</p>
+                      <p>No se guardó la lista de procesos. ¿Continuar de todas formas?</p>
                     </div>
                     <div class="modal-footer">
                       <div class="d-flex align-content-left m-2">
-                        <button type="button" class="btn btn-secondary btnNext" data-dismiss="modal" style="visibility: visible" onclick="obtenerLista()">Continuar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="continuarProcesosSinGuardar()">Sí</button>
                       </div>
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                     </div>
                   </div>
                 </div>
@@ -462,7 +462,7 @@
       </div>
     </div>
 
-    <!-- modal de continuar sin guardar la lista de procesos -->
+    <!-- modal de continuar sin guardar la lista de colas -->
     <div class="modal fade" id="modalContinuarSinGuardarColas" role="dialog">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -470,7 +470,7 @@
             <p>No se guardó la lista de colas de CPU. ¿Continuar de todas formas?</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="continuarQueNoAndaEnElHTML()">Sí</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="continuarColasSinGuardar()">Sí</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
           </div>
         </div>

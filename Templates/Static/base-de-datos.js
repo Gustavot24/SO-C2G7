@@ -128,6 +128,7 @@ function guardarProcesos(nombre) {
         if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
             alert(this.responseText); // SOLO PARA PRUEBAS, SE BORRA DESPUES
             mostrarMensaje("avisoCargaDeTrabajo", "Se guardó la lista de procesos"); // muestra el mensaje de que todo salio bien
+            seGuardaronLosProcesos = true;
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
@@ -156,7 +157,8 @@ function cargarProcesos(nombre) {
                     generarFila();
                 }
             }
-            mostrarMensaje("avisoCargaDeTrabajo", "Se cargó la lista de procesos");        
+            mostrarMensaje("avisoCargaDeTrabajo", "Se cargó la lista de procesos");
+            seGuardaronLosProcesos = true;
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);

@@ -85,6 +85,6 @@ function continuarColas() {
 }
 
 // esta cosa es porque si lo meto en el atributo onclick de un boton no anda un carajo
-function continuarQueNoAndaEnElHTML() {
+function continuarColasSinGuardar() {
     $('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
 }
