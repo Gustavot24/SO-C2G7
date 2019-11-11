@@ -43,6 +43,7 @@ function guardarParticiones(nombre) {
         if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
             alert(this.responseText); // SOLO PARA PRUEBAS, SE BORRA DESPUES
             mostrarMensaje("avisoCondicionesIniciales", "Se guardó la configuración de la memoria principal"); // muestra el mensaje de que todo salio bien
+            seGuardaronLasParticiones = true;
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
@@ -105,6 +106,7 @@ function cargarParticiones(nombre) {
             }
             //cargarParticionesVbles(); // ejecuta esta funcion de algoritmo.js para crear el object que tiene todos los datos de la pagina        
             mostrarMensaje("avisoCondicionesIniciales", "Se cargó la configuración de la memoria principal");
+            seGuardaronLasParticiones = true;
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);

@@ -184,7 +184,7 @@
                 <div class="mensajeError" id="errorCondicionesIniciales"></div>
               </div>
               <div class="d-flex align-content-left m-2">
-                <button type="button" class="btn btn-secondary nav-link" data-toggle="tab" href="#workload" id="boton6" style="visibility: visible">Siguiente</button>
+                <button type="button" class="btn btn-secondary nav-link" id="boton6" style="visibility: visible" onclick="continuarParticiones()">Siguiente</button>
               </div>
 
               <!-- modal de guardar particiones -->
@@ -416,6 +416,21 @@
       </div>
     </div>
 
+    <!-- modal de continuar sin guardar la lista de particiones -->
+    <div class="modal fade" id="modalContinuarSinGuardarParticiones" role="dialog">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p>No se guardó la configuración de la memoria principal. ¿Continuar de todas formas?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="continuarParticionesSinGuardar()">Sí</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <!-- modal de guardar lista de colas -->
     <div class="modal fade" id="todbcolas" role="dialog">
       <div class="modal-dialog modal-dialog-centered">
@@ -504,11 +519,11 @@
 </html>
 
 <script>
-  $('#boton6').click(function(){
+  /*$('#boton6').click(function(){
   $('.nav-tabs a[href="#workload"]').tab('show')
-});
+});*/
 
-$('.btnNext').click(function(){
+/*$('.btnNext').click(function(){
   $('.nav-tabs > .active').next('li').find('a').trigger('click');
-});
+});*/
 </script>

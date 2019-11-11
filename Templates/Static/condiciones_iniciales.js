@@ -1,5 +1,8 @@
 //Pestaña:Carga de condiciones iniciales
 
+// variable que controla si se guardaron las particiones
+var seGuardaronLasParticiones = false;
+
 //Esto es para el slider que muestra el porcentaje del SO
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
@@ -9,8 +12,10 @@ slider.oninput = function() {
     //var tamanoSO = Math.ceil(tamanoMP* ((this.value)/100));
     //output.innerHTML = tamanoSO;
     output.innerHTML = this.value;
+    seGuardaronLasParticiones = false;
 }
 
+document.getElementById("frtfit").on
 //Funcion para setear visibilidad de los botones
 function setVisible() {
     document.getElementById("div-particiones").style.visibility="visible";
@@ -202,4 +207,20 @@ function modalCargarParticiones() {
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
     xhttp.send(); // manda la peticion al servidor
+}
+
+// comprueba si se guardaron los cambios para pasar a la carga de trabajo
+// con info de https://stackoverflow.com/questions/39461076/how-to-change-active-bootstrap-tab-with-javascript
+function continuarParticiones() {
+    if (seGuardaronLasParticiones) { // si se guardo todo continua a la parte de carga de trabajo
+        $('a[href="#workload"]').trigger("click"); // cambia a la pestaña carga de trabajo
+    }
+    else { // si no se guardo todo avisa al usuario
+        $("#modalContinuarSinGuardarParticiones").modal(); // muestra el modal que avisa que no se guardo
+    }
+}
+
+// esta cosa es porque si lo meto en el atributo onclick de un boton no anda un carajo
+function continuarParticionesSinGuardar() {
+    $('a[href="#workload"]').trigger("click"); // cambia a la pestaña carga de trabajo
 }
