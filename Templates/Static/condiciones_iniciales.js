@@ -25,6 +25,12 @@ function setVisible() {
     document.getElementById("boton4").style.visibility="visible";
 }
 
+// habilita los controles de porcentaje del SO y otros
+// cuando se selecciona un tamaño de memoria
+function habilitarControles() {
+    document.getElementById("myRange").disabled = false;
+}
+
 //Object que contine todos los datos ingresados por el usuario en cuanto a las
 //condiciones iniciales
 var condicionesInciales ={ 
@@ -113,6 +119,21 @@ function cargarParticionesVbles() {
 //Funcion que permite cargar el object cuando las particiones son del mismo tamaño.
 //Cuando el usuario presiona el boton Agregar Particiones iguales.
 function cargarParticionesFijas() {
+    var tamanoMP = parseInt(document.getElementById("mp").value);
+    var porcentaje = parseInt(document.getElementById("myRange").value) / 100;
+    var tamanoSO = Math.ceil(tamanoMP * porcentaje);
+
+    var cantParticiones = parseInt(document.getElementById("cantpart").value);
+    var tamanoParticion = parseInt(document.getElementById("tamanopart").value);
+
+    tamanoLibre = tamanoMP - tamanoSO;
+    direccionLibre = tamanoSO;
+
+    if ((cantParticiones * tamanoParticion) > tamanoLibre) {
+        $("#addprt").modal('hide');
+        mostrarMensaje("errorCondicionesIniciales", "Las particiones ingresadas superan el espacio disponible: " + tamanoLibre);
+        return;
+    }
     document.getElementById("boton1").disabled=true;
     document.getElementById("boton2").disabled=true;
     document.getElementById("boton3").disabled=true;
@@ -128,16 +149,9 @@ function cargarParticionesFijas() {
         if($('#wrtfit').is(':checked')) { condicionesInciales.algoritmo="W"}
     }
     
-    var tamanoMP = parseInt(document.getElementById("mp").value);
-    var porcentaje =parseInt(document.getElementById("myRange").value)/100;
-    var tamanoSO = Math.ceil(tamanoMP* porcentaje);
     condicionesInciales.tamanoMP=tamanoMP;
     condicionesInciales.porcentajeSO=porcentaje;
     condicionesInciales.tamanoSO=tamanoSO;
-    tamanoLibre= tamanoMP-tamanoSO;
-    direccionLibre = tamanoSO;
-    var cantParticiones =parseInt(document.getElementById("cantpart").value);
-    var tamanoParticion =parseInt(document.getElementById("tamanopart").value);
 
     for (let i = 0; i < cantParticiones; i++) {
         var dirfin= direccionLibre+tamanoParticion-1;

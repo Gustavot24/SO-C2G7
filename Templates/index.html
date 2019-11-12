@@ -103,8 +103,8 @@
               <form class="form-inline">
                 <div class="form-group mx-sm-3 mb-2">
                   <label for="szmem">Tamaño de la Memoria (KB)</label>
-                  <select class="form-control ml-2" id="mp">
-                    <option>Selecciona</option>
+                  <select class="form-control ml-2" id="mp" onchange="habilitarControles()">
+                    <option disabled="true" selected="true">Selecciona</option>
                     <option value="128">128</option>
                     <option value="256">256</option>
                     <option value="512">512</option>
@@ -116,7 +116,7 @@
               <div class="d-flex align-items-center justify-items-start m-3">
                 <label for="rpm">Porcentaje ocupado por el S.O.</label>
                 <form class="field-range ml-2">
-                  <input class="custom-range ml-3" id="myRange" value="10" type="range" min="10" max="25" />
+                  <input class="custom-range ml-3" id="myRange" value="10" type="range" min="10" max="25" disabled="true" />
                 </form>
                 <label for="rpm" class="ml-4" >Valor: </label>
                 <label for="rpm" id="demo"></label>
