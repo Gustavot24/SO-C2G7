@@ -119,6 +119,7 @@ function guardarProcesos(nombre) {
         mostrarMensaje("errorCargaDeTrabajo", "El nombre de la lista de procesos no puede estar en blanco"); // muestra el mensaje de error
         return; // termina la funcion
     }
+    obtenerLista();
     var tablaConvertidaEnString = JSON.stringify(tablaProcesos); // convierte el listado de procesos en un string de un jota son
     var stringDeConsulta = "INSERT INTO Simulador.dbo.Procesos (nombre, listado) VALUES (" +
         "'" + nombre + "', " +

@@ -540,7 +540,7 @@ function obtenerLista() {
 				tablaProcesos.push(proceso);
 				
 				//Se ocultan todos los botones de opciones correspondientes al proceso
-				document.getElementById("opciones"+i).style.display = "none";
+				 //document.getElementById("opciones"+i).style.display = "none";
 				
 			}// else {
 				//Se oculta la fila completa correspondiente al proceso eliminado 
