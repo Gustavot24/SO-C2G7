@@ -18,22 +18,24 @@ slider.oninput = function() {
 document.getElementById("frtfit").on
 //Funcion para setear visibilidad de los botones
 function setVisible() {
-    document.getElementById("div-particiones").style.visibility="visible";
-    document.getElementById("boton1").disabled=true; 
-    document.getElementById("boton2").disabled=true;
-    document.getElementById("boton3").disabled=true;
-    document.getElementById("boton4").style.visibility="visible";
+    document.getElementById("div-particiones").style.visibility = "visible";
+    document.getElementById("boton1").disabled = true; 
+    document.getElementById("boton2").disabled = true;
+    document.getElementById("boton3").disabled = true;
+    document.getElementById("boton4").style.visibility = "visible";
 }
 
 // habilita los controles de porcentaje del SO y otros
 // cuando se selecciona un tamaño de memoria
 function habilitarControles() {
-    document.getElementById("myRange").disabled = false;
+    document.getElementById("myRange").disabled = false; // habilita el range de porcentaje del SO
+    document.getElementById("boton1").disabled = false; // habilita el boton de agregar varias particiones iguales
+    document.getElementById("boton2").disabled = false; // habilita el boton de agregar particiones manualmente
 }
 
 //Object que contine todos los datos ingresados por el usuario en cuanto a las
 //condiciones iniciales
-var condicionesInciales ={ 
+var condicionesInciales = { 
     "tamanoMP": null,
     "porcentajeSO": null,
     "tamanoSO": null,
@@ -43,9 +45,9 @@ var condicionesInciales ={
 };
 
 //Variables globales
-var idPart=1;
-var direccionLibre=0;
-var tamanoLibre =0;
+var idPart = 1;
+var direccionLibre = 0;
+var tamanoLibre = 0;
 
 //Funcion que carga en el object los datos para las particiones de distintos tamaños. 
 //Cuando presiona el boton Agregar Particiones Manualmente
@@ -129,10 +131,10 @@ function cargarParticionesFijas() {
     tamanoLibre = tamanoMP - tamanoSO;
     direccionLibre = tamanoSO;
 
-    if ((cantParticiones * tamanoParticion) > tamanoLibre) {
-        $("#addprt").modal('hide');
-        mostrarMensaje("errorCondicionesIniciales", "Las particiones ingresadas superan el espacio disponible: " + tamanoLibre);
-        return;
+    if ((cantParticiones * tamanoParticion) > tamanoLibre) { // si las particiones agregadas superan el tamaño disponible no deberia agregar
+        $("#addprt").modal('hide'); // cierra el modal
+        mostrarMensaje("errorCondicionesIniciales", "Las particiones ingresadas superan el espacio disponible: " + tamanoLibre); // muestra el error
+        return; // termina la funcion
     }
     document.getElementById("boton1").disabled=true;
     document.getElementById("boton2").disabled=true;
@@ -188,6 +190,7 @@ function cargarParticionesFijas() {
     $("#addprt").modal('hide');
     document.getElementById("div-particiones").style.visibility="visible";
     document.getElementById("boton5").style.visibility="visible";
+    mostrarMensaje("avisoCondicionesIniciales", "Se cargaron las particiones");
     console.log(condicionesInciales);
 }
 
