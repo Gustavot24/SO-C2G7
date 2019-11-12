@@ -24,7 +24,7 @@
       </div>
 
       <div class="row mx-lg-n5 mt-4 align-items-center justify-content-center">
-        <div class="col-9 m-0">
+        <div class="col-9 m-0 mb-5">
           <ul class="nav nav-tabs rounded border-0" role="tablist">
             <li class="nav-item">
               <a class="nav-link active" data-toggle="tab" href="#icondition">Condiciones Iniciales</a>
@@ -183,8 +183,8 @@
                 <div class="mensajeAviso" id="avisoCondicionesIniciales"></div>
                 <div class="mensajeError" id="errorCondicionesIniciales"></div>
               </div>
-              <div class="d-flex align-content-left m-2">
-                <button type="button" class="btn btn-secondary nav-link" id="boton6" style="visibility: visible" onclick="continuarParticiones()">Siguiente</button>
+              <div class="d-flex justify-content-end align-items-center mr-5">
+                <button type="button" class="btn btn-secondary" id="boton6" style="visibility: visible" onclick="continuarParticiones()">Siguiente</button>
               </div>
 
               <!-- modal de guardar particiones -->
@@ -212,11 +212,22 @@
 
             <!-- pestaña de resultados -->
             <div id="result" class="container tab-pane fade"><br>
-              <div class="form-inline m-3" >
-                <label for="time">Duracion de cada Batido del Reloj</label>
-                <input type="text" class="form-control ml-3" id="time" placeholder="Tiempo en segundos">
+              
+              <div style="margin-bottom: 50px;">
+                <h4>Cola de CPU</h4>
+                <div class="progress" id="cola_cpu">  
+                </div>
               </div>
-              <div class="row d-inline-flex ml-5 justify-content-center rounded" id="grafica" style="visibility: hidden;">
+              <div>
+                <h4>Cola de E/S</h4>
+                <div class="progress" id="cola_es"> 
+                </div>
+              </div>
+              <h4 class="mt-5">Diagrama segun un t determinado</h4>
+              <div class="d-flex justify-content-center rounded">
+                <button type="button" class="btn btn-secondary" id="mostrargrafica" onclick="mostrarGrafica()">Mostrar</button>
+              </div>              
+              <div class="row d-inline-flex ml-5 mt-2 justify-content-center rounded" id="grafica">
                 <div class="col align-self-center">
                   <p>Memoria: </p>
                   <div class="d-flex flex-column m-2 text-dark">
@@ -272,24 +283,8 @@
                   </div>
                 </div>
               </div>
-              <div style="margin-bottom: 50px;">
-                <h1>Cola de CPU</h1>
-                <div class="progress" id="cola_cpu"> 
-                  
-                </div>
-              </div>
-
-              <div>
-                  <h1>Cola de E/S</h1>
-                  <div class="progress" id="cola_es"> 
-                  </div>
-                </div>
-              <div class="form-check form-check-inline m-3">
-                <label class="form-check-label" for="mnprocess">Avanzar Manualmente</label>
-                <input class="form-check-input ml-2" type="radio" name="inlineRadioOptions" id="mnprocess" value="option2">
-              </div>
-              <div class="d-flex align-content-left m-2">
-                <button type="button" class="btn btn-secondary" id="boton6" style="visibility: visible" onclick="FCFS()">Siguiente</button>    
+              <div class="d-flex justify-content-end mr-5 mt-3">
+                <button type="button" class="btn btn-secondary" style="visibility: visible">Guardar</button>    
               </div> 
             </div>
 
@@ -493,7 +488,7 @@
     </div>
       
     <!-- pie de pagina -->
-    <footer id="sticky-footer" class="py-4 text-white-50 sticky-bottom">
+    <footer id="sticky-footer" class="py-4 text-white-50 sticky-bottom mt-2">
       <div class="container ml-0">
         <div class="row align-items-center justify-content-start">
           <div class="col-2">

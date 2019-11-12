@@ -22,6 +22,13 @@ function variable (){
     }
 }
 
+function mostrarGrafica() {
+    if(document.getElementById("mostrargrafica").onclick){
+        document.getElementById("grafica").style.display= "block";
+        document.getElementById("mostrargrafica").style.display= "none";
+    }
+
+}
 // muestra un mensaje que da un aviso o un error
 // ej: al guardar algo en la db o cuando ingresas algo mal
 // se le pasa el id del elemento html y el contenido del mensaje

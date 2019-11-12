@@ -68,6 +68,7 @@ a:link, a:visited {
 #grafica{
     background-color:#17202A;
     color: #D0D3D4;
+    display: none !important;
 }
 
 #sticky-footer {
