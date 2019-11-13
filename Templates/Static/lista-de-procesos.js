@@ -561,21 +561,17 @@ function obtenerLista() {
 
 function continuarProcesos() {
 	tablaProcesos = [];
-	obtenerLista();
-	//Se continuará pero no se almacenará la lista de procesos en DB
-	continuarSinGuardar:{
-		
-		//Si ya se está cargando o editando un proceso no se continúa
-		if ((cargando == true) || (editando == true)) {
-			mostrarMensaje("alertaCargaDeTrabajo", "Primero termine la operación pendiente.");
-			break continuarSinGuardar;
-		}
-		
-		//Si la lista está vacia
-		if (cantProc == 0) {
-			mostrarMensaje("errorCargaDeTrabajo", "La lista está vacia. Primero agregue procesos.");
-			break continuarSinGuardar;
-		}		
+	obtenerLista();		
+	//Si ya se está cargando o editando un proceso no se continúa
+	if ((cargando == true) || (editando == true)) {
+		mostrarMensaje("alertaCargaDeTrabajo", "Primero termine la operación pendiente.");
+		return;
+	}
+	
+	//Si la lista está vacia
+	if (cantProc == 0) {
+		mostrarMensaje("errorCargaDeTrabajo", "La lista está vacia. Primero agregue procesos.");
+		return;
 	}
 	if (seGuardaronLosProcesos) {
 		$('a[href="#algmn"]').trigger("click"); // cambia a la pestaña colas multinivel
