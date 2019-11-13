@@ -59,7 +59,7 @@ function cargarParticiones(nombre) {
     var tablaParticiones; // variable que va a contener el json de las particiones sacado de la db
     var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
     xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
-        if (this.readyState == 4 && this.status == 200) {
+        if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
             console.log(this.responseText); // muestra por consola la respuesta del servidor
             document.getElementById("prtfixed").checked = true; // chequea el radio de particiones fijas
             fixed(); // ejecuta la funcion ???
@@ -120,19 +120,18 @@ function guardarProcesos(nombre) {
         mostrarMensaje("errorCargaDeTrabajo", "El nombre de la lista de procesos no puede estar en blanco"); // muestra el mensaje de error
         return; // termina la funcion
     }
-    obtenerLista();
+    obtenerLista(); // ejecuta la funcion que crea el array de objetos de procesos
     var tablaConvertidaEnString = JSON.stringify(tablaProcesos); // convierte el listado de procesos en un string de un jota son
     var stringDeConsulta = "INSERT INTO Simulador.dbo.Procesos (nombre, listado) VALUES (" +
         "'" + nombre + "', " +
         "'" + tablaConvertidaEnString + "');"; // crea el string de la consulta
-        // si no me equivoco esto es re vulnerable a una inyeccion sql
-    alert(stringDeConsulta); // SOLO PARA PRUEBAS, SE BORRA DESPUES
+    console.log(stringDeConsulta); // muestra en consola el string de la consulta
     var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
     xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
         if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
-            alert(this.responseText); // SOLO PARA PRUEBAS, SE BORRA DESPUES
+            console.log(this.responseText); // muestra en consola la respuesta del servidor
             mostrarMensaje("avisoCargaDeTrabajo", "Se guardó la lista de procesos"); // muestra el mensaje de que todo salio bien
-            seGuardaronLosProcesos = true;
+            seGuardaronLosProcesos = true; // pone a true la variable que indica que se guardaron los procesos
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
@@ -141,32 +140,34 @@ function guardarProcesos(nombre) {
 
 // recupera una lista de procesos de la db y la carga en la tabla del html
 function cargarProcesos(nombre) {
-    nuevaLista();
+    nuevaLista(); // ejecuta la funcion que prepara la tabla para ingresar una nueva lista
     var tabla = document.getElementById("tabla-procesos").tBodies.item(0); // variable que apunta a la tabla de procesos
-    var tablaConvertidaEnJSON;
+    var tablaConvertidaEnJSON; // variable que va a contener la respuesta del servidor convertida en objeto
     var stringDeConsulta = "SELECT * FROM Simulador.dbo.Procesos WHERE nombre = '" + nombre + "'"; // crea el string de la consulta
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            tablaConvertidaEnJSON = JSON.parse(this.responseText);
+    console.log(stringDeConsulta); // muestra por consola el string de la consulta
+    var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
+    xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
+        if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
+            console.log(this.responseText); // muestra por consola la respuesta del servidor
+            tablaConvertidaEnJSON = JSON.parse(this.responseText); // convierte la respuesta del servidor en un objeto
             tablaProcesos = JSON.parse(tablaConvertidaEnJSON.recordset[0].listado); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
-            for (var i = 0; i < tablaProcesos.length; i++) { // itera  sobre el array de objects
+            for (var i = 0; i < tablaProcesos.length; i++) { // itera sobre el array de objects y va cargando los datos
                 tabla.rows[i].cells[0].innerHTML = tablaProcesos[i].idProceso;
                 tabla.rows[i].cells[1].children[0].value = tablaProcesos[i].tamaño;
                 tabla.rows[i].cells[2].children[0].selectedIndex = tablaProcesos[i].prioridad - 1;
                 tabla.rows[i].cells[3].children[0].value = tablaProcesos[i].tiempoArribo;
                 tabla.rows[i].cells[4].children[0].value = tablaProcesos[i].cicloVida.join("-");
-                guardarProc();
-                if (i < tablaProcesos.length - 1) {
+                guardarProc(); // ejecuta la funcion que guarda ese proceso cargado en la tabla
+                if (i < tablaProcesos.length - 1) { // si no es el ultimo proceso que falta cargar crea una nueva fila para cargar el siguiente
                     generarFila();
                 }
             }
-            mostrarMensaje("avisoCargaDeTrabajo", "Se cargó la lista de procesos");
-            seGuardaronLosProcesos = true;
+            mostrarMensaje("avisoCargaDeTrabajo", "Se cargó la lista de procesos"); // muestra un mensaje de que se cargo todo bien
+            seGuardaronLosProcesos = true; // pone a true la variable que indica que se guardaron los procesos
         }
     };
-    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
-    xhttp.send();
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
+    xhttp.send(); // manda la peticion al servidor
 }
 
 // guarda la lista de colas que esta en el html en la db
@@ -175,30 +176,30 @@ function guardarColas(nombre) {
         mostrarMensaje("errorColasMultinivel", "El nombre de la lista de colas no puede estar en blanco"); // muestra el mensaje de error
         return; // termina la funcion
     }
-    var tablaConvertidaEnString = [];
-    var tablaColas = document.getElementById("tabla-colas").tBodies.item(0);
-    for (var i = 0; i < tablaColas.rows.length; i++) {
-        var cola = {
+    var tablaConvertidaEnString = []; // tabla que va a contener el array de colas a meter en la db
+    var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
+    for (var i = 0; i < tablaColas.rows.length; i++) { // itera sobre las filas de la tabla de colas
+        var cola = { // crea un objeto con los datos de una cola
             idCola: tablaColas.rows[i].cells[0].innerHTML,
             algoritmo: tablaColas.rows[i].cells[1].children[0].children[0].value,
         }
-        tablaConvertidaEnString.push(cola);
+        tablaConvertidaEnString.push(cola); // agrega ese objeto al array de colas
     }
-    tablaConvertidaEnString = JSON.stringify(tablaConvertidaEnString);
-    var stringDeConsulta = "INSERT INTO Simulador.dbo.Colas (nombre, listado) VALUES ("  +
+    tablaConvertidaEnString = JSON.stringify(tablaConvertidaEnString); // convierte el array de colas en un string json
+    var stringDeConsulta = "INSERT INTO Simulador.dbo.Colas (nombre, listado) VALUES (" +
         "'" + nombre + "', " +
-        "'" + tablaConvertidaEnString + "');";
-    alert(stringDeConsulta); // SOLO PARA PRUEBAS, SE BORRA DESPUES
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            alert(this.responseText);
-            mostrarMensaje("avisoColasMultinivel", "Se guardó la lista de colas de CPU");
-            seGuardaronLasColas = true;
+        "'" + tablaConvertidaEnString + "');"; // crea e string de la consulta
+    console.log(stringDeConsulta); // muestra por consola el string de la consulta
+    var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
+    xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
+        if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
+            console.log(this.responseText); // muestra por consola la respuesta del servidor
+            mostrarMensaje("avisoColasMultinivel", "Se guardó la lista de colas de CPU"); // muestra un mensaje de que todo salio bien
+            seGuardaronLasColas = true; // pone a true la variable que indica que se guardaron las colas
         }
     };
-    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
-    xhttp.send();
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
+    xhttp.send(); // manda la peticion al servidor
 }
 
 // recupera una lista de colas de la db y la carga en la tabla del html
@@ -206,20 +207,22 @@ function cargarColas(nombre) {
     var tabla = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
     var tablaConvertidaEnJSON;
     var stringDeConsulta = "SELECT * FROM Simulador.dbo.Colas WHERE nombre = '" + nombre + "';"; // crea el string de la consulta
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            tablaConvertidaEnJSON = JSON.parse(this.responseText);
+    console.log(stringDeConsulta); // muestra por consola el string de consulta
+    var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
+    xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
+        if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
+            console.log(this.responseText); // muestra por consola la respuesta del servidor
+            tablaConvertidaEnJSON = JSON.parse(this.responseText); // convierte la respuesta del servidor en un objeto
             tablaColas = tablaConvertidaEnJSON.recordset[0].listado; // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
-            tablaColas = JSON.parse(tablaColas);
-            tabla.deleteRow(0);
-            for (var i = 0; i < tablaColas.length; i++) { // itera  sobre el array de objects
-                var nuevaFila = tabla.insertRow();
-                var celdaIdCola = document.createElement("th");
-                nuevaFila.appendChild(celdaIdCola);
-                var celdaAlgoritmo = nuevaFila.insertCell(1);
-                celdaIdCola.innerHTML = tablaColas[i].idCola;
-                celdaIdCola.scope = "row";
+            tablaColas = JSON.parse(tablaColas); // convierte el string de la lista de colas en un array de objetos
+            tabla.deleteRow(0); // elimina la primera fila de la tabla de colas (que se crea por defecto)
+            for (var i = 0; i < tablaColas.length; i++) { // itera sobre el array de objects
+                var nuevaFila = tabla.insertRow(); // agrega una fila a la tabla
+                var celdaIdCola = document.createElement("th"); // crea una celda th
+                nuevaFila.appendChild(celdaIdCola); // agrega esa celda th a la fila
+                var celdaAlgoritmo = nuevaFila.insertCell(1); // agrega una celda comun a la fila
+                celdaIdCola.innerHTML = tablaColas[i].idCola; // carga el id de la cola en su celda
+                celdaIdCola.scope = "row"; // a esa celda le pone el scope "row"
                 celdaAlgoritmo.innerHTML = 
                     '<div class="form-group">' +
                     '  <select class="form-control" id="typealgm">' +
@@ -229,13 +232,13 @@ function cargarColas(nombre) {
                     '    <option value="Round Robin">Round Robin</option>' +
                     '    <option value="Por Prioridad">Por Prioridad</option>' +
                     '  </select>' +
-                    '</div>';
-                celdaAlgoritmo.children[0].children[0].value = tablaColas[i].algoritmo;
+                    '</div>'; // agrega un div con un select adentro a la celda de algoritmo
+                celdaAlgoritmo.children[0].children[0].value = tablaColas[i].algoritmo; // selecciona el algoritmo en el select
             }
-            mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas");
-            seGuardaronLasColas = true;
+            mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas"); // muestra un mensaje de que se cargo todo bien
+            seGuardaronLasColas = true; // pone a true la variable que indica que se guardaron las colas
         }
     };
-    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
-    xhttp.send();
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
+    xhttp.send(); // manda la peticion al servidor
 }
