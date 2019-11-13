@@ -36,14 +36,13 @@ function guardarParticiones(nombre) {
         "'" + nombre + "', " +
         tamanoMemoria + ", " + porcentajeSO + ", '" + algoritmo + "', " +
         "'" + tablaConvertidaEnString + "');"; // crea el string de la consulta
-        // si no me equivoco esto es re vulnerable a una inyeccion sql
-    alert(stringDeConsulta); // SOLO PARA PRUEBAS, SE BORRA DESPUES
+    console.log(stringDeConsulta); // muestra en la consola el string de la consulta
     var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
     xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
         if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
-            alert(this.responseText); // SOLO PARA PRUEBAS, SE BORRA DESPUES
+            console.log(this.responseText); // muestra en la consola la respuesta del servidor
             mostrarMensaje("avisoCondicionesIniciales", "Se guardó la configuración de la memoria principal"); // muestra el mensaje de que todo salio bien
-            seGuardaronLasParticiones = true;
+            seGuardaronLasParticiones = true; // pone a true la variable que indica que se guardaron las particiones
         }
     };
     xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
@@ -56,31 +55,33 @@ function guardarParticiones(nombre) {
 function cargarParticiones(nombre) {
     var tabla = document.getElementById("tabla-particiones").tBodies.item(0); // variable que apunta a la tabla de particiones
     var stringDeConsulta = "SELECT * FROM Simulador.dbo.ParticionesFijas WHERE nombre = '" + nombre + "';"; // crea el string de la consulta
-    var tablaParticiones;
+    console.log(stringDeConsulta); // muestra por consola el string de consulta
+    var tablaParticiones; // variable que va a contener el json de las particiones sacado de la db
     var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
-    xhttp.onreadystatechange = function() {
+    xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
         if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("prtfixed").checked = true;
-            fixed();
-            tabla.deleteRow(0);
-            document.getElementById("div-particiones").style.visibility="visible";
-            tablaParticiones = JSON.parse(this.responseText).recordset[0];
-            condicionesInciales.tipoParticion = "F";
+            console.log(this.responseText); // muestra por consola la respuesta del servidor
+            document.getElementById("prtfixed").checked = true; // chequea el radio de particiones fijas
+            fixed(); // ejecuta la funcion ???
+            tabla.deleteRow(0); // elimina la primera fila de la tabla (donde se cargan los datos de una particion)
+            document.getElementById("div-particiones").style.visibility="visible"; // hace visible el div que contiene la tabla de particiones
+            tablaParticiones = JSON.parse(this.responseText).recordset[0]; // convierte a un array de objetos la tabla de particiones sacada de la db
+            condicionesInciales.tipoParticion = "F"; // en la variable global de condiciones iniciales pone que el tipo de particion es fija
             document.getElementById("mp").value = tablaParticiones.tamanoMemoria; // asigna el valor del tamaño de memoria al select
-            condicionesInciales.tamanoMP = tablaParticiones.tamanoMemoria;
+            condicionesInciales.tamanoMP = tablaParticiones.tamanoMemoria; // guarda el tamaño de la memoria en la variable global de condiciones iniciales
             document.getElementById("myRange").value = tablaParticiones.porcentajeSO; // asigna el valor del porcentaje del SO al range
             document.getElementById("demo").innerHTML = tablaParticiones.porcentajeSO; // asigna el valor del porcentaje del SO al label
-            condicionesInciales.porcentajeSO = parseInt(tablaParticiones.porcentajeSO) / 100;
-            condicionesInciales.tamanoSO = Math.ceil(condicionesInciales.tamanoMP * condicionesInciales.porcentajeSO);
-            if (tablaParticiones.algoritmo == "firstfit") {
+            condicionesInciales.porcentajeSO = parseInt(tablaParticiones.porcentajeSO) / 100; // asigna el porcentaje ocupado por el SO a la variable de condiciones iniciales
+            condicionesInciales.tamanoSO = Math.ceil(condicionesInciales.tamanoMP * condicionesInciales.porcentajeSO); // asigna el tamaño del SO a la variable de condiciones iniciales
+            if (tablaParticiones.algoritmo == "firstfit") { // si el algoritmo es first fit chequea su radio
                 document.getElementById("bstfit").checked = false;
                 document.getElementById("frtfit").checked = true;
-                condicionesInciales.algoritmo = "FF";
+                condicionesInciales.algoritmo = "FF"; // pone en la variable de condiciones iniciales que el algoritmo es first fit
             }
-            if (tablaParticiones.algoritmo == "bestfit") {
+            if (tablaParticiones.algoritmo == "bestfit") { // si el algoritmo es best fit chequea su radio
                 document.getElementById("frtfit").checked = false;
                 document.getElementById("bstfit").checked = true;
-                condicionesInciales.algoritmo = "B";
+                condicionesInciales.algoritmo = "B"; // pone en la variable de condiciones iniciales que el algoritmo es best fit
             }
             var tablaConvertidaEnJSON = JSON.parse(tablaParticiones.listado); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
             for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
@@ -93,7 +94,7 @@ function cargarParticiones(nombre) {
                 celdaDirInicio.innerHTML = tablaConvertidaEnJSON[i].dirInicio;
                 celdaDirFin.innerHTML = tablaConvertidaEnJSON[i].dirFin;
                 celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamaño;
-                var particion = {
+                var particion = { // crea un objeto con los datos dela particion recien cargada
                     idParticion: Number(tablaConvertidaEnJSON[i].idParticion),
                     dirInicio: Number(tablaConvertidaEnJSON[i].dirInicio),
                     dirFin: Number(tablaConvertidaEnJSON[i].dirFin),
@@ -102,15 +103,15 @@ function cargarParticiones(nombre) {
                     idProceso: null,
                     FI: 0,
                 };
-                condicionesInciales.tablaParticiones.push(particion);
+                condicionesInciales.tablaParticiones.push(particion); // pone esa particion en el array tablaParticiones de la variable de condiciones iniciales
             }
             //cargarParticionesVbles(); // ejecuta esta funcion de algoritmo.js para crear el object que tiene todos los datos de la pagina        
-            mostrarMensaje("avisoCondicionesIniciales", "Se cargó la configuración de la memoria principal");
-            seGuardaronLasParticiones = true;
+            mostrarMensaje("avisoCondicionesIniciales", "Se cargó la configuración de la memoria principal"); // muestra un mensaje de que se cargo todo bien
+            seGuardaronLasParticiones = true; // pone a true la variable que indica que se guardaron las particiones
         }
     };
-    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true);
-    xhttp.send();
+    xhttp.open("POST", "/ejecutarConsulta?stringDeConsulta=" + stringDeConsulta, true); // hace un post con la peticion ajax
+    xhttp.send(); // manda la peticion al servidor
 }
 
 // guarda la lista de procesos que esta en el html en la db
