@@ -37,8 +37,8 @@ request.query('select * from dbo.ParticionesFijas', function (err, resultado) { 
 
 // hace un get para devolver el html al cargar la pagina
 app.get('/', function(request, response) {
-    response.sendFile('C:/Users/emmah/repositorio local del tpi/Templates/index.html');
-});
+    response.sendFile('D:/GitHub/Sistemas Operativos/Simulador C2G7/SO-C2G7/Templates/index.html');
+}); //C:/Users/emmah/repositorio local del tpi/Templates
 
 // hace que se acceda a la pagina desde el puerto 8000
 // e imprime eso en consola

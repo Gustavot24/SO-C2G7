@@ -86,5 +86,19 @@ function continuarColas() {
 
 // esta cosa es porque si lo meto en el atributo onclick de un boton no anda un carajo
 function continuarColasSinGuardar() {
-    $('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
+continuarColasSinGuardar:{ // falta implementar similar para agregarColas y continuarColas...
+		
+		var algoritmo = document.getElementById("typealgm").value;
+		
+		if (algoritmo == "Round Robin") {
+		
+			validarQuantum();
+			
+			if (quantumValido == false) {
+				break continuarColasSinGuardar;
+			}
+		}
+		
+		$('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
+	}
 }
