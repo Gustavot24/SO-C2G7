@@ -223,66 +223,72 @@
                 <div class="progress" id="cola_es"> 
                 </div>
               </div>
+              <div class="d-flex justify-content-center rounded">
+                <button type="button" class="btn btn-secondary" id="llenarColas" onclick="llenarColas()">Iniciar</button>
+              </div>
               <h4 class="mt-5">Diagrama segun un t determinado</h4>
               <div class="d-flex justify-content-center rounded">
                 <button type="button" class="btn btn-secondary" id="mostrargrafica" onclick="mostrarGrafica()">Mostrar</button>
-              </div>              
-              <div class="row d-inline-flex ml-5 mt-2 justify-content-center rounded" id="grafica">
-                <div class="col align-self-center">
-                  <p>Memoria: </p>
-                  <div class="d-flex flex-column m-2 text-dark">
-                    <div class="p-2 bg-white">Flex item 1</div>
-                    <div class="p-2 bg-warning">Flex item 2</div>
-                    <div class="p-2 bg-primary">Flex item 3</div>
-                    <div class="p-2 bg-white">Flex item 1</div>
-                    <div class="p-2 bg-warning">Flex item 2</div>
-                  </div>
-                </div>
-                <div class="col align-self-start">
-                  <div class="d-flex align-content-center justify-content-center">
-                    <p class="mt-3">En t vigente:</p>
-                    <p class="mt-3"></p>
-                  </div>
-                  <div class="col align-content-center justify-content-center">
-                    <p>CPU: </p>
-                    <div class="d-flex align-content-center justify-content-center bg-white">
-                      <p class="text-dark text-center">2</p>
-                    </div>
-                  </div>
-                  <div class="col align-content-center justify-content-center">
-                    <p class="mt-3">Entrada: </p>
-                    <div class="d-flex align-content-center justify-content-center bg-white">
-                      <p class="text-dark text-center">5</p>
-                    </div>
-                  </div>
-                  <div class="col align-content-center justify-content-center">
-                    <p class="mt-3">Salida: </p>
-                    <div class="d-flex align-content-center justify-content-center bg-white">
-                      <p class="text-dark text-center">libre</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col align-self-center">
-                  <p>Entrada: </p>
-                  <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark" id="input">
-                    <div class="p-2 bg-white">Flex item 1</div>
-                    <div class="p-2 bg-warning">Flex item 2</div>
-                    <div class="p-2 bg-primary">Flex item 3</div>
-                  </div>
-                  <p>CPU: </p>
-                  <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark">
-                    <div class="p-2 bg-white">Flex item 1</div>
-                    <div class="p-2 bg-warning">Flex item 2</div>
-                    <div class="p-2 bg-primary">Flex item 3</div>
-                  </div>
-                  <p>Salidas: </p>
-                  <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark">
-                    <div class="p-2 bg-white">Flex item 1</div>
-                    <div class="p-2 bg-warning">Flex item 2</div>
-                    <div class="p-2 bg-primary">Flex item 3</div>
-                  </div>
-                </div>
               </div>
+			  
+			<div id="mostrarGraf" style="display:none">
+			
+				<div class="row d-inline-flex ml-5 justify-content-center rounded" id="grafica">
+					<div class="col align-self-center">
+					  <p>Memoria: </p>
+					  <div class="d-flex flex-column m-2 text-dark">
+						<div class="p-2 bg-white">Flex item 1</div>
+						<div class="p-2 bg-warning">Flex item 2</div>
+						<div class="p-2 bg-primary">Flex item 3</div>
+						<div class="p-2 bg-white">Flex item 1</div>
+						<div class="p-2 bg-warning">Flex item 2</div>
+					  </div>
+					</div>
+					<div class="col align-self-start">
+					  <div class="d-flex align-content-center justify-content-center">
+						<p class="mt-3" id="tiempoActual">Tiempo Actual:</p>
+					  </div>
+					  <div class="col align-content-center justify-content-center">
+						<p>CPU: </p>
+						<div class="d-flex align-content-center justify-content-center bg-white">
+						  <p class="text-dark text-center" id="usoDeCPU"></p>
+						</div>
+					  </div>
+					  <div class="col align-content-center justify-content-center">
+						<p class="mt-3">Entrada: </p>
+						<div class="d-flex align-content-center justify-content-center bg-white">
+						  <p class="text-dark text-center" id="usoDeE"></p>
+						</div>
+					  </div>
+					  <div class="col align-content-center justify-content-center">
+						<p class="mt-3">Salida: </p>
+						<div class="d-flex align-content-center justify-content-center bg-white">
+						  <p class="text-dark text-center" id="usoDeS"></p>
+						</div>
+					  </div>
+					</div>
+					<div class="col align-self-center">
+					  <p>Cola de CPU: </p>
+					  <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark" id="colaDeCPU">
+						
+					  </div>
+					  <p>Cola de Entrada: </p>
+					  <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark" id="colaDeE">
+						
+					  </div>
+					  <p>Cola de Salida: </p>
+					  <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark" id="colaDeS">
+						
+					  </div>
+					</div>
+				</div>
+				
+				<div class="d-flex align-content-left m-2" id="botonesResultados">
+					<button type="button" class="btn btn-secondary" id="iniciar" onclick="iniciar()">Iniciar</button>    
+				</div> 
+			  
+			 </div>
+             
               <div class="d-flex justify-content-end mr-5 mt-3">
                 <button type="button" class="btn btn-secondary" style="visibility: visible">Guardar</button>    
               </div> 
@@ -303,7 +309,7 @@
                     <th scope="row">1</th>
                     <td>
                       <div class="form-group">
-                        <select class="form-control" id="typealgm">
+                        <select class="form-control" id="typealgm" onchange="tipoAlgoritmo()" value="FCFS">
                           <option value="FCFS">FCFS</option>
                           <option value="SJF">SJF</option>
                           <option value="SRTF">SRTF</option>
@@ -311,6 +317,12 @@
                           <option value="Por Prioridad">Por Prioridad</option>
                         </select>
                       </div>
+					  
+					  <div id="ingresarQuantum" style="display:none">
+						<label for="quantum">Valor del Quantum:</label>
+                        <input type="number" id="quantum" min=1 value=1>
+                      </div>
+					  
                     </td>
                 </tbody>
               </table>
@@ -507,6 +519,9 @@
     <script type="text/javascript" src="Static/base-de-datos.js"></script>
     <script type="text/javascript" src="Static/lista-de-procesos.js"></script>
     <script type="text/javascript" src="Static/colas-multinivel.js"></script>
+	
+	<script type="text/javascript" src="Static/diagrama.js"></script>
+	
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

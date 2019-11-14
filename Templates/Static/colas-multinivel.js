@@ -78,13 +78,29 @@ function continuarColas() {
     }
     if (seGuardaronLasColas) { // si se guardo todo continua a la parte de resultados
         $('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
+        console.log(colasMultinivel);
     }
     if (!seGuardaronLasColas) { // si no se guardo todo avisa al usuario
         $("#modalContinuarSinGuardarColas").modal(); // muestra el modal que avisa que no se guardo
+        console.log(colasMultinivel);
     }
 }
 
 // esta cosa es porque si lo meto en el atributo onclick de un boton no anda un carajo
 function continuarColasSinGuardar() {
-    $('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
+continuarColasSinGuardar:{ // falta implementar similar para agregarColas y continuarColas...
+		
+		var algoritmo = document.getElementById("typealgm").value;
+		
+		if (algoritmo == "Round Robin") {
+		
+			validarQuantum();
+			
+			if (quantumValido == false) {
+				break continuarColasSinGuardar;
+			}
+		}
+		
+		$('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
+	}
 }

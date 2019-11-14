@@ -1,4 +1,5 @@
 //Resolucion de algoritmos de planificación de procesos
+/*
 var tablaParticiones = [];
 var particion ={ //se crea el object
     "idParticion": 1,
@@ -60,6 +61,7 @@ var proceso = {
 };
 tablaProcesos.push(proceso);
 console.log(tablaProcesos);
+*/
 //declaracion de variables
 var t_simulacion=0;
 var t_cpu=0;
@@ -70,13 +72,28 @@ var cola_bloqueado=[];
 var cola_terminado=[];
 var cola_cpu=[];
 var cola_es=[];
-SJF();
-//var tablaParticiones=condicionesInciales.tablaParticiones;
+var tablaParticiones=condicionesInciales.tablaParticiones;
+//SJF();
+/*
+var condicionesInciales = { 
+    "tamanoMP": 128,
+    "porcentajeSO": 0.25,
+    "tamanoSO": 32,
+    "tipoParticion": "F",
+    "algoritmo": "FF", 
+    "tablaParticiones": [{FI: 0,dirFin: 37,dirInicio: 32,estado: 0, idParticion: 1, idProceso: null, tamaño: 6}],
+};
+var colasMultinivel=[{algoritmo:"FCFS"}]
+var tablaProcesos=[{"idProceso": 3,"tamaño": 6,"prioridad": 1,"tiempoArribo": 0,"cicloVida": [1,3,2,1,1],
+"posicion":0,}]
+var tablaParticiones=condicionesInciales.tablaParticiones;//
+llenarColas();
+*/
 
-function SJF() {    
-    var algoritmo= "FF";//toString(condicionesInciales.algoritmo);
-    var tipoPart="F";//toString(condicionesInciales.tipoParticion);
-    var algoritmo2="FCFS"; //o puede ser sjf
+function llenarColas() {    
+    var algoritmo= condicionesInciales.algoritmo; //"FF";//
+    var tipoPart=condicionesInciales.tipoParticion; //"F";//
+    var algoritmo2=colasMultinivel[0].algoritmo; //"FCFS"; 
     var to_es=0; //tiempo oscioso e/s
     var to_cpu=0; //tiempo oscioso cpu
     do {
@@ -435,8 +452,8 @@ function quitar_MP(idProceso) {
 }
 
 //FirstFit para particiones variables
-var tamanoLibre= 921;//(condicionesInciales.tamanoMP-condicionesInciales.tamanoSO);
-var direccionLibre = 103;//condicionesInciales.tamanoSO;
+var tamanoLibre= (condicionesInciales.tamanoMP-condicionesInciales.tamanoSO); //921;//
+var direccionLibre = condicionesInciales.tamanoSO; //103;//
 function firstFitVble() {
     for (let i = 0; i < cola_nuevo.length; i++) {
         const proceso = cola_nuevo[i];
