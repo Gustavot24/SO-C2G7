@@ -78,9 +78,11 @@ function continuarColas() {
     }
     if (seGuardaronLasColas) { // si se guardo todo continua a la parte de resultados
         $('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
+        console.log(colasMultinivel);
     }
     if (!seGuardaronLasColas) { // si no se guardo todo avisa al usuario
         $("#modalContinuarSinGuardarColas").modal(); // muestra el modal que avisa que no se guardo
+        console.log(colasMultinivel);
     }
 }
 

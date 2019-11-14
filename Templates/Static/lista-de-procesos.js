@@ -500,6 +500,7 @@ function obtenerLista() {
 				tiempoArribo: 0,
 				cicloVida: 0,
 				condicion: 0,
+				posicion: 0,
 			};
 		
 		var i = 1; //Índice para recorrer toda la lista, proceso a proceso
@@ -534,6 +535,7 @@ function obtenerLista() {
 					prioridad: prioP,
 					tiempoArribo: tArrP,
 					cicloVida: cvP,
+					posicion: 0,
 				};
 				
 			 //Se agrega el proceso al array de la lista de procesos (tablaProcesos)
@@ -583,7 +585,8 @@ function continuarProcesos() {
 
 // esta cosa es porque si lo meto en el atributo onclick de un boton no anda un carajo
 function continuarProcesosSinGuardar() {
-    $('a[href="#algmn"]').trigger("click"); // cambia a la pestaña colas multinivel
+	$('a[href="#algmn"]').trigger("click"); // cambia a la pestaña colas multinivel
+	console.log(tablaProcesos);
 }
 
 function guardarEnDB() {
