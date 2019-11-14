@@ -90,7 +90,7 @@ var tablaParticiones=condicionesInciales.tablaParticiones;//
 llenarColas();
 */
 
-function llenarColas() {    
+function llenarColas() {   
     var algoritmo= condicionesInciales.algoritmo; //"FF";//
     var tipoPart=condicionesInciales.tipoParticion; //"F";//
     var algoritmo2=colasMultinivel[0].algoritmo; //"FCFS"; 
@@ -247,6 +247,7 @@ function llenarColas() {
         console.log("C terminado " + cola_terminado);
     
     } while (cola_terminado.length < tablaProcesos.length);
+    $('[data-toggle="popover"]').popover();
 }
 
 //Algoritmo FCFS para particiones Fijas
@@ -619,4 +620,3 @@ function add_cola_es(proceso) {
     document.getElementById("cola_es").innerHTML+=`<div id='P${idProceso}' class="progress-bar" role="progressbar" style="width:20%">`+
     `<a data-trigger="hover" data-placement="bottom" data-original-title='Proceso ${idProceso}' data-toggle="popover" data-content= '${texto}'>P${idProceso} </a>` +'</div>';
 }
-$(document).ready(function(){$('[data-toggle="popover"]').popover();});
