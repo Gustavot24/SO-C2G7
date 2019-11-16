@@ -37,7 +37,7 @@ request.query('select * from dbo.ParticionesFijas', function (err, resultado) { 
 
 // hace un get para devolver el html al cargar la pagina
 app.get('/', function(request, response) {
-    response.sendFile('C:/Users/emman/repositorio local del tpi/Templates/index.html');
+    response.sendFile('C:/Users/emmah/repositorio local del tpi/Templates/index.html');
 });
 
 // hace que se acceda a la pagina desde el puerto 8000

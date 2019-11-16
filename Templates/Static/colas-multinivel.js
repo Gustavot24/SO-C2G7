@@ -19,14 +19,20 @@ function agregarCola() {
     celdaIdCola.scope = "row";
     celdaAlgoritmo.innerHTML = 
         '<div class="form-group">' +
-        '  <select class="form-control" id="typealgm">' +
+        '  <select class="form-control" id="typealgm" onchange="tipoAlgoritmo()" value="FCFS">' +
         '    <option value="FCFS">FCFS</option>' +
         '    <option value="SJF">SJF</option>' +
         '    <option value="SRTF">SRTF</option>' +
         '    <option value="Round Robin">Round Robin</option>' +
         '    <option value="Por Prioridad">Por Prioridad</option>' +
         '  </select>' +
-        '</div>';
+        '</div>' +
+        '<form class="form-inline">' +
+        '  <div id="ingresarQuantum" class="form-group mx-sm-3 mb-2" style="display:none">' +
+        '    <label for="quantum">Valor del Quantum:</label>' +
+        '    <input type="number" class="form-control" id="quantum" min="1" max="10" value="1">' +
+        '  </div>' +
+        '</form>';
         seGuardaronLasColas = false;
 }
 
@@ -66,7 +72,7 @@ function modalCargarColas() {
 // tambien comprueba si se guardaron los cambios
 // con info de https://stackoverflow.com/questions/39461076/how-to-change-active-bootstrap-tab-with-javascript
 function continuarColas() {
-    colasMultinivel = [] // vacia el array de colas par no guardar colas repetidas (si el usuario cliquea siguiente varias veces)
+    colasMultinivel = [] // vacia el array de colas para no guardar colas repetidas (si el usuario cliquea siguiente varias veces)
     var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
     for (var i = 0; i < tablaColas.rows.length; i++) { // itera para cada fila de la tabla
         var colaMultinivel = { // crea un objeto con una cola y le agrega sus datos
@@ -87,20 +93,16 @@ function continuarColas() {
 }
 
 // esta cosa es porque si lo meto en el atributo onclick de un boton no anda un carajo
-function continuarColasSinGuardar() {
-continuarColasSinGuardar:{ // falta implementar similar para agregarColas y continuarColas...
-		
-		var algoritmo = document.getElementById("typealgm").value;
-		
-		if (algoritmo == "Round Robin") {
-		
-			validarQuantum();
-			
-			if (quantumValido == false) {
-				break continuarColasSinGuardar;
-			}
-		}
-		
-		$('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
-	}
+function continuarColasSinGuardar() { // falta implementar similar para agregarColas y continuarColas...
+    var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
+    for (var i = 0; i < tablaColas.rows.length; i++) { // itera para cada fila de la tabla
+        var algoritmo = tablaColas.rows[i].cells[1].children[0].children[0].value;
+        if (algoritmo == "Round Robin") {
+            validarQuantum();
+            if (quantumValido == false) {
+                return;
+            }
+        }    
+    }
+	$('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
 }
