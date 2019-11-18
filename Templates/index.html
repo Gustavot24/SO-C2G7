@@ -309,7 +309,7 @@
                     <th scope="row">1</th>
                     <td>
                       <div class="form-group">
-                        <select class="form-control" id="typealgm" onchange="tipoAlgoritmo()" value="FCFS">
+                        <select class="form-control" id="typealgm1" onchange="tipoAlgoritmo(this.id)">
                           <option value="FCFS">FCFS</option>
                           <option value="SJF">SJF</option>
                           <option value="SRTF">SRTF</option>
@@ -318,9 +318,9 @@
                         </select>
                       </div>
                       <form class="form-inline">
-  					            <div id="ingresarQuantum" class="form-group mx-sm-3 mb-2" style="display:none">
-	  					            <label for="quantum">Valor del Quantum:</label>
-                          <input type="number" class="form-control" id="quantum" min="1" max="10" value="1">
+  					    <div id="ingresarQuantum1" class="form-group mx-sm-3 mb-2" style="display:none">
+	  					    <label for="quantum1">Valor del Quantum:</label>
+							<input type="number" class="form-control" id="quantum1" min="1" value="1">
                         </div>
                       </form>
                     </td>
@@ -332,7 +332,7 @@
               </div>
               <div class="d-flex">
                 <div class="p-2 flex-fill mr-5">
-                  <button type="button" class="btn btn-secondary" onclick="agregarCola()">Nueva Cola</button>
+                  <button type="button" class="btn btn-secondary" id="botonAgregarCola" onclick="agregarCola()">Nueva Cola</button>
                   <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#todbcolas">Guardar en DB</button>
                   <button type="button" class="btn btn-secondary" onclick="modalCargarColas()">Cargar desde DB</button>
                   <button type="button" class="btn btn-secondary" onclick="continuarColas()">Siguiente</button>

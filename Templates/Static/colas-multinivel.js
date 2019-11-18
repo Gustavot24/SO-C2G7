@@ -8,32 +8,56 @@ var colasMultinivel = [];
 
 // agrega una cola a la tabla
 // con info de https://stackoverflow.com/questions/14999927/insert-th-in-thead
+
+var nroDeCola = 1; //Variable para controlar la cantidad de colas
+
 function agregarCola() {
-    var tablaColas = document.getElementById("tabla-colas");
-    //var ultimoIdCola = parseInt(tablaColas.rows(tablaColas.rows.length - 1).cells(0).innerHTML);
-    var nuevaFila = tablaColas.insertRow();
-    var celdaIdCola = document.createElement("th");
-    nuevaFila.appendChild(celdaIdCola);
-    var celdaAlgoritmo = nuevaFila.insertCell(1);
-    celdaIdCola.innerHTML = tablaColas.rows.length - 1;
-    celdaIdCola.scope = "row";
-    celdaAlgoritmo.innerHTML = 
-        '<div class="form-group">' +
-        '  <select class="form-control" id="typealgm" onchange="tipoAlgoritmo()" value="FCFS">' +
-        '    <option value="FCFS">FCFS</option>' +
-        '    <option value="SJF">SJF</option>' +
-        '    <option value="SRTF">SRTF</option>' +
-        '    <option value="Round Robin">Round Robin</option>' +
-        '    <option value="Por Prioridad">Por Prioridad</option>' +
-        '  </select>' +
-        '</div>' +
-        '<form class="form-inline">' +
-        '  <div id="ingresarQuantum" class="form-group mx-sm-3 mb-2" style="display:none">' +
-        '    <label for="quantum">Valor del Quantum:</label>' +
-        '    <input type="number" class="form-control" id="quantum" min="1" max="10" value="1">' +
-        '  </div>' +
-        '</form>';
-        seGuardaronLasColas = false;
+	agregarCola:{ //Similar para cuando se implemente "Guardar en DB"
+
+		var algoritmo = document.getElementById("typealgm"+nroDeCola).value;
+		
+		if (algoritmo == "Round Robin") {
+		
+			validarQuantum();
+			
+			if (quantumValido == false) {
+				break agregarCola;
+			}
+		}
+		
+		nroDeCola++;
+
+		var tablaColas = document.getElementById("tabla-colas");
+		//var ultimoIdCola = parseInt(tablaColas.rows(tablaColas.rows.length - 1).cells(0).innerHTML);
+		var nuevaFila = tablaColas.insertRow();
+		var celdaIdCola = document.createElement("th");
+		nuevaFila.appendChild(celdaIdCola);
+		var celdaAlgoritmo = nuevaFila.insertCell(1);
+		celdaIdCola.innerHTML = tablaColas.rows.length - 1;
+		celdaIdCola.scope = "row";
+		celdaAlgoritmo.innerHTML = 
+			'<div class="form-group">' +
+			'  <select class="form-control" id="typealgm'+nroDeCola+'" onchange="tipoAlgoritmo(this.id)">' +
+			'    <option value="FCFS">FCFS</option>' +
+			'    <option value="SJF">SJF</option>' +
+			'    <option value="SRTF">SRTF</option>' +
+			'    <option value="Round Robin">Round Robin</option>' +
+			'    <option value="Por Prioridad">Por Prioridad</option>' +
+			'  </select>' +
+			'</div>'+
+			'<form class="form-inline">' +
+				'<div id="ingresarQuantum'+nroDeCola+'" class="form-group mx-sm-3 mb-2" style="display:none">' +
+	  				'<label for="quantum'+nroDeCola+'">Valor del Quantum:</label>' +
+					'<input type="number" class="form-control" id="quantum'+nroDeCola+'" min="1" value="1">' +
+                '</div>' +
+            '</form>';
+			
+		if (nroDeCola == 3) {
+			document.getElementById("botonAgregarCola").style.display = "none";
+		}
+			
+			seGuardaronLasColas = false;
+	}		
 }
 
 // carga una lista con los nombres de todas las listas de colas guardadas
