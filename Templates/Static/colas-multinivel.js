@@ -15,18 +15,13 @@ function agregarCola() {
 	agregarCola:{ //Similar para cuando se implemente "Guardar en DB"
 
 		var algoritmo = document.getElementById("typealgm"+nroDeCola).value;
-		
 		if (algoritmo == "Round Robin") {
-		
 			validarQuantum();
-			
 			if (quantumValido == false) {
 				break agregarCola;
 			}
 		}
-		
 		nroDeCola++;
-
 		var tablaColas = document.getElementById("tabla-colas");
 		//var ultimoIdCola = parseInt(tablaColas.rows(tablaColas.rows.length - 1).cells(0).innerHTML);
 		var nuevaFila = tablaColas.insertRow();
@@ -51,13 +46,55 @@ function agregarCola() {
 					'<input type="number" class="form-control" id="quantum'+nroDeCola+'" min="1" value="1">' +
                 '</div>' +
             '</form>';
-			
+        var celdaObjetivo = nuevaFila.insertCell(2);
+        celdaObjetivo.innerHTML = 
+            '<div class="form-group">' +
+            '  <input type="checkbox" id="objetivo' + nroDeCola +'-1" onchange="habilitarObjetivos(this)">' +
+            '  <label for="objetivo' + nroDeCola +'-1">Todos los procesos nuevos</label>' +
+            '  <br>' +
+            '  <input type="checkbox" id="objetivo' + nroDeCola +'-2" onchange="habilitarObjetivos(this)">' +
+            '  <label for="objetivo' + nroDeCola +'-2">Todos los procesos que salen de la entrada</label>' +
+            '  <br>' +
+            '  <input type="checkbox" id="objetivo' + nroDeCola +'-3" onchange="habilitarObjetivos(this)">' +
+            '  <label for="objetivo' + nroDeCola +'-3">Todos los procesos que salen de la salida</label>' +
+            '  <br>' +
+            '  <input type="checkbox" id="objetivo' + nroDeCola +'-4" onchange="habilitarObjetivos(this)">' +
+            '  <label for="objetivo' + nroDeCola +'-4">Todos los procesos que son desalojados de la CPU</label>' +
+            '</div>';
 		if (nroDeCola == 3) {
 			document.getElementById("botonAgregarCola").style.display = "none";
 		}
-		
 		seGuardaronLasColas = false;
 	}		
+}
+
+// funcion que deshabilita los checkbox de un objetivo de las demas colas cuando se selecciona uno
+// en el html vas a entender bien que hace
+function habilitarObjetivos(checkbox) {
+    var objetivoACambiar = checkbox.id[10];
+    var colaElegida = Number(checkbox.id[8]);
+    if (checkbox.checked == true) {
+        if (colaElegida != 1) {
+            document.getElementById("objetivo1-" + objetivoACambiar).disabled = true;
+        }
+        if (colaElegida != 2) {
+            document.getElementById("objetivo2-" + objetivoACambiar).disabled = true;
+        }
+        if (colaElegida != 3) {
+            document.getElementById("objetivo3-" + objetivoACambiar).disabled = true;
+        }
+    }
+    if (checkbox.checked == false) {
+        if (colaElegida != 1) {
+            document.getElementById("objetivo1-" + objetivoACambiar).disabled = false;
+        }
+        if (colaElegida != 2) {
+            document.getElementById("objetivo2-" + objetivoACambiar).disabled = false;
+        }
+        if (colaElegida != 3) {
+            document.getElementById("objetivo3-" + objetivoACambiar).disabled = false;
+        }
+    }
 }
 
 // carga una lista con los nombres de todas las listas de colas guardadas
