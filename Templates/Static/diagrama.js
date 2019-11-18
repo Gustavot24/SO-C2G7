@@ -134,7 +134,6 @@ function obtenerProcesos() {
 }
 
 //Variables globales
-	
 	var colaCPU = [];
 	var colaE = [];
 	var colaS = [];

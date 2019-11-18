@@ -55,8 +55,8 @@ function agregarCola() {
 		if (nroDeCola == 3) {
 			document.getElementById("botonAgregarCola").style.display = "none";
 		}
-			
-			seGuardaronLasColas = false;
+		
+		seGuardaronLasColas = false;
 	}		
 }
 
