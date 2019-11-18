@@ -117,31 +117,31 @@ a:link, a:visited {
 }
 
 #warning{
-    background-color: grey;
+    background-color:#ffc107;
 }
 
 #P1{
-    background-color: blue;
+    background-color: #007bff;
 }
 
 #P2{
-    background-color: rgb(100, 5, 100);
+    background-color: #910BC3;
 }
 #P3{
-    background-color: blueviolet;
+    background-color: #17D699;
 }
 #P4{
-    background-color:rgb(0, 132, 255);
+    background-color:#B4D617;
 }
 #P5{
-    background-color: rgb(2, 48, 45);
+    background-color: #55D617;
 }
 #P6{
-    background-color: rgb(2, 23, 41);
+    background-color: #D69917;
 }
 #P7{
-    background-color: rgb(3, 70, 14);
+    background-color: #C30B3D;
 }
 #P8{
-    background-color: rgb(247, 0, 255);
+    background-color: #C30B99;
 }
