@@ -135,6 +135,26 @@ function modalCargarColas() {
 function continuarColas() {
     colasMultinivel = [] // vacia el array de colas para no guardar colas repetidas (si el usuario cliquea siguiente varias veces)
     var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
+    var objetivo1 = document.getElementById("objetivo1-1").checked | document.getElementById("objetivo2-1").checked | document.getElementById("objetivo3-1").checked;
+    var objetivo2 = document.getElementById("objetivo1-2").checked | document.getElementById("objetivo2-2").checked | document.getElementById("objetivo3-2").checked;
+    var objetivo3 = document.getElementById("objetivo1-3").checked | document.getElementById("objetivo2-3").checked | document.getElementById("objetivo3-3").checked;
+    var objetivo4 = document.getElementById("objetivo1-4").checked | document.getElementById("objetivo2-4").checked | document.getElementById("objetivo3-4").checked;
+    if (objetivo1 == false) {
+        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos nuevos");
+        return;
+    }
+    if (objetivo2 == false) {
+        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos que salen de la entrada");
+        return;
+    }
+    if (objetivo3 == false) {
+        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos que salen de la salida");
+        return;
+    }
+    if (objetivo4 == false) {
+        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos desalojados de la CPU");
+        return;
+    }
     for (var i = 0; i < tablaColas.rows.length; i++) { // itera para cada fila de la tabla
         var colaMultinivel = { // crea un objeto con una cola y le agrega sus datos
             idCola: Number(tablaColas.rows[i].cells[0].innerHTML),
