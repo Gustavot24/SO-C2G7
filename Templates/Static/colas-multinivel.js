@@ -11,9 +11,14 @@ var colasMultinivel = [];
 
 var nroDeCola = 1; //Variable para controlar la cantidad de colas
 
+// variables que definen si hay una cola elegida para que entren cada tipo de procesos
+var objetivo1 = false;
+var objetivo2 = false;
+var objetivo3 = false;
+var objetivo4 = false;
+
 function agregarCola() {
 	agregarCola:{ //Similar para cuando se implemente "Guardar en DB"
-
 		var algoritmo = document.getElementById("typealgm"+nroDeCola).value;
 		if (algoritmo == "Round Robin") {
 			validarQuantum();
@@ -78,10 +83,26 @@ function habilitarObjetivos(checkbox) {
             document.getElementById("objetivo1-" + objetivoACambiar).disabled = true;
         }
         if (colaElegida != 2) {
-            document.getElementById("objetivo2-" + objetivoACambiar).disabled = true;
+            if (document.getElementById("objetivo2-" + objetivoACambiar) !== null) {
+                document.getElementById("objetivo2-" + objetivoACambiar).disabled = true;
+            }
         }
         if (colaElegida != 3) {
-            document.getElementById("objetivo3-" + objetivoACambiar).disabled = true;
+            if (document.getElementById("objetivo3-" + objetivoACambiar) !== null) {
+                document.getElementById("objetivo3-" + objetivoACambiar).disabled = true;
+            }
+        }
+        if (objetivoACambiar == "1") {
+            objetivo1 = true;
+        }
+        if (objetivoACambiar == "2") {
+            objetivo2 = true;
+        }
+        if (objetivoACambiar == "3") {
+            objetivo3 = true;
+        }
+        if (objetivoACambiar == "4") {
+            objetivo4 = true;
         }
     }
     if (checkbox.checked == false) {
@@ -89,10 +110,26 @@ function habilitarObjetivos(checkbox) {
             document.getElementById("objetivo1-" + objetivoACambiar).disabled = false;
         }
         if (colaElegida != 2) {
-            document.getElementById("objetivo2-" + objetivoACambiar).disabled = false;
+            if (document.getElementById("objetivo2-" + objetivoACambiar) !== null) {
+                document.getElementById("objetivo2-" + objetivoACambiar).disabled = false;
+            }
         }
         if (colaElegida != 3) {
-            document.getElementById("objetivo3-" + objetivoACambiar).disabled = false;
+            if (document.getElementById("objetivo3-" + objetivoACambiar) !== null) {
+                document.getElementById("objetivo3-" + objetivoACambiar).disabled = false;
+            }
+        }
+        if (objetivoACambiar == "1") {
+            objetivo1 = false;
+        }
+        if (objetivoACambiar == "2") {
+            objetivo2 = false;
+        }
+        if (objetivoACambiar == "3") {
+            objetivo3 = false;
+        }
+        if (objetivoACambiar == "4") {
+            objetivo4 = false;
         }
     }
 }
@@ -135,10 +172,6 @@ function modalCargarColas() {
 function continuarColas() {
     colasMultinivel = [] // vacia el array de colas para no guardar colas repetidas (si el usuario cliquea siguiente varias veces)
     var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
-    var objetivo1 = document.getElementById("objetivo1-1").checked | document.getElementById("objetivo2-1").checked | document.getElementById("objetivo3-1").checked;
-    var objetivo2 = document.getElementById("objetivo1-2").checked | document.getElementById("objetivo2-2").checked | document.getElementById("objetivo3-2").checked;
-    var objetivo3 = document.getElementById("objetivo1-3").checked | document.getElementById("objetivo2-3").checked | document.getElementById("objetivo3-3").checked;
-    var objetivo4 = document.getElementById("objetivo1-4").checked | document.getElementById("objetivo2-4").checked | document.getElementById("objetivo3-4").checked;
     if (objetivo1 == false) {
         mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos nuevos");
         return;
