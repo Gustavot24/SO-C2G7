@@ -229,35 +229,27 @@ function guardarColas(nombre) {
 // recupera una lista de colas de la db y la carga en la tabla del html
 function cargarColas(nombre) {
     var tabla = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
-    var tablaConvertidaEnJSON;
+    var tablaColas;
     var stringDeConsulta = "SELECT * FROM Simulador.dbo.Colas WHERE nombre = '" + nombre + "';"; // crea el string de la consulta
     console.log(stringDeConsulta); // muestra por consola el string de consulta
     var xhttp = new XMLHttpRequest(); // crea el objeto de la peticion ajax
     xhttp.onreadystatechange = function() { // esto se ejecuta cuando la peticion se complete
         if (this.readyState == 4 && this.status == 200) { // se ejecuta si se recibio la respuesta del servidor y no dio error
             console.log(this.responseText); // muestra por consola la respuesta del servidor
-            tablaConvertidaEnJSON = JSON.parse(this.responseText); // convierte la respuesta del servidor en un objeto
-            tablaColas = tablaConvertidaEnJSON.recordset[0].listado; // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
+            tablaColas = JSON.parse(this.responseText).recordset[0].listado; // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
             tablaColas = JSON.parse(tablaColas); // convierte el string de la lista de colas en un array de objetos
-            tabla.deleteRow(0); // elimina la primera fila de la tabla de colas (que se crea por defecto)
             for (var i = 0; i < tablaColas.length; i++) { // itera sobre el array de objects
-                var nuevaFila = tabla.insertRow(); // agrega una fila a la tabla
-                var celdaIdCola = document.createElement("th"); // crea una celda th
-                nuevaFila.appendChild(celdaIdCola); // agrega esa celda th a la fila
-                var celdaAlgoritmo = nuevaFila.insertCell(1); // agrega una celda comun a la fila
-                celdaIdCola.innerHTML = tablaColas[i].idCola; // carga el id de la cola en su celda
-                celdaIdCola.scope = "row"; // a esa celda le pone el scope "row"
-                celdaAlgoritmo.innerHTML = 
-                    '<div class="form-group">' +
-                    '  <select class="form-control" id="typealgm">' +
-                    '    <option value="FCFS">FCFS</option>' +
-                    '    <option value="SJF">SJF</option>' +
-                    '    <option value="SRTF">SRTF</option>' +
-                    '    <option value="Round Robin">Round Robin</option>' +
-                    '    <option value="Por Prioridad">Por Prioridad</option>' +
-                    '  </select>' +
-                    '</div>'; // agrega un div con un select adentro a la celda de algoritmo
-                celdaAlgoritmo.children[0].children[0].value = tablaColas[i].algoritmo; // selecciona el algoritmo en el select
+                if (tabla.rows[i].style.display == "none") {
+                    tabla.rows[i].removeAttribute("style");
+                }
+                document.getElementById("typealgm" + (i + 1)).value = tablaColas[i].algoritmo;
+                document.getElementById("quantum" + (i + 1)).value = tablaColas[i].quantum;
+                for (var j = 0; j < tablaColas[i].objetivo.length; j++) {
+                    if (tablaColas[i].objetivo[j] == "1") {
+                        document.getElementById("objetivo" + (i + 1) + "-" + (j + 1)).checked = true;
+                        habilitarObjetivos(document.getElementById("objetivo" + (i + 1) + "-" + (j + 1)));
+                    }
+                }
             }
             mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas"); // muestra un mensaje de que se cargo todo bien
             seGuardaronLasColas = true; // pone a true la variable que indica que se guardaron las colas
