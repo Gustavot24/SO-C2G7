@@ -27,45 +27,8 @@ function agregarCola() {
 			}
 		}
 		nroDeCola++;
-		var tablaColas = document.getElementById("tabla-colas");
-		//var ultimoIdCola = parseInt(tablaColas.rows(tablaColas.rows.length - 1).cells(0).innerHTML);
-		var nuevaFila = tablaColas.insertRow();
-		var celdaIdCola = document.createElement("th");
-		nuevaFila.appendChild(celdaIdCola);
-		var celdaAlgoritmo = nuevaFila.insertCell(1);
-		celdaIdCola.innerHTML = tablaColas.rows.length - 1;
-		celdaIdCola.scope = "row";
-		celdaAlgoritmo.innerHTML = 
-			'<div class="form-group">' +
-			'  <select class="form-control" id="typealgm'+nroDeCola+'" onchange="tipoAlgoritmo(this.id)">' +
-			'    <option value="FCFS">FCFS</option>' +
-			'    <option value="SJF">SJF</option>' +
-			'    <option value="SRTF">SRTF</option>' +
-			'    <option value="Round Robin">Round Robin</option>' +
-			'    <option value="Por Prioridad">Por Prioridad</option>' +
-			'  </select>' +
-			'</div>'+
-			'<form class="form-inline">' +
-				'<div id="ingresarQuantum'+nroDeCola+'" class="form-group mx-sm-3 mb-2" style="display:none">' +
-	  				'<label for="quantum'+nroDeCola+'">Valor del Quantum:</label>' +
-					'<input type="number" class="form-control" id="quantum'+nroDeCola+'" min="1" value="1">' +
-                '</div>' +
-            '</form>';
-        var celdaObjetivo = nuevaFila.insertCell(2);
-        celdaObjetivo.innerHTML = 
-            '<div class="form-group">' +
-            '  <input type="checkbox" id="objetivo' + nroDeCola +'-1" onchange="habilitarObjetivos(this)">' +
-            '  <label for="objetivo' + nroDeCola +'-1">Todos los procesos nuevos</label>' +
-            '  <br>' +
-            '  <input type="checkbox" id="objetivo' + nroDeCola +'-2" onchange="habilitarObjetivos(this)">' +
-            '  <label for="objetivo' + nroDeCola +'-2">Todos los procesos que salen de la entrada</label>' +
-            '  <br>' +
-            '  <input type="checkbox" id="objetivo' + nroDeCola +'-3" onchange="habilitarObjetivos(this)">' +
-            '  <label for="objetivo' + nroDeCola +'-3">Todos los procesos que salen de la salida</label>' +
-            '  <br>' +
-            '  <input type="checkbox" id="objetivo' + nroDeCola +'-4" onchange="habilitarObjetivos(this)">' +
-            '  <label for="objetivo' + nroDeCola +'-4">Todos los procesos que son desalojados de la CPU</label>' +
-            '</div>';
+        var tablaColas = document.getElementById("tabla-colas");
+        tablaColas.tBodies.item(0).rows[nroDeCola - 1].removeAttribute("style");
 		if (nroDeCola == 3) {
 			document.getElementById("botonAgregarCola").style.display = "none";
 		}
@@ -83,14 +46,10 @@ function habilitarObjetivos(checkbox) {
             document.getElementById("objetivo1-" + objetivoACambiar).disabled = true;
         }
         if (colaElegida != 2) {
-            if (document.getElementById("objetivo2-" + objetivoACambiar) !== null) {
-                document.getElementById("objetivo2-" + objetivoACambiar).disabled = true;
-            }
+            document.getElementById("objetivo2-" + objetivoACambiar).disabled = true;
         }
         if (colaElegida != 3) {
-            if (document.getElementById("objetivo3-" + objetivoACambiar) !== null) {
-                document.getElementById("objetivo3-" + objetivoACambiar).disabled = true;
-            }
+            document.getElementById("objetivo3-" + objetivoACambiar).disabled = true;
         }
         if (objetivoACambiar == "1") {
             objetivo1 = true;
@@ -110,14 +69,10 @@ function habilitarObjetivos(checkbox) {
             document.getElementById("objetivo1-" + objetivoACambiar).disabled = false;
         }
         if (colaElegida != 2) {
-            if (document.getElementById("objetivo2-" + objetivoACambiar) !== null) {
-                document.getElementById("objetivo2-" + objetivoACambiar).disabled = false;
-            }
+            document.getElementById("objetivo2-" + objetivoACambiar).disabled = false;
         }
         if (colaElegida != 3) {
-            if (document.getElementById("objetivo3-" + objetivoACambiar) !== null) {
-                document.getElementById("objetivo3-" + objetivoACambiar).disabled = false;
-            }
+            document.getElementById("objetivo3-" + objetivoACambiar).disabled = false;
         }
         if (objetivoACambiar == "1") {
             objetivo1 = false;

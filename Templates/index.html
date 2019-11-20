@@ -338,6 +338,77 @@
                         <label for="objetivo1-4">Todos los procesos que son desalojados de la CPU</label>
                       </div>
                     </td>
+                  </tr>
+                  <tr style="display: none">
+                    <th scope="row">2</th>
+                    <td>
+                      <div class="form-group">
+                        <select class="form-control" id="typealgm2" onchange="tipoAlgoritmo(this.id)">
+                          <option value="FCFS">FCFS</option>
+                          <option value="SJF">SJF</option>
+                          <option value="SRTF">SRTF</option>
+                          <option value="Round Robin">Round Robin</option>
+                          <option value="Por Prioridad">Por Prioridad</option>
+                        </select>
+                      </div>
+                      <form class="form-inline">
+  					            <div id="ingresarQuantum2" class="form-group mx-sm-3 mb-2" style="display:none">
+	  					            <label for="quantum2">Valor del Quantum:</label>
+							            <input type="number" class="form-control" id="quantum2" min="1" value="1">
+                        </div>
+                      </form>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <input type="checkbox" id="objetivo2-1" onchange="habilitarObjetivos(this)">
+                        <label for="objetivo2-1">Todos los procesos nuevos</label>
+                        <br>
+                        <input type="checkbox" id="objetivo2-2" onchange="habilitarObjetivos(this)">
+                        <label for="objetivo2-2">Todos los procesos que salen de la entrada</label>
+                        <br>
+                        <input type="checkbox" id="objetivo2-3" onchange="habilitarObjetivos(this)">
+                        <label for="objetivo2-3">Todos los procesos que salen de la salida</label>
+                        <br>
+                        <input type="checkbox" id="objetivo2-4" onchange="habilitarObjetivos(this)">
+                        <label for="objetivo2-4">Todos los procesos que son desalojados de la CPU</label>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr style="display: none">
+                    <th scope="row">3</th>
+                    <td>
+                      <div class="form-group">
+                        <select class="form-control" id="typealgm3" onchange="tipoAlgoritmo(this.id)">
+                          <option value="FCFS">FCFS</option>
+                          <option value="SJF">SJF</option>
+                          <option value="SRTF">SRTF</option>
+                          <option value="Round Robin">Round Robin</option>
+                          <option value="Por Prioridad">Por Prioridad</option>
+                        </select>
+                      </div>
+                      <form class="form-inline">
+  					            <div id="ingresarQuantum3" class="form-group mx-sm-3 mb-2" style="display:none">
+	  					            <label for="quantum3">Valor del Quantum:</label>
+							            <input type="number" class="form-control" id="quantum3" min="1" value="1">
+                        </div>
+                      </form>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <input type="checkbox" id="objetivo3-1" onchange="habilitarObjetivos(this)">
+                        <label for="objetivo3-1">Todos los procesos nuevos</label>
+                        <br>
+                        <input type="checkbox" id="objetivo3-2" onchange="habilitarObjetivos(this)">
+                        <label for="objetivo3-2">Todos los procesos que salen de la entrada</label>
+                        <br>
+                        <input type="checkbox" id="objetivo3-3" onchange="habilitarObjetivos(this)">
+                        <label for="objetivo3-3">Todos los procesos que salen de la salida</label>
+                        <br>
+                        <input type="checkbox" id="objetivo3-4" onchange="habilitarObjetivos(this)">
+                        <label for="objetivo3-4">Todos los procesos que son desalojados de la CPU</label>
+                      </div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
               <div class="contenedorMensajes" id="mensajesColasMultinivel">
