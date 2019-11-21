@@ -8,6 +8,8 @@ function fixed (){
     } else{
         document.getElementById("prtvar").removeAttribute("disable");
     }
+    document.getElementById("boton1").disabled = false; // habilita el boton de agregar varias particiones iguales
+    document.getElementById("boton2").disabled = false; // habilita el boton de agregar particiones manualmente
 }
 
 function variable (){
@@ -20,6 +22,10 @@ function variable (){
     } else{
         document.getElementById("prtfixed").removeAttribute("disable");
     }
+    document.getElementById("boton1").disabled = true; // deshabilita el boton de agregar varias particiones iguales
+    document.getElementById("boton2").disabled = true; // deshabilita el boton de agregar particiones manualmente
+    document.getElementById("boton3").disabled = true; // deshabilita el boton de cargar desde db
+    seGuardaronLasParticiones = true; // si se eligen particiones variables no hay nada que guardar en la db
 }
 
 function mostrarGrafica() {

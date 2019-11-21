@@ -29,8 +29,8 @@ function setVisible() {
 // cuando se selecciona un tamaño de memoria
 function habilitarControles() {
     document.getElementById("myRange").disabled = false; // habilita el range de porcentaje del SO
-    document.getElementById("boton1").disabled = false; // habilita el boton de agregar varias particiones iguales
-    document.getElementById("boton2").disabled = false; // habilita el boton de agregar particiones manualmente
+    document.getElementById("prtfixed").disabled = false; // habilita el radio de particiones fijas
+    document.getElementById("prtvar").disabled = false; // habilita el radio de particiones variables
 }
 
 //Object que contine todos los datos ingresados por el usuario en cuanto a las
