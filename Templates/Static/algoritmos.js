@@ -90,7 +90,8 @@ var tablaParticiones=condicionesInciales.tablaParticiones;//
 llenarColas();
 */
 
-function llenarColas() {   
+function llenarColas() {
+    document.getElementById("llenarColas").disabled = true; // si se vuelve a hacer clic en ese boton se congela el simulador
     var algoritmo= condicionesInciales.algoritmo; //"FF";//
     var tipoPart=condicionesInciales.tipoParticion; //"F";//
     var algoritmo2=colasMultinivel[0].algoritmo; //"FCFS"; 
