@@ -11,6 +11,7 @@ var cola_terminado=[];
 var cola_cpu=[];
 var cola_es=[];
 var tablaParticiones=[];
+var tablaProcesos2=[];
 var algoritmo=""; 
 var tipoPart=""; 
 var algoritmo2="";
@@ -19,171 +20,48 @@ var to_cpu=0; //tiempo oscioso cpu
 var tamanoLibre= 0;
 var direccionLibre = 0; 
 
-function llenar(){ 
-    do {
-        //Buscar un proceso donde TA=TSimulacion y agregarlo cola nuevo
-        for (let i = 0; i < tablaProcesos.length; i++) {
-            const element = tablaProcesos[i];
-            if (element.tiempoArribo==t_simulacion) {
-                cola_nuevo.push(element);
-            }
-        }
-        console.log("tiempo simulacion "+ t_simulacion);
-        console.log("C nuevo " + cola_nuevo);
-        document.getElementById("tiempoActual").innerHTML = "Tiempo Actual: "+t_simulacion;
-            
-        var exito=false
-        agregarMP: do {
-            //Asignar esos procesos de la cola nuevo a la MP y a la cola listo
-            if (cola_nuevo.length>0) { //si significa que hay procesos para entrar a MP
-                switch (algoritmo) {
-                    case "FF":
-                        firstFit();
-                        console.log("hola");
-                    break;
-                    case "FV":
-                        firstFitVble();
-                    break;
-                    case "B":
-                        bestFit();
-                    break;
-                    case "W":
-                        worstFit();
-                    break;
-                }
-            }
-            //Asignar los procesos de la cola listo a la cpu
-            if (cola_listo.length>0) { //Primero pregunto si la cola contiene algun proceso.
-                if (cola_cpu.length==0) { //No hay procesos ejecutandose en cpu
-                    var pos=0;                    
-                    if (cola_listo.length>1 && algoritmo2=="SJF") {
-                        var irrupcion_cpu =10000;
-                        for (let k = 0; k < cola_listo.length; k++) {
-                            const proceso = cola_listo[k];
-                            var posicion=proceso.posicion;
-                            var duracion=proceso.cicloVida[posicion];
-                            if (duracion<irrupcion_cpu) {
-                                irrupcion_cpu=duracion;
-                                pos=k;
-                            }
-                        }
-                    }                
-                    var proceso = cola_listo[pos];
-                    cola_cpu.push(proceso);                    
-                    add_to_cpu(to_cpu);
-                    to_cpu=0;
-                    var i = proceso.posicion;
-                    t_cpu = proceso.cicloVida[i];
-                    exito = true; //para salir del ciclo
-                } else { //Si hay proceso ejecutando cpu
-                    if (t_cpu==0) { //Pregunto si termino de ejecutar su tiempo de cpu
-                        var proceso = cola_listo[0];
-                        proceso.posicion ++;
-                        cola_cpu.shift();
-                        add_cola_cpu(proceso);
-                        if (proceso.posicion==5) {//Termine de ejecutar el utlimo tiempo de cpu pasa a la cola terminado
-                            cola_terminado.push(proceso);
-                            cola_listo.shift();
-                            exito = true;
-                            idProceso=proceso.idProceso;
-                            switch (tipoPart) {
-                                case "F":
-                                    quitar_MP(idProceso); //cuando termina de ejecutar su ciclo de vida. Debe ser eliminado de mp
-                                break;                            
-                                case "V":
-                                    quitarVariable(idProceso);
-                                break;
-                            }                      
-                            if (cola_nuevo.length>0) { //si significa que hay procesos para entrar a MP
-                                exito=false;
-                                continue agregarMP;                           
-                            }                        
-                        } else {//Termino de ejecutar cpu pasa a e/s
-                            cola_bloqueado.push(proceso);
-                            cola_listo.shift();
-                        }                
-                    }else{
-                        exito=true;
-                    }
-                }
-            }else{
-                to_cpu++;
-            }       
-    
-            //Asignar los procesos de la cola de bloqueados a la e/s
-            if (cola_bloqueado.length>0) {
-                if (cola_es.length==0) { //No hay procesos ejecutandose en es
-                    var pos=0;
-                    if (cola_bloqueado.length>1 && algoritmo2=="SJF") {
-                        var irrupcion_es=10000;
-                        for (let k = 0; k < cola_bloqueado.length; k++) {
-                            const proceso = cola_bloqueado[k];
-                            var posicion=proceso.posicion;
-                            var duracion=proceso.cicloVida[posicion];
-                            if (duracion<irrupcion_es) {
-                                irrupcion_es=duracion;
-                                pos=k;
-                            }
-                        }
-                    }                
-                    add_to_es(to_es);
-                    to_es=0;
-                    var proceso = cola_bloqueado[pos];
-                    cola_es.push(proceso);
-                    var i = proceso.posicion;
-                    t_es = proceso.cicloVida[i];                    
-                    if (cola_listo.length<=0) { //si hay un proceso en cola, vuelvo arriba
-                        exito=true;
-                        to_cpu++;
-                    }             
-                } else { //Si hay proceso ejecutando es
-                    if (t_es==0) { //Pregunto si termino de ejecutar su tiempo de es
-                        var proceso = cola_bloqueado[0];
-                        proceso.posicion ++;
-                        add_cola_es(proceso);
-                        cola_listo.push(proceso);
-                        cola_bloqueado.shift();  
-                        cola_es.shift();   
-                        if (cola_bloqueado.length>0 |cola_cpu.length==0) {
-                            exito=false;
-                        }
-                        if (exito==true) {
-                            to_es++; 
-                        }                               
-                    }else{
-                        if (cola_listo.length<=0 && cola_cpu.length==0) { //si no, hay un proceso en cola, vuelvo arriba
-                            exito=true;
-                        } 
-                    }
-                }
-            }else{
-                to_es++;                
-            }
-    
-        } while (exito==false);
-    
-        t_simulacion ++;
-        t_cpu --;
-        t_es --;
-    
-        
-        console.log("C listo " + cola_listo);
-        console.log("C bloqueado " + cola_bloqueado);
-        console.log("C terminado " + cola_terminado);
-    
-    } while (cola_terminado.length < tablaProcesos.length);
-    $('[data-toggle="popover"]').popover();
-}
-
 //Algoritmo Prueba
 function start(){
     tablaParticiones=condicionesInciales.tablaParticiones;
+    tablaProcesos2=tablaProcesos;
     algoritmo2=colasMultinivel[0].algoritmo;
     algoritmo=condicionesInciales.algoritmo; 
     tipoPart=condicionesInciales.tipoParticion; 
     tamanoLibre= (condicionesInciales.tamanoMP-condicionesInciales.tamanoSO); 
     direccionLibre = condicionesInciales.tamanoSO; 
     document.getElementById("iniciar").disabled = true; 
+    switch (algoritmo2) {
+        case "SRTF":
+            SRTF1();
+        break;
+        
+        case "FCFS":
+            FCFS_SJF1()
+        break;
+
+        case "SJF":
+            FCFS_SJF1()
+        break;
+    }
+}
+
+function next(){
+    switch (algoritmo2) {
+        case "SRTF":
+            SRTF2();
+        break;
+        
+        case "FCFS":
+            FCFS_SJF2()
+        break;
+
+        case "SJF":
+            FCFS_SJF2()
+        break;
+    }
+}
+
+function FCFS_SJF1(){
     //Buscar un proceso donde TA=TSimulacion y agregarlo cola nuevo
     for (let i = 0; i < tablaProcesos.length; i++) {
         const element = tablaProcesos[i];
@@ -240,10 +118,11 @@ function start(){
             } else { //Si hay proceso ejecutando cpu
                 if (t_cpu==0) { //Pregunto si termino de ejecutar su tiempo de cpu
                     var proceso = cola_listo[0];
+                    add_cola_cpu(proceso, t_cpu);
                     proceso.posicion ++;
                     cola_cpu.shift();
                     document.getElementById("usoDeCPU").innerHTML = "Libre";
-                    add_cola_cpu(proceso);
+                    
                     if (proceso.posicion==5) {//Termine de ejecutar el utlimo tiempo de cpu pasa a la cola terminado
                         cola_terminado.push(proceso);
                         cola_listo.shift();
@@ -316,7 +195,7 @@ function start(){
     t_es --;
     llenarColas();
 }
-function next(){
+function FCFS_SJF2(){
     if (cola_terminado.length < tablaProcesos.length) {
         //Buscar un proceso donde TA=TSimulacion y agregarlo cola nuevo
         for (let i = 0; i < tablaProcesos.length; i++) {
@@ -372,10 +251,11 @@ function next(){
                 } else { //Si hay proceso ejecutando cpu
                     if (t_cpu==0) { //Pregunto si termino de ejecutar su tiempo de cpu
                         var proceso = cola_listo[0];
+                        add_cola_cpu(proceso, t_cpu);
                         proceso.posicion ++;
                         cola_cpu.shift();
                         document.getElementById("usoDeCPU").innerHTML = "Libre";
-                        add_cola_cpu(proceso);
+                        
                         if (proceso.posicion==5) {//Termine de ejecutar el utlimo tiempo de cpu pasa a la cola terminado
                             cola_terminado.push(proceso);
                             cola_listo.shift();
@@ -406,23 +286,10 @@ function next(){
             }else{to_cpu++;}     
             //Asignar los procesos de la cola de bloqueados a la e/s
             if (cola_bloqueado.length>0) {
-                if (cola_es.length==0) { //No hay procesos ejecutandose en es
-                    var pos=0;
-                    if (cola_bloqueado.length>1 && algoritmo2=="SJF") {
-                        var irrupcion_es=10000;
-                        for (let k = 0; k < cola_bloqueado.length; k++) {
-                            const proceso = cola_bloqueado[k];
-                            var posicion=proceso.posicion;
-                            var duracion=proceso.cicloVida[posicion];
-                            if (duracion<irrupcion_es) {
-                                irrupcion_es=duracion;
-                                pos=k;
-                            }
-                        }
-                    }                
+                if (cola_es.length==0) { //No hay procesos ejecutandose en es                                
                     add_to_es(to_es);
                     to_es=0;
-                    var proceso = cola_bloqueado[pos];
+                    var proceso = cola_bloqueado[0];
                     cola_es.push(proceso);
                     var i = proceso.posicion;
                     t_es = proceso.cicloVida[i];
@@ -454,6 +321,7 @@ function next(){
         llenarColas();
     } else {alert("Simulacion Terminada");}
 }
+
 
 //Algoritmo FirstFit para Particiones Fijas
 function firstFit() {
@@ -774,10 +642,13 @@ function quitarVariable(idProceso) {
     }
 }
 
-function add_cola_cpu(proceso) {
+function add_cola_cpu(proceso, t_cpu) {
     var t_inicio=0; //tiempo de inicio en cola
     var t_fin=t_simulacion; //tiempo de fin en la cola
-    var duracion= proceso.cicloVida[(proceso.posicion-1)];
+    var duracion= proceso.cicloVida[(proceso.posicion)];
+    if (duracion!=t_cpu) {
+        var duracion= duracion-t_cpu;
+    }
     t_inicio=t_fin-duracion;
     var idProceso= proceso.idProceso;
     var texto= 'Desde: '+ t_inicio.toString() + ' Hasta: ' + t_fin.toString();
@@ -841,6 +712,13 @@ function llenarColasNuevo() {
 }
 function llenarMemoria() {
     $('#divMemoria').empty();
+    var texto= "Dir Inicio: 0"+
+    `  Dir Fin: ${(condicionesInciales.tamanoSO)-1}  `+
+    `  Tamaño: ${condicionesInciales.tamanoSO}  `;
+    htmlTags='<div class="p-2 bg-white">'+
+    `<a data-trigger="hover" data-placement="bottom" data-original-title='SO' data-toggle="popover" data-content= '${texto}'>SO</a>` +
+    '</div>';
+    $('#divMemoria').append(htmlTags);
     for (let i = 0; i < tablaParticiones.length; i++) {
         const particion = tablaParticiones[i];
         if (particion.estado==1) {
@@ -867,8 +745,8 @@ function llenarMemoria() {
     $(function () {$('[data-toggle="popover"]').popover()});
 }
 function llenarTiempos(id,t_fin) {
-    for (let i = 0; i < tablaProcesos.length; i++) {
-        const proceso = tablaProcesos[i];
+    for (let i = 0; i < tablaProcesos2.length; i++) {
+        const proceso = tablaProcesos2[i];
         if (proceso.idProceso==id) {
             var t_irrupcion=proceso.cicloVida[0]+proceso.cicloVida[2]+proceso.cicloVida[4];
             var arribo=proceso.tiempoArribo;
@@ -888,4 +766,330 @@ function llenarTiempos(id,t_fin) {
     '<td>' + `${t_irrupcion}` + '</td>'+
     '<td>' +`${espera}` + '</td>'+ '</tr>';       
     $('#tablaEspera tbody').append(htmlTags);
+}
+
+function SRTF1(){    
+    //Buscar un proceso donde TA=TSimulacion y agregarlo cola nuevo
+    for (let i = 0; i < tablaProcesos.length; i++) {
+        const element = tablaProcesos[i];
+        if (element.tiempoArribo==t_simulacion) {
+            cola_nuevo.push(element);
+        }
+    }
+    llenarColasNuevo();
+    document.getElementById("tiempoActual").innerHTML = "Tiempo Actual: "+t_simulacion;
+    var exito=false
+    agregarMP: do {
+        //Asignar esos procesos de la cola nuevo a la MP y a la cola listo
+        if (cola_nuevo.length>0) { //si significa que hay procesos para entrar a MP
+            switch (algoritmo) {
+                case "FF":
+                    firstFit();
+                break;
+                case "FV":
+                    firstFitVble();
+                break;
+                case "B":
+                    bestFit();
+                break;
+                case "W":
+                    worstFitVble();
+                break;
+            }
+            llenarMemoria();
+        }
+        //Asignar los procesos de la cola listo a la cpu
+        if (cola_listo.length>0) { //Primero pregunto si la cola contiene algun proceso.
+            if (cola_cpu.length==0) { //No hay procesos ejecutandose en cpu
+                var pos=0;     
+                if (cola_listo.length>1 && algoritmo2=="SRTF") {//Busco aquel proceso con el ciclo de vida mas corto
+                    var irrupcion_cpu =10000;
+                    for (let k = 0; k < cola_listo.length; k++) {
+                        const proceso = cola_listo[k];
+                        var posicion=proceso.posicion;
+                        var duracion=proceso.cicloVida[posicion];
+                        if (duracion<irrupcion_cpu) {
+                            irrupcion_cpu=duracion;
+                            pos=k;
+                        }
+                    }
+                }         
+                var proceso = cola_listo[pos];
+                cola_cpu.push(proceso);                    
+                add_to_cpu(to_cpu);
+                to_cpu=0;
+                var i = proceso.posicion;
+                t_cpu = proceso.cicloVida[i];
+                exito = true; //para salir del ciclo
+                document.getElementById("usoDeCPU").innerHTML = "P"+proceso.idProceso;
+            } else { //Si hay proceso ejecutando cpu
+                if (t_cpu==0) { //Pregunto si termino de ejecutar su tiempo de cpu
+                    var proceso = cola_cpu[0];
+                    add_cola_cpu(proceso, t_cpu);
+                    proceso.posicion ++;
+                    cola_cpu.shift();
+                    document.getElementById("usoDeCPU").innerHTML = "Libre";
+                    
+                    if (proceso.posicion==5) {//Termine de ejecutar el utlimo tiempo de cpu pasa a la cola terminado
+                        cola_terminado.push(proceso);
+                        var index = cola_listo.indexOf(proceso);
+                        cola_listo.splice(index,1);
+                        exito = true;
+                        idProceso=proceso.idProceso;
+                        llenarTiempos(idProceso,t_simulacion);
+                        htmlTags = `<div class="p-2 bg-white" id='CT${idProceso}'>P${idProceso}</div>`
+                        $('#colaTerminado').append(htmlTags);
+                        switch (tipoPart) {
+                            case "F":
+                                quitar_MP(idProceso); //cuando termina de ejecutar su ciclo de vida. Debe ser eliminado de mp
+                            break;                            
+                            case "V":
+                                quitarVariable(idProceso);
+                            break;                                
+                        }  
+                        llenarMemoria();                    
+                        if (cola_nuevo.length>0) { //si significa que hay procesos para entrar a MP
+                            exito=false;
+                            continue agregarMP;                           
+                        } 
+                        if (cola_listo.length>0 && cola_cpu.length==0){exito=false;}                      
+                    } else {//Termino de ejecutar cpu pasa a e/s
+                        cola_bloqueado.push(proceso);
+                        var index = cola_listo.indexOf(proceso);
+                        cola_listo.splice(index,1);
+                    }                
+                }else{ //Hay algun proceso en CPU pero no termino. Pregunto si hay otro con menor tiempo para entrar
+                    var pos=0;                    
+                    if (cola_listo.length>1 && algoritmo2=="SRTF") { //pregunta si hay dos procesos en la cola de listo
+                        var exito2 =false;
+                        var irrupcion_cpu =t_cpu;
+                        for (let k = 0; k < cola_listo.length; k++) {
+                            const proceso = cola_listo[k];
+                            var posicion=proceso.posicion;
+                            var duracion=proceso.cicloVida[posicion];
+                            var idProc=proceso.idProceso;
+                            var idProc2=cola_cpu[0].idProceso;
+                            var pos2=cola_cpu[0].posicion;
+                            if (idProc!=idProc2 && duracion<irrupcion_cpu) {
+                                irrupcion_cpu=duracion;
+                                pos=k;
+                                exito2=true;
+                            }
+                        }
+                        if (exito2==true) { //significa que el proceso que esta en cpu tiene que salir porq hay otro que tiene el TI mas pequeño
+                            var proceso = cola_cpu[0];
+                            var index = tablaProcesos.indexOf(proceso);
+                            add_cola_cpu(proceso, t_cpu);
+                            tablaProcesos[index].cicloVida[pos2]=t_cpu;
+                            
+                            proceso = cola_listo[pos];
+                            cola_cpu.shift();
+                            cola_cpu.push(proceso);
+                            t_cpu = irrupcion_cpu;                                
+                            document.getElementById("usoDeCPU").innerHTML = "P"+proceso.idProceso;
+                        }                        
+                    } 
+                    exito = true; //para salir del ciclo 
+                }
+            }
+        }else{to_cpu++;}     
+        //Asignar los procesos de la cola de bloqueados a la e/s
+        if (cola_bloqueado.length>0) {
+            if (cola_es.length==0) { //No hay procesos ejecutandose en es             
+                add_to_es(to_es);
+                to_es=0;
+                var proceso = cola_bloqueado[0];
+                cola_es.push(proceso);
+                var i = proceso.posicion;
+                t_es = proceso.cicloVida[i];
+                document.getElementById("usoDeES").innerHTML = "P"+proceso.idProceso;                    
+                if (cola_listo.length<=0) { //si hay un proceso en cola, vuelvo arriba
+                    exito=true;
+                    to_cpu++;
+                }             
+            } else { //Si hay proceso ejecutando es
+                if (t_es==0) { //Pregunto si termino de ejecutar su tiempo de es
+                    var proceso = cola_bloqueado[0];
+                    proceso.posicion ++;
+                    add_cola_es(proceso);
+                    cola_listo.push(proceso);
+                    cola_bloqueado.shift();  
+                    cola_es.shift();   
+                    document.getElementById("usoDeES").innerHTML = "Libre";
+                    if (cola_bloqueado.length>0 |cola_cpu.length==0){exito=false;}
+                    if (exito==true){to_es++;}                               
+                }else{
+                    
+                    if (cola_listo.length<=0 && cola_cpu.length==0){exito=true;}//si no, hay un proceso en cola, vuelvo arriba
+                }
+            }
+        }else{to_es++;}    
+    } while (exito==false);   
+    t_simulacion ++;
+    t_cpu --;
+    t_es --;
+    llenarColas();
+}
+
+function SRTF2(){
+    if (cola_terminado.length < tablaProcesos.length) {
+        //Buscar un proceso donde TA=TSimulacion y agregarlo cola nuevo
+        for (let i = 0; i < tablaProcesos.length; i++) {
+            const element = tablaProcesos[i];
+            if (element.tiempoArribo==t_simulacion) {cola_nuevo.push(element);}
+        }
+        llenarColasNuevo();
+        document.getElementById("tiempoActual").innerHTML = "Tiempo Actual: "+t_simulacion;            
+        var exito=false
+        agregarMP: do {
+            //Asignar esos procesos de la cola nuevo a la MP y a la cola listo
+            if (cola_nuevo.length>0) { //si significa que hay procesos para entrar a MP
+                switch (algoritmo) {
+                    case "FF":
+                        firstFit();
+                    break;
+                    case "FV":
+                        firstFitVble();
+                    break;
+                    case "B":
+                        bestFit();
+                    break;
+                    case "W":
+                        worstFitVble();
+                    break;
+                }
+                llenarMemoria();
+            }
+            //Asignar los procesos de la cola listo a la cpu
+            if (cola_listo.length>0) { //Primero pregunto si la cola contiene algun proceso.
+                if (cola_cpu.length==0) { //No hay procesos ejecutandose en cpu
+                    var pos=0;     
+                    if (cola_listo.length>1 && algoritmo2=="SRTF") {//Busco aquel proceso con el ciclo de vida mas corto
+                        var irrupcion_cpu =10000;
+                        for (let k = 0; k < cola_listo.length; k++) {
+                            const proceso = cola_listo[k];
+                            var posicion=proceso.posicion;
+                            var duracion=proceso.cicloVida[posicion];
+                            if (duracion<irrupcion_cpu) {
+                                irrupcion_cpu=duracion;
+                                pos=k;
+                            }
+                        }
+                    }         
+                    var proceso = cola_listo[pos];
+                    cola_cpu.push(proceso);                    
+                    add_to_cpu(to_cpu);
+                    to_cpu=0;
+                    var i = proceso.posicion;
+                    t_cpu = proceso.cicloVida[i];
+                    exito = true; //para salir del ciclo
+                    document.getElementById("usoDeCPU").innerHTML = "P"+proceso.idProceso;
+                } else { //Si hay proceso ejecutando cpu
+                    if (t_cpu==0) { //Pregunto si termino de ejecutar su tiempo de cpu
+                        var proceso = cola_cpu[0];
+                        add_cola_cpu(proceso, t_cpu);
+                        proceso.posicion ++;
+                        cola_cpu.shift();
+                        document.getElementById("usoDeCPU").innerHTML = "Libre";
+                        
+                        if (proceso.posicion==5) {//Termine de ejecutar el utlimo tiempo de cpu pasa a la cola terminado
+                            cola_terminado.push(proceso);
+                            var index = cola_listo.indexOf(proceso);
+                            cola_listo.splice(index,1);
+                            exito = true;
+                            idProceso=proceso.idProceso;
+                            llenarTiempos(idProceso,t_simulacion);
+                            htmlTags = `<div class="p-2 bg-white" id='CT${idProceso}'>P${idProceso}</div>`
+                            $('#colaTerminado').append(htmlTags);
+                            switch (tipoPart) {
+                                case "F":
+                                    quitar_MP(idProceso); //cuando termina de ejecutar su ciclo de vida. Debe ser eliminado de mp
+                                break;                            
+                                case "V":
+                                    quitarVariable(idProceso);
+                                break;                                
+                            }  
+                            llenarMemoria();                    
+                            if (cola_nuevo.length>0) { //si significa que hay procesos para entrar a MP
+                                exito=false;
+                                continue agregarMP;                           
+                            } 
+                            if (cola_listo.length>0 && cola_cpu.length==0){exito=false;}                      
+                        } else {//Termino de ejecutar cpu pasa a e/s
+                            cola_bloqueado.push(proceso);
+                            var index = cola_listo.indexOf(proceso);
+                            cola_listo.splice(index,1);
+                        }                
+                    }else{ //Hay algun proceso en CPU pero no termino. Pregunto si hay otro con menor tiempo para entrar
+                        var pos=0;                    
+                        if (cola_listo.length>1 && algoritmo2=="SRTF") { //pregunta si hay dos procesos en la cola de listo
+                            var exito2 =false;
+                            var irrupcion_cpu =t_cpu;
+                            for (let k = 0; k < cola_listo.length; k++) {
+                                const proceso = cola_listo[k];
+                                var posicion=proceso.posicion;
+                                var duracion=proceso.cicloVida[posicion];
+                                var idProc=proceso.idProceso;
+                                var idProc2=cola_cpu[0].idProceso;
+                                var pos2=cola_cpu[0].posicion;
+                                if (idProc!=idProc2 && duracion<irrupcion_cpu) {
+                                    irrupcion_cpu=duracion;
+                                    pos=k;
+                                    exito2=true;
+                                }
+                            }
+                            if (exito2==true) { //significa que el proceso que esta en cpu tiene que salir porq hay otro que tiene el TI mas pequeño
+                                var proceso = cola_cpu[0];
+                                var index = tablaProcesos.indexOf(proceso);
+                                add_cola_cpu(proceso, t_cpu);
+                                tablaProcesos[index].cicloVida[pos2]=t_cpu;
+                                
+                                proceso = cola_listo[pos];
+                                cola_cpu.shift();
+                                cola_cpu.push(proceso);
+                                t_cpu = irrupcion_cpu;                                
+                                document.getElementById("usoDeCPU").innerHTML = "P"+proceso.idProceso;
+                            }                        
+                        } 
+                        exito = true; //para salir del ciclo 
+                    }
+                }
+            }else{to_cpu++;}     
+            //Asignar los procesos de la cola de bloqueados a la e/s
+            if (cola_bloqueado.length>0) {
+                if (cola_es.length==0) { //No hay procesos ejecutandose en es             
+                    add_to_es(to_es);
+                    to_es=0;
+                    var proceso = cola_bloqueado[0];
+                    cola_es.push(proceso);
+                    var i = proceso.posicion;
+                    t_es = proceso.cicloVida[i];
+                    document.getElementById("usoDeES").innerHTML = "P"+proceso.idProceso;                    
+                    if (cola_listo.length<=0) { //si hay un proceso en cola, vuelvo arriba
+                        exito=true;
+                        to_cpu++;
+                    }             
+                } else { //Si hay proceso ejecutando es
+                    if (t_es==0) { //Pregunto si termino de ejecutar su tiempo de es
+                        var proceso = cola_bloqueado[0];
+                        proceso.posicion ++;
+                        add_cola_es(proceso);
+                        cola_listo.push(proceso);
+                        cola_bloqueado.shift();  
+                        cola_es.shift();   
+                        document.getElementById("usoDeES").innerHTML = "Libre";
+                        if (cola_bloqueado.length>0 |cola_cpu.length==0){exito=false;}
+                        if (exito==true){to_es++;}                               
+                    }else{
+                        
+                        if (cola_listo.length<=0 && cola_cpu.length==0){exito=true;}//si no, hay un proceso en cola, vuelvo arriba
+                    }
+                }
+            }else{to_es++;}    
+        } while (exito==false);    
+        t_simulacion ++;
+        t_cpu --;
+        t_es --;
+        llenarColas();
+    } else {alert("Simulacion Terminada");}
 }
