@@ -177,6 +177,8 @@ function llenar(){
 
 //Algoritmo Prueba
 function start(){
+    document.getElementById("previous").disabled = false;
+    document.getElementById("next").disabled = false;
     tablaParticiones=condicionesInciales.tablaParticiones;
     algoritmo2=colasMultinivel[0].algoritmo;
     algoritmo=condicionesInciales.algoritmo; 
