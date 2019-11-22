@@ -1,67 +1,5 @@
 //Resolucion de algoritmos de planificación de procesos
-/*
-var tablaParticiones = [];
-var particion ={ //se crea el object
-    "idParticion": 1,
-    "dirInicio": 31,
-    "dirFin": 37,
-    "tamaño": 6,
-    "estado": 0, //0 libre 1 ocupado
-    "idProceso": null,
-    "FI": 0,
-};
-tablaParticiones.push(particion);
-var particion ={ //se crea el object
-    "idParticion": 2,
-    "dirInicio": 38,
-    "dirFin": 57,
-    "tamaño": 20,
-    "estado": 0, //0 libre 1 ocupado
-    "idProceso": null,
-    "FI": 0,
-};
-tablaParticiones.push(particion);
-var particion ={ //se crea el object
-    "idParticion": 3,
-    "dirInicio": 58,
-    "dirFin": 127,
-    "tamaño": 70,
-    "estado": 0, //0 libre 1 ocupado
-    "idProceso": null,
-    "FI": 0,
-};
-tablaParticiones.push(particion);
-console.log(tablaParticiones);
-var tablaProcesos=[];
-var proceso = {
-    "idProceso": 1,
-    "tamaño": 15,
-    "prioridad": 1,
-    "tiempoArribo": 0,
-    "cicloVida": [1,3,4,3,1],
-    "posicion":0,
-};
-tablaProcesos.push(proceso);
-var proceso = {
-    "idProceso": 2,
-    "tamaño": 20,
-    "prioridad": 1,
-    "tiempoArribo": 3,
-    "cicloVida": [1,2,3,2,1],
-    "posicion":0,
-};
-tablaProcesos.push(proceso);
-var proceso = {
-    "idProceso": 3,
-    "tamaño": 6,
-    "prioridad": 1,
-    "tiempoArribo": 5,
-    "cicloVida": [1,3,2,1,1],
-    "posicion":0,
-};
-tablaProcesos.push(proceso);
-console.log(tablaProcesos);
-*/
+
 //declaracion de variables
 var t_simulacion=0;
 var t_cpu=0;
@@ -72,31 +10,16 @@ var cola_bloqueado=[];
 var cola_terminado=[];
 var cola_cpu=[];
 var cola_es=[];
-var tablaParticiones=condicionesInciales.tablaParticiones;
-//SJF();
-/*
-var condicionesInciales = { 
-    "tamanoMP": 128,
-    "porcentajeSO": 0.25,
-    "tamanoSO": 32,
-    "tipoParticion": "F",
-    "algoritmo": "FF", 
-    "tablaParticiones": [{FI: 0,dirFin: 37,dirInicio: 32,estado: 0, idParticion: 1, idProceso: null, tamaño: 6}],
-};
-var colasMultinivel=[{algoritmo:"FCFS"}]
-var tablaProcesos=[{"idProceso": 3,"tamaño": 6,"prioridad": 1,"tiempoArribo": 0,"cicloVida": [1,3,2,1,1],
-"posicion":0,}]
-var tablaParticiones=condicionesInciales.tablaParticiones;//
-llenarColas();
-*/
+var tablaParticiones=[];
+var algoritmo=""; 
+var tipoPart=""; 
+var algoritmo2="";
+var to_es=0; //tiempo oscioso e/s
+var to_cpu=0; //tiempo oscioso cpu
+var tamanoLibre= 0;
+var direccionLibre = 0; 
 
-function llenarColas() {
-    document.getElementById("llenarColas").disabled = true; // si se vuelve a hacer clic en ese boton se congela el simulador
-    var algoritmo= condicionesInciales.algoritmo; //"FF";//
-    var tipoPart=condicionesInciales.tipoParticion; //"F";//
-    var algoritmo2=colasMultinivel[0].algoritmo; //"FCFS"; 
-    var to_es=0; //tiempo oscioso e/s
-    var to_cpu=0; //tiempo oscioso cpu
+function llenar(){ 
     do {
         //Buscar un proceso donde TA=TSimulacion y agregarlo cola nuevo
         for (let i = 0; i < tablaProcesos.length; i++) {
@@ -107,6 +30,7 @@ function llenarColas() {
         }
         console.log("tiempo simulacion "+ t_simulacion);
         console.log("C nuevo " + cola_nuevo);
+        document.getElementById("tiempoActual").innerHTML = "Tiempo Actual: "+t_simulacion;
             
         var exito=false
         agregarMP: do {
@@ -115,6 +39,7 @@ function llenarColas() {
                 switch (algoritmo) {
                     case "FF":
                         firstFit();
+                        console.log("hola");
                     break;
                     case "FV":
                         firstFitVble();
@@ -183,8 +108,7 @@ function llenarColas() {
                 }
             }else{
                 to_cpu++;
-            }
-        
+            }       
     
             //Asignar los procesos de la cola de bloqueados a la e/s
             if (cola_bloqueado.length>0) {
@@ -251,23 +175,156 @@ function llenarColas() {
     $('[data-toggle="popover"]').popover();
 }
 
-//Algoritmo FCFS para particiones Fijas
-function FCFS() {    
-    var algoritmo= "FF";//toString(condicionesInciales.algoritmo);
-    var tipoPart="F";//toString(condicionesInciales.tipoParticion);
-    var to_es=0; //tiempo oscioso e/s
-    var to_cpu=0; //tiempo oscioso cpu
-    do {
+//Algoritmo Prueba
+function start(){
+    tablaParticiones=condicionesInciales.tablaParticiones;
+    algoritmo2=colasMultinivel[0].algoritmo;
+    algoritmo=condicionesInciales.algoritmo; 
+    tipoPart=condicionesInciales.tipoParticion; 
+    tamanoLibre= (condicionesInciales.tamanoMP-condicionesInciales.tamanoSO); 
+    direccionLibre = condicionesInciales.tamanoSO; 
+    document.getElementById("iniciar").disabled = true; 
+    //Buscar un proceso donde TA=TSimulacion y agregarlo cola nuevo
+    for (let i = 0; i < tablaProcesos.length; i++) {
+        const element = tablaProcesos[i];
+        if (element.tiempoArribo==t_simulacion) {
+            cola_nuevo.push(element);
+        }
+    }
+    llenarColasNuevo();
+    document.getElementById("tiempoActual").innerHTML = "Tiempo Actual: "+t_simulacion;
+    var exito=false
+    agregarMP: do {
+        //Asignar esos procesos de la cola nuevo a la MP y a la cola listo
+        if (cola_nuevo.length>0) { //si significa que hay procesos para entrar a MP
+            switch (algoritmo) {
+                case "FF":
+                    firstFit();
+                break;
+                case "FV":
+                    firstFitVble();
+                break;
+                case "B":
+                    bestFit();
+                break;
+                case "W":
+                    worstFitVble();
+                break;
+            }
+            llenarMemoria();
+        }
+        //Asignar los procesos de la cola listo a la cpu
+        if (cola_listo.length>0) { //Primero pregunto si la cola contiene algun proceso.
+            if (cola_cpu.length==0) { //No hay procesos ejecutandose en cpu
+                var pos=0;                    
+                if (cola_listo.length>1 && algoritmo2=="SJF") {
+                    var irrupcion_cpu =10000;
+                    for (let k = 0; k < cola_listo.length; k++) {
+                        const proceso = cola_listo[k];
+                        var posicion=proceso.posicion;
+                        var duracion=proceso.cicloVida[posicion];
+                        if (duracion<irrupcion_cpu) {
+                            irrupcion_cpu=duracion;
+                            pos=k;
+                        }
+                    }
+                }                
+                var proceso = cola_listo[pos];
+                cola_cpu.push(proceso);                    
+                add_to_cpu(to_cpu);
+                to_cpu=0;
+                var i = proceso.posicion;
+                t_cpu = proceso.cicloVida[i];
+                exito = true; //para salir del ciclo
+                document.getElementById("usoDeCPU").innerHTML = "P"+proceso.idProceso;
+            } else { //Si hay proceso ejecutando cpu
+                if (t_cpu==0) { //Pregunto si termino de ejecutar su tiempo de cpu
+                    var proceso = cola_listo[0];
+                    proceso.posicion ++;
+                    cola_cpu.shift();
+                    document.getElementById("usoDeCPU").innerHTML = "Libre";
+                    add_cola_cpu(proceso);
+                    if (proceso.posicion==5) {//Termine de ejecutar el utlimo tiempo de cpu pasa a la cola terminado
+                        cola_terminado.push(proceso);
+                        cola_listo.shift();
+                        exito = true;
+                        idProceso=proceso.idProceso;                        
+                        switch (tipoPart) {
+                            case "F":
+                                quitar_MP(idProceso); //cuando termina de ejecutar su ciclo de vida. Debe ser eliminado de mp
+                            break;                            
+                            case "V":
+                                quitarVariable(idProceso);
+                            break;
+                        }   
+                        llenarMemoria();                   
+                        if (cola_nuevo.length>0) { //si significa que hay procesos para entrar a MP
+                            exito=false;
+                            continue agregarMP;                           
+                        }                        
+                    } else {//Termino de ejecutar cpu pasa a e/s
+                        cola_bloqueado.push(proceso);
+                        cola_listo.shift();
+                    }                
+                }else{exito=true;}
+            }
+        }else{to_cpu++;}     
+        //Asignar los procesos de la cola de bloqueados a la e/s
+        if (cola_bloqueado.length>0) {
+            if (cola_es.length==0) { //No hay procesos ejecutandose en es
+                var pos=0;
+                if (cola_bloqueado.length>1 && algoritmo2=="SJF") {
+                    var irrupcion_es=10000;
+                    for (let k = 0; k < cola_bloqueado.length; k++) {
+                        const proceso = cola_bloqueado[k];
+                        var posicion=proceso.posicion;
+                        var duracion=proceso.cicloVida[posicion];
+                        if (duracion<irrupcion_es) {
+                            irrupcion_es=duracion;
+                            pos=k;
+                        }
+                    }
+                }                
+                add_to_es(to_es);
+                to_es=0;
+                var proceso = cola_bloqueado[pos];
+                cola_es.push(proceso);
+                var i = proceso.posicion;
+                t_es = proceso.cicloVida[i];                    
+                if (cola_listo.length<=0) { //si hay un proceso en cola, vuelvo arriba
+                    exito=true;
+                    to_cpu++;
+                }             
+            } else { //Si hay proceso ejecutando es
+                if (t_es==0) { //Pregunto si termino de ejecutar su tiempo de es
+                    var proceso = cola_bloqueado[0];
+                    proceso.posicion ++;
+                    add_cola_es(proceso);
+                    cola_listo.push(proceso);
+                    cola_bloqueado.shift();  
+                    cola_es.shift();   
+                    if (cola_bloqueado.length>0 |cola_cpu.length==0) {exito=false;}
+                    if (exito==true){to_es++;}                               
+                }else{
+                    if (cola_listo.length<=0 && cola_cpu.length==0){exito=true;} //si no, hay un proceso en cola, vuelvo arriba
+                }
+            }
+        }else{to_es++;}
+    } while (exito==false);
+    t_simulacion ++;
+    t_cpu --;
+    t_es --;
+    llenarColas();
+}
+function next(){
+    if (cola_terminado.length < tablaProcesos.length) {
         //Buscar un proceso donde TA=TSimulacion y agregarlo cola nuevo
         for (let i = 0; i < tablaProcesos.length; i++) {
             const element = tablaProcesos[i];
-            if (element.tiempoArribo==t_simulacion) {
-                cola_nuevo.push(element);
-            }
+            if (element.tiempoArribo==t_simulacion) {cola_nuevo.push(element);}
         }
-        console.log("tiempo simulacion "+ t_simulacion);
-        console.log("C nuevo " + cola_nuevo);
-            
+        llenarColasNuevo();
+        document.getElementById("tiempoActual").innerHTML = "Tiempo Actual: "+t_simulacion;            
         var exito=false
         agregarMP: do {
             //Asignar esos procesos de la cola nuevo a la MP y a la cola listo
@@ -283,39 +340,59 @@ function FCFS() {
                         bestFit();
                     break;
                     case "W":
-                        worstFit();
+                        worstFitVble();
                     break;
                 }
+                llenarMemoria();
             }
             //Asignar los procesos de la cola listo a la cpu
             if (cola_listo.length>0) { //Primero pregunto si la cola contiene algun proceso.
                 if (cola_cpu.length==0) { //No hay procesos ejecutandose en cpu
-                    var proceso = cola_listo[0];
+                    var pos=0;                    
+                    if (cola_listo.length>1 && algoritmo2=="SJF") {
+                        var irrupcion_cpu =10000;
+                        for (let k = 0; k < cola_listo.length; k++) {
+                            const proceso = cola_listo[k];
+                            var posicion=proceso.posicion;
+                            var duracion=proceso.cicloVida[posicion];
+                            if (duracion<irrupcion_cpu) {
+                                irrupcion_cpu=duracion;
+                                pos=k;
+                            }
+                        }
+                    }                
+                    var proceso = cola_listo[pos];
                     cola_cpu.push(proceso);                    
                     add_to_cpu(to_cpu);
                     to_cpu=0;
                     var i = proceso.posicion;
                     t_cpu = proceso.cicloVida[i];
                     exito = true; //para salir del ciclo
+                    document.getElementById("usoDeCPU").innerHTML = "P"+proceso.idProceso;
                 } else { //Si hay proceso ejecutando cpu
                     if (t_cpu==0) { //Pregunto si termino de ejecutar su tiempo de cpu
                         var proceso = cola_listo[0];
                         proceso.posicion ++;
                         cola_cpu.shift();
+                        document.getElementById("usoDeCPU").innerHTML = "Libre";
                         add_cola_cpu(proceso);
                         if (proceso.posicion==5) {//Termine de ejecutar el utlimo tiempo de cpu pasa a la cola terminado
                             cola_terminado.push(proceso);
                             cola_listo.shift();
                             exito = true;
                             idProceso=proceso.idProceso;
+                            llenarTiempos(idProceso,t_simulacion);
+                            htmlTags = `<div class="p-2 bg-white" id='CT${idProceso}'>P${idProceso}</div>`
+                            $('#colaTerminado').append(htmlTags);
                             switch (tipoPart) {
                                 case "F":
                                     quitar_MP(idProceso); //cuando termina de ejecutar su ciclo de vida. Debe ser eliminado de mp
                                 break;                            
                                 case "V":
                                     quitarVariable(idProceso);
-                                break;
-                            }                      
+                                break;                                
+                            }  
+                            llenarMemoria();                    
                             if (cola_nuevo.length>0) { //si significa que hay procesos para entrar a MP
                                 exito=false;
                                 continue agregarMP;                           
@@ -324,26 +401,35 @@ function FCFS() {
                             cola_bloqueado.push(proceso);
                             cola_listo.shift();
                         }                
-                    }else{
-                        exito=true;
-                    }
+                    }else{exito=true;}
                 }
-            }else{
-                to_cpu++;
-            }
-        
-    
+            }else{to_cpu++;}     
             //Asignar los procesos de la cola de bloqueados a la e/s
             if (cola_bloqueado.length>0) {
                 if (cola_es.length==0) { //No hay procesos ejecutandose en es
+                    var pos=0;
+                    if (cola_bloqueado.length>1 && algoritmo2=="SJF") {
+                        var irrupcion_es=10000;
+                        for (let k = 0; k < cola_bloqueado.length; k++) {
+                            const proceso = cola_bloqueado[k];
+                            var posicion=proceso.posicion;
+                            var duracion=proceso.cicloVida[posicion];
+                            if (duracion<irrupcion_es) {
+                                irrupcion_es=duracion;
+                                pos=k;
+                            }
+                        }
+                    }                
                     add_to_es(to_es);
                     to_es=0;
-                    var proceso = cola_bloqueado[0];
+                    var proceso = cola_bloqueado[pos];
                     cola_es.push(proceso);
                     var i = proceso.posicion;
-                    t_es = proceso.cicloVida[i];                    
+                    t_es = proceso.cicloVida[i];
+                    document.getElementById("usoDeES").innerHTML = "P"+proceso.idProceso;                    
                     if (cola_listo.length<=0) { //si hay un proceso en cola, vuelvo arriba
                         exito=true;
+                        to_cpu++;
                     }             
                 } else { //Si hay proceso ejecutando es
                     if (t_es==0) { //Pregunto si termino de ejecutar su tiempo de es
@@ -353,31 +439,21 @@ function FCFS() {
                         cola_listo.push(proceso);
                         cola_bloqueado.shift();  
                         cola_es.shift();   
-                        if (exito==true) {
-                            to_es++; 
-                        }                               
+                        document.getElementById("usoDeES").innerHTML = "Libre";
+                        if (cola_bloqueado.length>0 |cola_cpu.length==0){exito=false;}
+                        if (exito==true){to_es++;}                               
                     }else{
-                        exito=true;
+                        if (cola_listo.length<=0 && cola_cpu.length==0){exito=true;}//si no, hay un proceso en cola, vuelvo arriba
                     }
                 }
-            }else{
-                to_es++;                
-            }
-    
-        } while (exito==false);
-    
+            }else{to_es++;}    
+        } while (exito==false);    
         t_simulacion ++;
         t_cpu --;
         t_es --;
-    
-        
-        console.log("C listo " + cola_listo);
-        console.log("C bloqueado " + cola_bloqueado);
-        console.log("C terminado " + cola_terminado);
-    
-    } while (cola_terminado.length < tablaProcesos.length);
+        llenarColas();
+    } else {alert("Simulacion Terminada");}
 }
-
 
 //Algoritmo FirstFit para Particiones Fijas
 function firstFit() {
@@ -433,11 +509,12 @@ function bestFit() {
             idpart=idpart-1;
             const particioni = tablaParticiones[idpart];
             particioni.estado=1;
-            particioni.idProceso=(i+1);
+            particioni.idProceso=(particioni.idProceso);
             particioni.FI=fiactual;
             fiTotal=fiactual+fiTotal;
             cola_listo.push(procesoi);
             cola_nuevo.splice(i,1);
+            console.log(tablaParticiones);
         }
     }
 }
@@ -454,13 +531,11 @@ function quitar_MP(idProceso) {
 }
 
 //FirstFit para particiones variables
-var tamanoLibre= (condicionesInciales.tamanoMP-condicionesInciales.tamanoSO); //921;//
-var direccionLibre = condicionesInciales.tamanoSO; //103;//
 function firstFitVble() {
     for (let i = 0; i < cola_nuevo.length; i++) {
         const proceso = cola_nuevo[i];
         var tamanoProceso=proceso.tamaño;
-        if (tablaParticiones.length==0) {
+        if (tablaParticiones.length==0) { //no hay particiones
             if (tamanoLibre>=proceso.tamaño) {
                 var idPart=tablaParticiones.length;
                 var particion3 ={ //se crea el object
@@ -475,8 +550,10 @@ function firstFitVble() {
                 tablaParticiones.push(particion3);
                 direccionLibre=direccionLibre+tamanoProceso;
                 tamanoLibre=tamanoLibre-tamanoProceso;
+                cola_listo.push(proceso);
+                cola_nuevo.splice(i,1);
             }
-        } else {        
+        } else {   //existen particiones. Busco si el proceso entra en alguna     
             var j=0;
             var exito=false;
             do {
@@ -493,12 +570,13 @@ function firstFitVble() {
                         case diferencia>0:
                             particion.idProceso=proceso.idProceso;
                             particion.estado=1;
-                            particion.tamaño=tamanoProceso;                        
+                            particion.tamaño=tamanoProceso;    
+                            var dirFinActual=particion.dirFin;                    
                             var direccionFin=(particion.dirInicio+tamanoProceso-1);
                             particion.dirFin=direccionFin;
                             var idPart=particion.idParticion;
                             var k = tablaParticiones.length;
-                            do {
+                            do {// corro las particiones. Incremento su id
                                 const particion2 = tablaParticiones[(k-1)];
                                 particion2.idParticion=(particion2.idParticion+1);
                                 tablaParticiones.push(particion2);
@@ -508,8 +586,8 @@ function firstFitVble() {
                             var particion3 ={ //se crea el object
                                 "idParticion": (idPart+1),
                                 "dirInicio": (direccionFin+1),
-                                "dirFin": 127,
-                                "tamano": diferencia,
+                                "dirFin": dirFinActual,
+                                "tamaño": diferencia,
                                 "estado": 0, //0 libre 1 ocupado
                                 "idProceso": null,
                                 "FI": 0,
@@ -517,6 +595,8 @@ function firstFitVble() {
                             tablaParticiones.push(particion3);
                         break;
                     }
+                    cola_listo.push(proceso);
+                    cola_nuevo.splice(i,1);
                 }  
                 j++;
             } while (j < tablaParticiones.length && exito==false);
@@ -527,7 +607,7 @@ function firstFitVble() {
                         "idParticion": (idPart+1),
                         "dirInicio": direccionLibre,
                         "dirFin": (direccionLibre+proceso.tamaño-1),
-                        "tamano": proceso.tamaño,
+                        "tamaño": proceso.tamaño,
                         "estado": 1, //0 libre 1 ocupado
                         "idProceso": proceso.idProceso,
                         "FI": 0,
@@ -535,6 +615,118 @@ function firstFitVble() {
                     tablaParticiones.push(particion3);
                     direccionLibre=direccionLibre+tamanoProceso;
                     tamanoLibre=tamanoLibre-tamanoProceso;
+                    cola_listo.push(proceso);
+                    cola_nuevo.splice(i,1);
+                    
+                } 
+            }
+        }
+    }
+}
+function worstFitVble() {
+    for (let i = 0; i < cola_nuevo.length; i++) {
+        const proceso = cola_nuevo[i];
+        var tamanoProceso=proceso.tamaño;
+        if (tablaParticiones.length==0) { //Caso que no hay particiones= La memoria esta libre
+            if (tamanoLibre>=tamanoProceso) {
+                var idPart=0;
+                var particion3 ={ //se crea el object
+                    "idParticion": (idPart+1),
+                    "dirInicio": direccionLibre,
+                    "dirFin": (direccionLibre+proceso.tamaño-1),
+                    "tamaño": proceso.tamaño,
+                    "estado": 1, //0 libre 1 ocupado
+                    "idProceso": proceso.idProceso,
+                    "FI": 0,
+                };
+                tablaParticiones.push(particion3);
+                direccionLibre=direccionLibre+tamanoProceso;
+                tamanoLibre=tamanoLibre-tamanoProceso;
+                cola_listo.push(proceso);
+                cola_nuevo.splice(i,1);
+            }
+        } else {  //Caso que la memoria no esta libre. Hay particiones ocupadas o no     
+            var fiactual=0;
+            var exito2 = false;
+            var j=0;
+            do {            
+                const particioni = tablaParticiones[j];
+                if (exito2==false) {
+                    if ((tamanoProceso<=particioni.tamaño) && (particioni.estado==0)) {
+                        idpart=particioni.idParticion;
+                        fiactual=(particioni.tamaño-tamanoProceso);
+                        exito2=true;
+                    }                     
+                } else {
+                    if ((tamanoProceso<=particioni.tamaño) && (particioni.estado==0)) {
+                        var ficompara=(particioni.tamaño-tamanoProceso);
+                        if (ficompara>fiactual) {
+                            idpart=particioni.idParticion;
+                            fiactual=ficompara;
+                        }                    
+                    }
+                }
+                j++;
+            } while ( j<tablaParticiones.length);
+
+            if (exito2==true) { //Caso que encontre una particion donde quepa el proceso
+                idpart=idpart-1;
+                const particioni = tablaParticiones[idpart];
+                var tamanoPart=particioni.tamanoPart;               
+                var diferencia = tamanoPart-tamanoProceso;
+                switch (diferencia) {
+                    case 0:
+                        particion.idProceso=proceso.idProceso;
+                        particion.estado=1;
+                    break;
+                    case diferencia>0:
+                        particion.idProceso=proceso.idProceso;
+                        particion.estado=1;
+                        particion.tamaño=tamanoProceso;     
+                        var dirFinActual=particion.dirFin;                   
+                        var direccionFin=(particion.dirInicio+tamanoProceso-1);
+                        particion.dirFin=direccionFin;
+                        var idPart=particion.idParticion;
+                        var k = tablaParticiones.length;
+                        do {
+                            const particion2 = tablaParticiones[(k-1)];
+                            particion2.idParticion=(particion2.idParticion+1);
+                            tablaParticiones.push(particion2);
+                            tablaParticiones.splice((k-1),1);
+                            k--;
+                        } while (k>idPart);
+                        var particion3 ={ //se crea el object
+                            "idParticion": (idPart+1),
+                            "dirInicio": (direccionFin+1),
+                            "dirFin": dirFinActual,
+                            "tamaño": diferencia,
+                            "estado": 0, //0 libre 1 ocupado
+                            "idProceso": null,
+                            "FI": 0,
+                        };
+                        tablaParticiones.push(particion3);
+                    break;
+                }
+                cola_listo.push(procesoi);
+                cola_nuevo.splice(i,1);
+            }else{ //Caso que todas las particiones estan ocupadas creo una nueva
+                if (tamanoLibre>=proceso.tamaño) {
+                    var idPart=tablaParticiones.length;
+                    var particion3 ={ //se crea el object
+                        "idParticion": (idPart+1),
+                        "dirInicio": direccionLibre,
+                        "dirFin": (direccionLibre+proceso.tamaño-1),
+                        "tamaño": proceso.tamaño,
+                        "estado": 1, //0 libre 1 ocupado
+                        "idProceso": proceso.idProceso,
+                        "FI": 0,
+                    };
+                    tablaParticiones.push(particion3);
+                    direccionLibre=direccionLibre+tamanoProceso;
+                    tamanoLibre=tamanoLibre-tamanoProceso;
+                    cola_listo.push(proceso);
+                    cola_nuevo.splice(i,1);
+                    
                 } 
             }
         }
@@ -553,7 +745,7 @@ function quitarVariable(idProceso) {
                 const particion2 = tablaParticiones[i-1];
                 if (particion2.estado==0) {//unir
                     particion2.dirFin=particion.dirFin;
-                    particion2.tamano=particion2.tamano+particion.tamaño;
+                    particion2.tamaño=particion2.tamaño+particion.tamaño;
                     exito2=true;
                 }
                 exito=true;
@@ -561,7 +753,7 @@ function quitarVariable(idProceso) {
                     const particion3 = tablaParticiones[i+1];
                     if (particion3.estado==0) {//unir
                         particion2.dirFin=particion3.dirFin;
-                        particion2.tamano=particion2.tamano+particion3.tamano;
+                        particion2.tamaño=particion2.tamaño+particion3.tamaño;
                         tablaParticiones.splice((i+1),1);
                     }
                 }
@@ -573,7 +765,7 @@ function quitarVariable(idProceso) {
                 const particion2 = tablaParticiones[i+1];
                 if (particion2.estado==0) {//unir
                     particion.dirFin=particion2.dirFin;
-                    particion.tamaño=particion.tamaño+particion2.tamano;
+                    particion.tamaño=particion.tamaño+particion2.tamaño;
                     tablaParticiones.splice((i+1),1);
                 }
             }
@@ -591,15 +783,16 @@ function add_cola_cpu(proceso) {
     var texto= 'Desde: '+ t_inicio.toString() + ' Hasta: ' + t_fin.toString();
     document.getElementById("cola_cpu").innerHTML+=`<div id='P${idProceso}' class="progress-bar" role="progressbar" style="width:20%">`+
    `<a data-trigger="hover" data-placement="bottom" data-original-title='Proceso ${idProceso}' data-toggle="popover" data-content= '${texto}'>P${idProceso} </a>` +'</div>';
-
+   $('[data-toggle="popover"]').popover();
 }
 function add_to_cpu(to_cpu) {
     if (to_cpu>0) {
         var t_inicio=t_simulacion-to_cpu; 
         var t_fin=t_simulacion; 
         var texto= 'Desde: '+ t_inicio.toString() + ' Hasta: ' + t_fin.toString();
-        document.getElementById("cola_cpu").innerHTML+='<div id="warning" class="progress-bar" role="progressbar" style="width:20%">'+
-        `<a data-trigger="hover" data-placement="bottom" data-original-title='Tiempo Ocioso' data-toggle="popover" data-content= '${texto}'> ** </a>` +'</div>';
+       document.getElementById("cola_cpu").innerHTML+='<div id="warning" class="progress-bar" role="progressbar" style="width:20%">'+
+      `<a data-trigger="hover" data-placement="bottom" data-original-title='Tiempo Ocioso' data-toggle="popover" data-content= '${texto}'> ** </a>` +'</div>';
+      $('[data-toggle="popover"]').popover();
     }
 }
 function add_to_es(to_es) {
@@ -607,8 +800,9 @@ function add_to_es(to_es) {
         var t_inicio=t_simulacion-to_es; 
         var t_fin=t_simulacion; 
         var texto= 'Desde: '+ t_inicio.toString() + ' Hasta: ' + t_fin.toString();
-        document.getElementById("cola_es").innerHTML+='<div id="warning" class="progress-bar" role="progressbar" style="width:20%">'+
-        `<a data-trigger="hover" data-placement="bottom" data-original-title='Tiempo Ocioso' data-toggle="popover" data-content= '${texto}'> ** </a>` +'</div>';
+       document.getElementById("cola_es").innerHTML+='<div id="warning" class="progress-bar" role="progressbar" style="width:20%">'+
+       `<a data-trigger="hover" data-placement="bottom" data-original-title='Tiempo Ocioso' data-toggle="popover" data-content= '${texto}'> ** </a>` +'</div>';
+       $('[data-toggle="popover"]').popover();
     }
 }
 function add_cola_es(proceso) {
@@ -620,4 +814,78 @@ function add_cola_es(proceso) {
     var texto= 'Desde: '+ t_inicio.toString() + ' Hasta: ' + t_fin.toString();
     document.getElementById("cola_es").innerHTML+=`<div id='P${idProceso}' class="progress-bar" role="progressbar" style="width:20%">`+
     `<a data-trigger="hover" data-placement="bottom" data-original-title='Proceso ${idProceso}' data-toggle="popover" data-content= '${texto}'>P${idProceso} </a>` +'</div>';
+    $('[data-toggle="popover"]').popover();
+}
+$(function () {$('[data-toggle="popover"]').popover()});
+function llenarColas() {
+    $('#colaListo').empty();
+    $('#colaBloqueado').empty();
+    for (let i = 0; i < cola_listo.length; i++) {
+        const element = cola_listo[i];
+        htmlTags = `<div class="p-2 bg-white" id='CL${element.idProceso}'>P${element.idProceso}</div>`
+        $('#colaListo').append(htmlTags);
+    }
+    for (let i = 0; i < cola_bloqueado.length; i++) {
+        const element = cola_bloqueado[i];
+        htmlTags = `<div class="p-2 bg-white" id='CB${element.idProceso}'>P${element.idProceso}</div>`
+        $('#colaBloqueado').append(htmlTags);
+    }
+}
+function llenarColasNuevo() {
+    $('#colaNuevo').empty();
+    for (let i = 0; i < cola_nuevo.length; i++) {
+        const element = cola_nuevo[i];
+        htmlTags = `<div class="p-2 bg-white" id='CN${element.idProceso}'>P${element.idProceso}</div>`
+        $('#colaNuevo').append(htmlTags);
+    }
+}
+function llenarMemoria() {
+    $('#divMemoria').empty();
+    for (let i = 0; i < tablaParticiones.length; i++) {
+        const particion = tablaParticiones[i];
+        if (particion.estado==1) {
+            //htmlTags=`<div class="p-2 bg-white">P${particion.idProceso}</div>`
+            var texto= "Dir Inicio:"+`${particion.dirInicio}  `+
+            `  Dir Fin: ${particion.dirFin}  `+
+            `  Tamaño: ${particion.tamaño}  `+
+            `  Fragm Interna: ${particion.FI}  `;
+            htmlTags='<div class="p-2 bg-white">'+
+            `<a data-trigger="hover" data-placement="bottom" data-original-title='Particion #${particion.idParticion}' data-toggle="popover" data-content= '${texto}'>P${particion.idProceso}</a>` +
+            '</div>';
+            $('#divMemoria').append(htmlTags);
+        } else {
+            var texto= "Dir Inicio:"+`${particion.dirInicio}  `+
+            `  Dir Fin: ${particion.dirFin}  `+
+            `  Tamaño: ${particion.tamaño}  `;
+            htmlTags='<div class="p-2 bg-white">'+
+            `<a data-trigger="hover" data-placement="bottom" data-original-title='Particion #${particion.idParticion}' data-toggle="popover" data-content= '${texto}'>Libre</a>` +
+            '</div>';
+            $('#divMemoria').append(htmlTags);
+        }
+        
+    }
+    $(function () {$('[data-toggle="popover"]').popover()});
+}
+function llenarTiempos(id,t_fin) {
+    for (let i = 0; i < tablaProcesos.length; i++) {
+        const proceso = tablaProcesos[i];
+        if (proceso.idProceso==id) {
+            var t_irrupcion=proceso.cicloVida[0]+proceso.cicloVida[2]+proceso.cicloVida[4];
+            var arribo=proceso.tiempoArribo;
+            var retorno=t_fin-arribo;
+            var espera=retorno-t_irrupcion;
+        }
+    }    
+    var htmlTags = '<tr>'+
+    '<td>' + `P${id}` + '</td>'+
+    '<td>' + `${t_fin}` + '</td>'+
+    '<td>' + `${arribo}` + '</td>'+
+    '<td>' +`${retorno}` + '</td>'+ '</tr>';       
+    $('#tablaRetorno tbody').append(htmlTags);
+    var htmlTags = '<tr>'+
+    '<td>' + `P${id}` + '</td>'+
+    '<td>' + `${retorno}` + '</td>'+
+    '<td>' + `${t_irrupcion}` + '</td>'+
+    '<td>' +`${espera}` + '</td>'+ '</tr>';       
+    $('#tablaEspera tbody').append(htmlTags);
 }
