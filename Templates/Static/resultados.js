@@ -50,8 +50,14 @@ function iniciarSimulacion() {
 
 // esta funcion se ejecuta una vez por segundo
 function cosoQueSeEjecutaCadaSegundo() {
-    tiempoSimulacion++;
-    console.log("TIEMPO " + tiempoSimulacion);
+    tiempoSimulacion++; // incrementa en uno el tiempo actual
+    console.log("TIEMPO " + tiempoSimulacion); // muestra por consola
+
+    for (var i = 0; i < tablaProcesos.length; i++) { // carga los procesos que arriban en la cola de nuevos
+        if (tablaProcesos[i].tiempoArribo == tiempoSimulacion) { // si el tiempo actual coincide con el tiempo de arribo del proceso
+            colaNuevos.push(tablaProcesos[i]); // lo mete en la cola de nuevos
+        }
+    }
 
     if (recursoCPU.proceso === null) { // se ejecuta cuando la cpu esta vacia
         // asd
@@ -121,4 +127,55 @@ function cosoQueSeEjecutaCadaSegundo() {
         console.log("Fin de la simulación");
         alert("Fin de la simulación");
     }
+}
+
+// algoritmo fcfs
+function FCFS() {
+    var procesoADespachar = null;
+    if (colaListos1.length > 0) { // si hay procesos en la cola de listos 1 busca ahi
+        procesoADespachar = colaListos1[0];
+        colaListos1.shift();
+    }
+    else { // sino busca en las otras colas
+        if (colaListos2.length > 0) { // si hay procesos en la cola de listos 2 busca ahi
+            procesoADespachar = colaListos2[0];
+            colaListos2.shift();    
+        }
+        else { // sino busca en la cola 3
+            if (colaListos3.length > 0) { // si hay procesos en la cola de listos 3 busca ahi
+                procesoADespachar = colaListos3[0];
+                colaListos3.shift();        
+            }
+            else { // sino no hay ningun proceso listo y la cpu queda ociosa
+                console.log("CPU ocioso"); // muestra por consola
+            }
+        }
+    }
+    if (procesoADespachar !== null) {
+        recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
+        recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
+        recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
+        console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
+        // MOSTRAR EN EL GRAFICO // muestra en el grafico
+    }
+}
+
+// algoritmo sjf
+function SJF() {
+    //
+}
+
+// algoritmo srtf
+function SRTF() {
+    //
+}
+
+// algoritmo round robin
+function roundRobin() {
+    //
+}
+
+// algoritmo por prioridad
+function porPrioridad() {
+    //
 }
