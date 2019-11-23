@@ -229,10 +229,10 @@
                       <button type="button" class="btn btn-outline-light" id="previous" disabled="true">
                           <i class="material-icons align-middle">skip_previous</i>
                       </button> 
-                      <button type="button" class="btn btn-outline-light" id="iniciar" onclick="start()">
+                      <button type="button" class="btn btn-outline-light" id="iniciar" onclick="iniciarSimulacion()">
                           <i class="material-icons align-middle">play_arrow</i>
                       </button> 
-                      <button type="button" class="btn btn-outline-light" id="next" disabled="true" onclick="next()">
+                      <button type="button" class="btn btn-outline-light" id="next" disabled="true" onclick="cosoQueSeEjecutaCadaSegundo()">
                         <i class="material-icons align-middle">skip_next</i>
                       </button>                         
                   </div> 
@@ -313,7 +313,6 @@
                   <tr>
                     <th scope="col">Cola</th>
                     <th scope="col">Algoritmo</th>
-                    <th scope="col">¿Qué procesos entran en esa cola?</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -336,21 +335,6 @@
                         </div>
                       </form>
                     </td>
-                    <td>
-                      <div class="form-group">
-                        <input type="checkbox" id="objetivo1-1" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo1-1">Todos los procesos nuevos</label>
-                        <br>
-                        <input type="checkbox" id="objetivo1-2" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo1-2">Todos los procesos que salen de la entrada</label>
-                        <br>
-                        <input type="checkbox" id="objetivo1-3" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo1-3">Todos los procesos que salen de la salida</label>
-                        <br>
-                        <input type="checkbox" id="objetivo1-4" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo1-4">Todos los procesos que son desalojados de la CPU</label>
-                      </div>
-                    </td>
                   </tr>
                   <tr style="display: none">
                     <th scope="row">2</th>
@@ -371,21 +355,6 @@
                         </div>
                       </form>
                     </td>
-                    <td>
-                      <div class="form-group">
-                        <input type="checkbox" id="objetivo2-1" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo2-1">Todos los procesos nuevos</label>
-                        <br>
-                        <input type="checkbox" id="objetivo2-2" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo2-2">Todos los procesos que salen de la entrada</label>
-                        <br>
-                        <input type="checkbox" id="objetivo2-3" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo2-3">Todos los procesos que salen de la salida</label>
-                        <br>
-                        <input type="checkbox" id="objetivo2-4" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo2-4">Todos los procesos que son desalojados de la CPU</label>
-                      </div>
-                    </td>
                   </tr>
                   <tr style="display: none">
                     <th scope="row">3</th>
@@ -405,21 +374,6 @@
 							            <input type="number" class="form-control" id="quantum3" min="1" value="1">
                         </div>
                       </form>
-                    </td>
-                    <td>
-                      <div class="form-group">
-                        <input type="checkbox" id="objetivo3-1" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo3-1">Todos los procesos nuevos</label>
-                        <br>
-                        <input type="checkbox" id="objetivo3-2" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo3-2">Todos los procesos que salen de la entrada</label>
-                        <br>
-                        <input type="checkbox" id="objetivo3-3" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo3-3">Todos los procesos que salen de la salida</label>
-                        <br>
-                        <input type="checkbox" id="objetivo3-4" onchange="habilitarObjetivos(this)">
-                        <label for="objetivo3-4">Todos los procesos que son desalojados de la CPU</label>
-                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -612,7 +566,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> <!--Esto agregue porq hay cosas que no me andan-->
     <script type="text/javascript" src="Static/main.js"></script>
     <script type="text/javascript" src="Static/condiciones_iniciales.js"></script>
-    <script type="text/javascript" src="Static/algoritmos.js"></script>
+    <script type="text/javascript" src="Static/resultados.js"></script>
     <script type="text/javascript" src="Static/base-de-datos.js"></script>
     <script type="text/javascript" src="Static/lista-de-procesos.js"></script>
     <script type="text/javascript" src="Static/colas-multinivel.js"></script>

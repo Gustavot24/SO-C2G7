@@ -36,59 +36,6 @@ function agregarCola() {
 	}		
 }
 
-// funcion que deshabilita los checkbox de un objetivo de las demas colas cuando se selecciona uno
-// en el html vas a entender bien que hace
-function habilitarObjetivos(checkbox) {
-    var objetivoACambiar = checkbox.id[10];
-    var colaElegida = Number(checkbox.id[8]);
-    if (checkbox.checked == true) {
-        if (colaElegida != 1) {
-            document.getElementById("objetivo1-" + objetivoACambiar).disabled = true;
-        }
-        if (colaElegida != 2) {
-            document.getElementById("objetivo2-" + objetivoACambiar).disabled = true;
-        }
-        if (colaElegida != 3) {
-            document.getElementById("objetivo3-" + objetivoACambiar).disabled = true;
-        }
-        if (objetivoACambiar == "1") {
-            objetivo1 = true;
-        }
-        if (objetivoACambiar == "2") {
-            objetivo2 = true;
-        }
-        if (objetivoACambiar == "3") {
-            objetivo3 = true;
-        }
-        if (objetivoACambiar == "4") {
-            objetivo4 = true;
-        }
-    }
-    if (checkbox.checked == false) {
-        if (colaElegida != 1) {
-            document.getElementById("objetivo1-" + objetivoACambiar).disabled = false;
-        }
-        if (colaElegida != 2) {
-            document.getElementById("objetivo2-" + objetivoACambiar).disabled = false;
-        }
-        if (colaElegida != 3) {
-            document.getElementById("objetivo3-" + objetivoACambiar).disabled = false;
-        }
-        if (objetivoACambiar == "1") {
-            objetivo1 = false;
-        }
-        if (objetivoACambiar == "2") {
-            objetivo2 = false;
-        }
-        if (objetivoACambiar == "3") {
-            objetivo3 = false;
-        }
-        if (objetivoACambiar == "4") {
-            objetivo4 = false;
-        }
-    }
-}
-
 // carga una lista con los nombres de todas las listas de colas guardadas
 // y abre el modal para poder seleccionar
 // con info de https://www.w3schools.com/jsref/met_select_remove.asp
@@ -127,22 +74,6 @@ function modalCargarColas() {
 function continuarColas() {
     colasMultinivel = [] // vacia el array de colas para no guardar colas repetidas (si el usuario cliquea siguiente varias veces)
     var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
-    if (objetivo1 == false) {
-        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos nuevos");
-        return;
-    }
-    if (objetivo2 == false) {
-        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos que salen de la entrada");
-        return;
-    }
-    if (objetivo3 == false) {
-        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos que salen de la salida");
-        return;
-    }
-    if (objetivo4 == false) {
-        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos desalojados de la CPU");
-        return;
-    }
     for (var i = 0; i < tablaColas.rows.length; i++) { // itera para cada fila de la tabla
         var colaMultinivel = { // crea un objeto con una cola y le agrega sus datos
             idCola: Number(tablaColas.rows[i].cells[0].innerHTML),
