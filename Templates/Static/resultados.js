@@ -138,6 +138,7 @@ function cosoQueSeEjecutaCadaSegundo() {
             }
             else { // el proceso termina
                 colaTerminados.push(recursoCPU.proceso);
+                //SACAR AL PROCESO DE MEMORIA
                 console.log("Proceso " + recursoCPU.proceso.idProceso + " termina");
             }
             recursoCPU.proceso = null;
@@ -246,7 +247,7 @@ function FCFS(cola) {
         recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[4]; // asigna el tiempo de fin de rafaga
     }
     console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
-    // MOSTRAR EN EL GRAFICO // muestra en el grafico
+    agregarGanttCPU(recursoCPU.proceso.idProceso, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // muestra en el grafico
 }
 
 // algoritmo sjf
@@ -267,7 +268,7 @@ function SJF(cola) {
         recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
         recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
         console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
-        // MOSTRAR EN EL GRAFICO // muestra en el grafico
+        agregarGanttCPU(recursoCPU.proceso.idProceso, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // muestra en el grafico
     }
 }
 
@@ -284,19 +285,39 @@ function SRTF(cola) {
                 posicionEnLaCola = i;
             }
         }
+    }
+    if (procesoADespachar !== null) { // si hay un proceso a despachar es porque la cola no esta vacia
         if (recursoCPU.proceso !== null) { // si hay un proceso en cpu puede que sea desalojado
-            if (procesoADespachar.cicloVida[0] < recursoCPU.proceso.cicloVida[0]) {
-                // desalojar proceso de cpu
-                // MOSTRAR GRAFICO DEL PROCESO DESALOJADO
-                cola.splice(posicionEnLaCola, 1);
+            if (procesoADespachar.cicloVida[0] < recursoCPU.proceso.cicloVida[0]) { // si el proceso puede ser desalojado
+                recursoCPU.finRafaga = tiempoSimulacion; // asigna al fin de refaga el tiempo actual
+                agregarGanttCPU(recursoCPU.proceso.idProceso, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // muestra en el grafico
+                console.log("Proceso " + recursoCPU.proceso.idProceso + " desalojado de CPU"); // muestra por consola
+                switch (recursoCPU.proceso.prioridad) { // segun la prioridad del proceso lo carga a su correspondiente cola de listos
+                    case 1:
+                        colaListos1.push(recursoCPU.proceso);
+                        break;
+                    case 2:
+                        colaListos2.push(recursoCPU.proceso);
+                        break;
+                    case 3:
+                        colaListos3.push(recursoCPU.proceso);
+                        break;
+                }
+                recursoCPU.proceso = null; // desaloja el proceso de la cpu
+                cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
                 recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
                 recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
                 recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
                 console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
             }
         }
-    }
-    if (procesoADespachar !== null) {
+        else { // sino, la cpu esta vacia y el proceso se mete de una
+            cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
+            recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
+            recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
+            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
+            console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
+        }
     }
 }
 
