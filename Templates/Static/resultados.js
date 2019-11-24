@@ -312,13 +312,15 @@ function porPrioridad(cola) {
 
 // algoritmo first fit para particiones fijas
 function firstFitFijas() {
-    for (var i = 0;  i < colaNuevos.length; i++) {
-        for (var j = 0; j < tablaParticiones.length; j++) {
-            if ((tablaParticiones[i].tamaño >= colaNuevos[i].tamaño) && (tablaParticiones[i].estado == 0)) {
-                tablaParticiones[i].estado = 1;
-                tablaParticiones[i].idProceso = colaNuevos[i].idProceso;
-                tablaParticiones[i].FI = tablaParticiones[i].tamaño - colaNuevos[i].tamaño;
-                switch (colaNuevos[i].prioridad) {
+    for (var i = 0;  i < colaNuevos.length; i++) { // itera por la cola de nuevos
+        var admitido = false; // indica si un proceso fue admitido en memoria o no
+        var j = 0; // para iterar sobre la tabla de particiones
+        while (j < tablaParticiones.length && !admitido) { // itera por la tabla de particiones
+            if ((tablaParticiones[i].tamaño >= colaNuevos[i].tamaño) && (tablaParticiones[i].estado == 0)) { // si la particion esta libre y el proceso entra
+                tablaParticiones[i].estado = 1; // asigna el estado ocupado a la particion
+                tablaParticiones[i].idProceso = colaNuevos[i].idProceso; // asigna el id de proceso a la particion
+                tablaParticiones[i].FI = tablaParticiones[i].tamaño - colaNuevos[i].tamaño; // asigna la fragmentacion interna
+                switch (colaNuevos[i].prioridad) { // segun la prioridad del proceso lo carga a su correspondiente cola de listos
                     case 1:
                         colaListos1.push(colaNuevos[i]);
                         break;
@@ -329,14 +331,45 @@ function firstFitFijas() {
                         colaListos3.push(colaNuevos[i]);
                         break;
                 }
+                colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
+                admitido = true; // indica que el proceso fue admitido para pasar al siguiente
             }
+            j++; // incrementa j para pasar a la siguiente particion
         }
     }
 }
 
 // algoritmo best fit
 function bestFit() {
-    //
+    var mejorAjuste = -1; // indica la particion donde mejor entra el proceso
+    var diferencia = Infinity; // diferencia de tamaño entre una particion y un proceso
+    for (var i = 0; i < colaNuevos.length; i++) { // itera por la cola de nuevos
+        for (var j = 0; j < tablaParticiones.length; j++) { // itera por la tabla de particiones
+            if ((tablaParticiones[i].tamaño >= colaNuevos[i].tamaño) && (tablaParticiones[i].estado == 0)) { // si la particion esta libre y el proceso entra
+                if ((tablaParticiones[j].tamaño - colaNuevos[i].tamaño) < diferencia) { // si el proceso se ajusta mejor que la diferencia guardada
+                    diferencia = tablaParticiones[j].tamaño - colaNuevos[i].tamaño; // actualiza la diferencia
+                    mejorAjuste = j; // guarda la posicion de esa particion
+                }
+            }
+        }
+        if (mejorAjuste >= 0) { // si es mayor o igual a 0 es porque el proceso entra en una particion
+            tablaParticiones[j].estado = 1; // asigna el estado ocupado a la particion
+            tablaParticiones[j].idProceso = colaNuevos[i].idProceso; // asigna el id de proceso a la particion
+            tablaParticiones[j].FI = tablaParticiones[j].tamaño - colaNuevos[i].tamaño; // asigna la fragmentacion interna
+            switch (colaNuevos[i].prioridad) { // segun la prioridad del proceso lo carga a su correspondiente cola de listos
+                case 1:
+                    colaListos1.push(colaNuevos[i]);
+                    break;
+                case 2:
+                    colaListos2.push(colaNuevos[i]);
+                    break;
+                case 3:
+                    colaListos3.push(colaNuevos[i]);
+                    break;
+            }
+            colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
+        }
+    }
 }
 
 // algoritmo first fit para particiones variables
