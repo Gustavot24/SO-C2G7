@@ -176,35 +176,14 @@ function guardarColas(nombre) {
         mostrarMensaje("errorColasMultinivel", "El nombre de la lista de colas no puede estar en blanco"); // muestra el mensaje de error
         return; // termina la funcion
     }
-    if (objetivo1 == false) {
-        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos nuevos");
-        return;
-    }
-    if (objetivo2 == false) {
-        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos que salen de la entrada");
-        return;
-    }
-    if (objetivo3 == false) {
-        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos que salen de la salida");
-        return;
-    }
-    if (objetivo4 == false) {
-        mostrarMensaje("errorColasMultinivel", "No hay ninguna cola elegida para que arriben los procesos desalojados de la CPU");
-        return;
-    }
     var tablaConvertidaEnString = []; // tabla que va a contener el array de colas a meter en la db
     var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
     for (var i = 0; i < tablaColas.rows.length; i++) { // itera sobre las filas de la tabla de colas
         if (tablaColas.rows[i].style.display != "none") {
-            var objetivo = String(Number(document.getElementById("objetivo" + (i + 1) + "-1").checked)) +
-                String(Number(document.getElementById("objetivo" + (i + 1) + "-2").checked)) +
-                String(Number(document.getElementById("objetivo" + (i + 1) + "-3").checked)) +
-                String(Number(document.getElementById("objetivo" + (i + 1) + "-4").checked));
             var cola = { // crea un objeto con los datos de una cola
                 idCola: tablaColas.rows[i].cells[0].innerHTML,
                 algoritmo: document.getElementById("typealgm" + (i + 1)).value,
                 quantum: document.getElementById("quantum" + (i + 1)).value,
-                objetivo: objetivo,
             }
             tablaConvertidaEnString.push(cola); // agrega ese objeto al array de colas
         }
@@ -244,12 +223,6 @@ function cargarColas(nombre) {
                 }
                 document.getElementById("typealgm" + (i + 1)).value = tablaColas[i].algoritmo;
                 document.getElementById("quantum" + (i + 1)).value = tablaColas[i].quantum;
-                for (var j = 0; j < tablaColas[i].objetivo.length; j++) {
-                    if (tablaColas[i].objetivo[j] == "1") {
-                        document.getElementById("objetivo" + (i + 1) + "-" + (j + 1)).checked = true;
-                        habilitarObjetivos(document.getElementById("objetivo" + (i + 1) + "-" + (j + 1)));
-                    }
-                }
             }
             mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas"); // muestra un mensaje de que se cargo todo bien
             seGuardaronLasColas = true; // pone a true la variable que indica que se guardaron las colas
