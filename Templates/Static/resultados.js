@@ -92,7 +92,7 @@ function cosoQueSeEjecutaCadaSegundo() {
                     SRTF(colaListos1.procesos);
                     break;
                 case "Round Robin":
-                    roundRobin(colaListos1.procesos);
+                    roundRobin(colaListos1.procesos, colaListos1.quantum);
                     break;
                 case "Por Prioridad":
                     porPrioridad(colaListos1.procesos);
@@ -111,7 +111,7 @@ function cosoQueSeEjecutaCadaSegundo() {
                     SRTF(colaListos2.procesos);
                     break;
                 case "Round Robin":
-                    roundRobin(colaListos2.procesos);
+                    roundRobin(colaListos2.procesos, colaListos2.quantum);
                     break;
                 case "Por Prioridad":
                     porPrioridad(colaListos2.procesos);
@@ -130,7 +130,7 @@ function cosoQueSeEjecutaCadaSegundo() {
                     SRTF(colaListos3.procesos);
                     break;
                 case "Round Robin":
-                    roundRobin(colaListos3.procesos);
+                    roundRobin(colaListos3.procesos, colaListos3.quantum);
                     break;
                 case "Por Prioridad":
                     porPrioridad(colaListos3.procesos);
@@ -184,9 +184,9 @@ function cosoQueSeEjecutaCadaSegundo() {
             recursoCPU.proceso = null; // elimina el proceso de la cpu
             document.getElementById("usoDeCPU").innerHTML = "Libre";
             recursoCPU.inicioRafaga = tiempoSimulacion; // pone el inicio de rafaga igual al tiempo actual
-            //cargar un nuevo proceso    
+            //CARGAR UN NUEVO PROCESO    
         }
-        else { // el proceso puede seguir en la cpu (si no es desalojado)
+        else { // el proceso puede seguir en la cpu (si no es desalojado por srtf)
             if (recursoCPU.proceso.cicloVida[0] > 0) { // esta ejecutando su primera rafaga de cpu
                 recursoCPU.proceso.cicloVida[0]--; // disminuye en 1 su ciclo de vida
             }
@@ -454,8 +454,44 @@ function SRTF(cola) {
 }
 
 // algoritmo round robin
-function roundRobin(cola) {
-    //
+function roundRobin(cola, quantum) {
+    var procesoADespachar = null; // proceso que se va a despachar en la cpu
+    if (cola.length > 0) { // si hay procesos en la cola busca ahi
+        procesoADespachar = cola[0]; // elige el primer proceso de la cola
+        cola.shift(); // elimina ese proceso de la cola
+        recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
+        document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
+        recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
+        if (recursoCPU.proceso.cicloVida[0] > 0) { // si tiene que ejecutar su primera rafaga de cpu
+            if (recursoCPU.proceso.cicloVida[0] <= quantum) { // si lo que queda de rafaga es menor o igual al quantum
+                recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el fin de rafaga como el tiempo actual mas lo que le queda de rafaga
+                finDeQuantum = false; // pone a false para que cuando se alcance el fin de rafaga vaya a cola de bloqueados
+            }
+            else {
+                recursoCPU.finRafaga = tiempoSimulacion + quantum; // asigna el fin de rafaga como el tiempo actual mas el quantum
+                finDeQuantum = true; // pone a true para que cuando se alcance el fin de rafaga vaya a cola de listos de vuelta
+            }
+        } else if (recursoCPU.proceso.cicloVida[2] > 0) { // si tiene que ejecutar su segunda rafaga de cpu
+            if (recursoCPU.proceso.cicloVida[2] <= quantum) { // si lo que queda de rafaga es menor o igual al quantum
+                recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[2]; // asigna el fin de rafaga como el tiempo actual mas lo que le queda de rafaga
+                finDeQuantum = false; // pone a false para que cuando se alcance el fin de rafaga vaya a cola de bloqueados
+            }
+            else {
+                recursoCPU.finRafaga = tiempoSimulacion + quantum; // asigna el fin de rafaga como el tiempo actual mas el quantum
+                finDeQuantum = true; // pone a true para que cuando se alcance el fin de rafaga vaya a cola de listos de vuelta
+            }
+        } else if (recursoCPU.proceso.cicloVida[4] > 0) { // si tiene que ejecutar su tercera rafaga de cpu
+            if (recursoCPU.proceso.cicloVida[4] <= quantum) { // si lo que queda de rafaga es menor o igual al quantum
+                recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[4]; // asigna el fin de rafaga como el tiempo actual mas lo que le queda de rafaga
+                finDeQuantum = false; // pone a false para que cuando se alcance el fin de rafaga vaya a cola de bloqueados
+            }
+            else {
+                recursoCPU.finRafaga = tiempoSimulacion + quantum; // asigna el fin de rafaga como el tiempo actual mas el quantum
+                finDeQuantum = true; // pone a true para que cuando se alcance el fin de rafaga vaya a cola de listos de vuelta
+            }
+        }
+        console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
+    }
 }
 
 // algoritmo por prioridad
