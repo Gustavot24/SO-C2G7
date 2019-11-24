@@ -168,11 +168,11 @@ function cosoQueSeEjecutaCadaSegundo() {
                 }
                 else { // el proceso termina
                     colaTerminados.push(recursoCPU.proceso); // coloca el proceso en la cola de terminados
-                    for (var i = 0; i < tablaProcesos.length; i++ ) { // elimina el proceso de memoria
-                        if (tablaProcesos[i].idProceso == recursoCPU.proceso.idProceso) {
-                            tablaProcesos[i].idProceso = null;
-                            tablaProcesos[i].estado = 0;
-                            tablaProcesos[i].FI = 0;
+                    for (var i = 0; i < tablaParticiones.length; i++) { // elimina el proceso de memoria
+                        if (tablaParticiones[i].idProceso == recursoCPU.proceso.idProceso) {
+                            tablaParticiones[i].idProceso = null;
+                            tablaParticiones[i].estado = 0;
+                            tablaParticiones[i].FI = 0;
                         }
                     }
                     console.log("Proceso " + recursoCPU.proceso.idProceso + " termina"); // muestra por consola
@@ -247,7 +247,7 @@ function cosoQueSeEjecutaCadaSegundo() {
                 colaBloqueadosE.shift(); // elimina ese proceso de la cola de bloqueados
                 agregarGanttE(recursoE.proceso.idProceso, recursoE.inicioRafaga, recursoE.finRafaga); // se muestra en el grafico el tiempo que va a estar el proceso
                 document.getElementById("usoDeE").innerHTML = "P" + recursoE.proceso.idProceso; // muestra en el html
-                console.log("Proceso " + recursoE.idProceso + " ingresó a E"); // muestra por consola    
+                console.log("Proceso " + recursoE.proceso.idProceso + " ingresó a E"); // muestra por consola    
             }
             else { // sino la entrada va a quedar ociosa por no se cuanto tiempo
                 recursoE.finRafaga = null; // se deja el fin de rafaga como null (no se cuando va a dejar de estar ocioso)
@@ -324,8 +324,9 @@ function cosoQueSeEjecutaCadaSegundo() {
 
     if (colaTerminados.length == tablaProcesos.length) { // esto quiere decir que terminaron todos los procesos, entonces tiene que terminar la simulacion
         document.getElementById("next").disabled = true; // deshabilita el boton de siguiente
-        console.log("Fin de la simulación");
-        alert("Fin de la simulación");
+        document.getElementById("tiempoActual").innerHTML = "Tiempo final: " + tiempoSimulacion; // muestra el tiempo final en el html
+        console.log("Fin de la simulación"); // muestra por consola
+        alert("Fin de la simulación"); // ESTO SE TIENE QUE CAMBIAR POR ALGO QUE MUESTRE EN EL HTML
     }
 }
 
