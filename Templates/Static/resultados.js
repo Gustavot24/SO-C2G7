@@ -46,6 +46,9 @@ function iniciarSimulacion() {
         colaListos2 = colaListos1; // colaListos2 apunta a colaListos1
         colaListos3 = colaListos1; // colaListos3 apunta a colaListos1
     }
+    recursoCPU.inicioRafaga = 0;
+    recursoE.inicioRafaga = 0;
+    recursoS.inicioRafaga = 0;
     cosoQueSeEjecutaCadaSegundo();
 }
 
@@ -536,15 +539,60 @@ function worstFit() {
 
 // agrega algo al diagrama de gantt de cpu
 function agregarGanttCPU(proceso, inicio, fin) {
-    //
+    if (inicio != fin) { // si inicio == fin entonces no tiene ningun chiste que dibuje
+        var texto = "Desde " + inicio + " hasta " + fin; // el texto que va a indicar de cuando a cuando estuvo el proceso
+        if (proceso !== null) { // si proceso no es null significa que hubo un proceso ocupando el recurso
+            document.getElementById("cola_cpu").innerHTML +=
+                '<div id="P' + proceso + '" class="progress-bar" role="progressbar" style="width:20%">' +
+                '  <a data-trigger="hover" data-placement="bottom" data-original-title="Proceso ' + proceso + '" data-toggle="popover" data-content="' + texto + '">P' + proceso + '</a>' +
+                '</div>'; // agrega al diagrama el proceso
+        }
+        else { // si proceso es null significa que el recurso estuvo ocioso
+            document.getElementById("cola_cpu").innerHTML +=
+                '<div id="warning" class="progress-bar" role="progressbar" style="width:20%">'+
+                '  <a data-trigger="hover" data-placement="bottom" data-original-title="Tiempo Ocioso" data-toggle="popover" data-content="' + texto + '"> ** </a>' +
+                '</div>'; // agrega al diagrama el tiempo ocioso
+        }
+        $('[data-toggle="popover"]').popover(); // hace el popover
+    }
 }
 
 // agrega algo al diagrama de gantt de entrada
 function agregarGanttE(proceso, inicio, fin) {
-    //
+    if (inicio != fin) { // si inicio == fin entonces no tiene ningun chiste que dibuje
+        var texto = "Desde " + inicio + " hasta " + fin; // el texto que va a indicar de cuando a cuando estuvo el proceso
+        if (proceso !== null) { // si proceso no es null significa que hubo un proceso ocupando el recurso
+            document.getElementById("cola_e").innerHTML +=
+                '<div id="P' + proceso + '" class="progress-bar" role="progressbar" style="width:20%">' +
+                '  <a data-trigger="hover" data-placement="bottom" data-original-title="Proceso ' + proceso + '" data-toggle="popover" data-content="' + texto + '">P' + proceso + '</a>' +
+                '</div>'; // agrega al diagrama el proceso
+        }
+        else { // si proceso es null significa que el recurso estuvo ocioso
+            document.getElementById("cola_e").innerHTML +=
+                '<div id="warning" class="progress-bar" role="progressbar" style="width:20%">'+
+                '  <a data-trigger="hover" data-placement="bottom" data-original-title="Tiempo Ocioso" data-toggle="popover" data-content="' + texto + '"> ** </a>' +
+                '</div>'; // agrega al diagrama el tiempo ocioso
+        }
+        $('[data-toggle="popover"]').popover(); // hace el popover
+    }
 }
 
 // agrega algo al diagrama de gantt de salida
 function agregarGanttS(proceso, inicio, fin) {
-    //
+    if (inicio != fin) { // si inicio == fin entonces no tiene ningun chiste que dibuje
+        var texto = "Desde " + inicio + " hasta " + fin; // el texto que va a indicar de cuando a cuando estuvo el proceso
+        if (proceso !== null) { // si proceso no es null significa que hubo un proceso ocupando el recurso
+            document.getElementById("cola_s").innerHTML +=
+                '<div id="P' + proceso + '" class="progress-bar" role="progressbar" style="width:20%">' +
+                '  <a data-trigger="hover" data-placement="bottom" data-original-title="Proceso ' + proceso + '" data-toggle="popover" data-content="' + texto + '">P' + proceso + '</a>' +
+                '</div>'; // agrega al diagrama el proceso
+        }
+        else { // si proceso es null significa que el recurso estuvo ocioso
+            document.getElementById("cola_s").innerHTML +=
+                '<div id="warning" class="progress-bar" role="progressbar" style="width:20%">'+
+                '  <a data-trigger="hover" data-placement="bottom" data-original-title="Tiempo Ocioso" data-toggle="popover" data-content="' + texto + '"> ** </a>' +
+                '</div>'; // agrega al diagrama el tiempo ocioso
+        }
+        $('[data-toggle="popover"]').popover(); // hace el popover
+    }
 }

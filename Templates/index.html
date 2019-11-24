@@ -213,13 +213,18 @@
             <!-- pestaña de resultados -->
             <div id="result" class="container tab-pane fade"><br>              
               <div style="margin-bottom: 20px;">
-                <h4>Cola de CPU</h4>
+                <h4>Diagrama de Gantt de CPU</h4>
                 <div class="progress" id="cola_cpu">  
                 </div>
               </div>
+              <div style="margin-bottom: 20px;">
+                <h4>Diagrama de Gantt de Entrada</h4>
+                <div class="progress" id="cola_e"> 
+                </div>
+              </div>
               <div>
-                <h4>Cola de E/S</h4>
-                <div class="progress" id="cola_es"> 
+                <h4>Diagrama de Gantt de Salida</h4>
+                <div class="progress" id="cola_s"> 
                 </div>
               </div>
               <h4 class="mt-5">Diagrama de Memoria y Colas de Estado</h4>			  
@@ -270,16 +275,16 @@
                     <p>Cola de Nuevos: </p>
                     <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark" id="colaNuevo">
                     </div>
-                    <p>Cola de Listos: </p>
+                    <p id="tituloColaListo">Cola de Listos: </p>
                     <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark" id="colaListo">
                     </div>
-                    <p>Cola de Listos de prioridad 1: </p>
+                    <p id="tituloColaListo1">Cola de Listos de prioridad 1: </p>
                     <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark" id="colaListo1">
                     </div>
-                    <p>Cola de Listos de prioridad 2: </p>
+                    <p id="tituloColaListo2">Cola de Listos de prioridad 2: </p>
                     <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark" id="colaListo2">
                     </div>
-                    <p>Cola de Listos de prioridad 3: </p>
+                    <p id="tituloColaListo3">Cola de Listos de prioridad 3: </p>
                     <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark" id="colaListo3">
                     </div>
                     <p>Cola de Bloqueados para Entrada: </p>
