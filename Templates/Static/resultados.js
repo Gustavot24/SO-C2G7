@@ -60,6 +60,8 @@ function cosoQueSeEjecutaCadaSegundo() {
         }
     }
 
+    // cargar los procesos de la cola de nuevos en memoria
+
     if (recursoCPU.proceso === null) { // se ejecuta cuando la cpu esta vacia
         if (colaListos1.length > 0) { // si la cola de listos 1 tiene procesos busca ahi uno para despachar
             switch (colaListos1.algoritmo) { // dependiendo del algoritmo de la cola ejecuta la funcion del algoritmo
@@ -177,12 +179,15 @@ function cosoQueSeEjecutaCadaSegundo() {
         if (recursoE.finRafaga == tiempoSimulacion) { // si el fin de rafaga es igual al tiempo actual, el proceso sale de la entrada
             recursoE.proceso.cicloVida[1] = 0;
             switch (recursoE.proceso.prioridad) { // coloca el proceso en la cola de listos correspondiente a su prioridad
-                case 1: colaListos1.procesos.push(recursoE.proceso);
-                        break;
-                case 2: colaListos2.procesos.push(recursoE.proceso);
-                        break;
-                case 3: colaListos3.procesos.push(recursoE.proceso);
-                        break;
+                case 1:
+                    colaListos1.procesos.push(recursoE.proceso);
+                    break;
+                case 2:
+                    colaListos2.procesos.push(recursoE.proceso);
+                    break;
+                case 3:
+                    colaListos3.procesos.push(recursoE.proceso);
+                    break;
             }
             console.log("Proceso " + recursoE.proceso.idProceso + " salió de E"); // muestra por consola
             recursoE.proceso = null; // se saca al proceso de la entrada
@@ -302,6 +307,45 @@ function roundRobin(cola) {
 
 // algoritmo por prioridad
 function porPrioridad(cola) {
+    //
+}
+
+// algoritmo first fit para particiones fijas
+function firstFitFijas() {
+    for (var i = 0;  i < colaNuevos.length; i++) {
+        for (var j = 0; j < tablaParticiones.length; j++) {
+            if ((tablaParticiones[i].tamaño >= colaNuevos[i].tamaño) && (tablaParticiones[i].estado == 0)) {
+                tablaParticiones[i].estado = 1;
+                tablaParticiones[i].idProceso = colaNuevos[i].idProceso;
+                tablaParticiones[i].FI = tablaParticiones[i].tamaño - colaNuevos[i].tamaño;
+                switch (colaNuevos[i].prioridad) {
+                    case 1:
+                        colaListos1.push(colaNuevos[i]);
+                        break;
+                    case 2:
+                        colaListos2.push(colaNuevos[i]);
+                        break;
+                    case 3:
+                        colaListos3.push(colaNuevos[i]);
+                        break;
+                }
+            }
+        }
+    }
+}
+
+// algoritmo best fit
+function bestFit() {
+    //
+}
+
+// algoritmo first fit para particiones variables
+function firstFitVariables() {
+    //
+}
+
+// algoritmo worst fit
+function worstFit() {
     //
 }
 
