@@ -17,7 +17,7 @@ var recursoS = { // proceso que esta en salida
     inicioRafaga: null,
     finRafaga: null,
 }
-var finDeQuantum = -1; // instante en que termina el quantum y el proceso raja de la cpu
+var finDeQuantum = false; // instante en que termina el quantum y el proceso raja de la cpu
 var colaNuevos = []; // cola de nuevos
 var colaListos1 = []; // cola de listos con prioridad 1
 var colaListos2 = null; // cola de listos con prioridad 2 (puede que no se use)
@@ -25,6 +25,7 @@ var colaListos3 = null; // cola de listos con prioridad 3 (puede que no se use)
 var colaBloqueadosE = []; // cola de bloqueados que van a la entrada
 var colaBloqueadosS = []; // cola de bloqueados que van a la salida
 var colaTerminados = []; // cola de terminados
+var tablaParticiones = condicionesInciales.tablaParticiones; // tabla de particiones
 
 // arranca la simulacion
 function iniciarSimulacion() {
@@ -38,7 +39,7 @@ function iniciarSimulacion() {
             colaListos3 = colasMultinivel[2]; // la asigna a colaListos3
         }
         else { // si no hay 3º cola multinivel
-            colaListos3 = colaListos1; // colaListos3 apunta a colaListos1
+            colaListos3 = colaListos2; // colaListos3 apunta a colaListos2
         }
     }
     else { // si no hay 2º ni 3º cola multinivel
@@ -60,63 +61,76 @@ function cosoQueSeEjecutaCadaSegundo() {
         }
     }
 
-    // cargar los procesos de la cola de nuevos en memoria
+    switch (condicionesInciales.algoritmo) { // cargar los procesos de la cola de nuevos en memoria y cola de listos
+        case "FF": // first fit para particiones fijas
+            firstFitFijas();
+            break;
+        case "B": // best fit para particiones fijas
+            bestFit();
+            break;
+        case "FV": // first fit para particiones variables
+            firstFitVariables();
+            break;
+        case "W": // worst fit para particiones variables
+            worstFit();
+            break;
+    }
 
     if (recursoCPU.proceso === null) { // se ejecuta cuando la cpu esta vacia
-        if (colaListos1.length > 0) { // si la cola de listos 1 tiene procesos busca ahi uno para despachar
+        if (colaListos1.procesos.length > 0) { // si la cola de listos 1 tiene procesos busca ahi uno para despachar
             switch (colaListos1.algoritmo) { // dependiendo del algoritmo de la cola ejecuta la funcion del algoritmo
                 case "FCFS":
-                    FCFS(colaListos1);
+                    FCFS(colaListos1.procesos);
                     break;
                 case "SJF":
-                    SJF(colaListos1);
+                    SJF(colaListos1.procesos);
                     break;
                 case "SRTF":
-                    SRTF(colaListos1);
+                    SRTF(colaListos1.procesos);
                     break;
                 case "Round Robin":
-                    roundRobin(colaListos1);
+                    roundRobin(colaListos1.procesos);
                     break;
                 case "Por Prioridad":
-                    porPrioridad(colaListos1);
+                    porPrioridad(colaListos1.procesos);
                     break;
             }
         }
-        else if (colaListos2.length > 0) { // si la cola de listos 2 tiene procesos busca ahi uno para despachar
+        else if (colaListos2.procesos.length > 0) { // si la cola de listos 2 tiene procesos busca ahi uno para despachar
             switch (colaListos2.algoritmo) { // dependiendo del algoritmo de la cola ejecuta la funcion del algoritmo
                 case "FCFS":
-                    FCFS(colaListos2);
+                    FCFS(colaListos2.procesos);
                     break;
                 case "SJF":
-                    SJF(colaListos2);
+                    SJF(colaListos2.procesos);
                     break;
                 case "SRTF":
-                    SRTF(colaListos2);
+                    SRTF(colaListos2.procesos);
                     break;
                 case "Round Robin":
-                    roundRobin(colaListos2);
+                    roundRobin(colaListos2.procesos);
                     break;
                 case "Por Prioridad":
-                    porPrioridad(colaListos2);
+                    porPrioridad(colaListos2.procesos);
                     break;
             }
         }
-        else if (colaListos3.length > 0) { // si la cola de listos 3 tiene procesos busca ahi uno para despachar
+        else if (colaListos3.procesos.length > 0) { // si la cola de listos 3 tiene procesos busca ahi uno para despachar
             switch (colaListos3.algoritmo) { // dependiendo del algoritmo de la cola ejecuta la funcion del algoritmo
                 case "FCFS":
-                    FCFS(colaListos3);
+                    FCFS(colaListos3.procesos);
                     break;
                 case "SJF":
-                    SJF(colaListos3);
+                    SJF(colaListos3.procesos);
                     break;
                 case "SRTF":
-                    SRTF(colaListos3);
+                    SRTF(colaListos3.procesos);
                     break;
                 case "Round Robin":
-                    roundRobin(colaListos3);
+                    roundRobin(colaListos3.procesos);
                     break;
                 case "Por Prioridad":
-                    porPrioridad(colaListos3);
+                    porPrioridad(colaListos3.procesos);
                     break;
             }
         }
@@ -127,56 +141,89 @@ function cosoQueSeEjecutaCadaSegundo() {
 
     if (recursoCPU.proceso !== null) { // se ejecuta cuando la cpu esta llena
         if (recursoCPU.finRafaga == tiempoSimulacion) { // el proceso tiene que salir de la cpu (si se bloquea por e/s o termina)
-            //poner a 0 su ciclo de vida
-            if (recursoCPU.proceso.ciclovida[1] > 0) { // el proceso tiene que ir a la entrada
-                colaBloqueadosE.push(recursoCPU.proceso); // lo mete en la cola de bloqueados de entrada
-                console.log("Proceso " + recursoCPU.proceso.idProceso + " se bloquea para ocupar E");
+            agregarGanttCPU(recursoCPU.proceso.idProceso, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // muestra en el html
+            if (finDeQuantum) { // si el proceso tiene que salir porque termino su quantum
+                switch (recursoCPU.proceso.prioridad) { // segun la prioridad del proceso lo devuelve a su correspondiente cola de listos
+                    case 1:
+                        colaListos1.procesos.push(recursoCPU.proceso);
+                        break;
+                    case 2:
+                        colaListos2.procesos.push(recursoCPU.proceso);
+                        break;
+                    case 3:
+                        colaListos3.procesos.push(recursoCPU.proceso);
+                        break;
+                }
+                finDeQuantum = false; // pone a false para no cometer errores en la proxima ejecucion
+                console.log("Proceso " + recursoCPU.proceso.idProceso + " desalojado de CPU porque finalizó su quantum"); // muestra por consola
             }
-            else if (recursoCPU.proceso.cicloVida[3] > 0) { // el proceso tiene que ir a la salida
-                colaBloqueadosS.push(recursoCPU.proceso) // lo mete en la cola de bloqueados de salida
-                console.log("Proceso " + recursoCPU.proceso.idProceso + " se bloquea para ocupar S");
+            else { // sino, el proceso se bloquea o termina
+                if (recursoCPU.proceso.cicloVida[1] > 0) { // el proceso tiene que ir a la entrada
+                    colaBloqueadosE.push(recursoCPU.proceso); // lo mete en la cola de bloqueados de entrada
+                    console.log("Proceso " + recursoCPU.proceso.idProceso + " se bloquea para ocupar E"); // muestra por consola
+                }
+                else if (recursoCPU.proceso.cicloVida[3] > 0) { // el proceso tiene que ir a la salida
+                    colaBloqueadosS.push(recursoCPU.proceso) // lo mete en la cola de bloqueados de salida
+                    console.log("Proceso " + recursoCPU.proceso.idProceso + " se bloquea para ocupar S"); // muestra por consola
+                }
+                else { // el proceso termina
+                    colaTerminados.push(recursoCPU.proceso); // coloca el proceso en la cola de terminados
+                    for (var i = 0; i < tablaProcesos.length; i++ ) { // elimina el proceso de memoria
+                        if (tablaProcesos[i].idProceso == recursoCPU.proceso.idProceso) {
+                            tablaProcesos[i].idProceso = null;
+                            tablaProcesos[i].estado = 0;
+                            tablaProcesos[i].FI = 0;
+                        }
+                    }
+                    console.log("Proceso " + recursoCPU.proceso.idProceso + " termina"); // muestra por consola
+                }
             }
-            else { // el proceso termina
-                colaTerminados.push(recursoCPU.proceso);
-                //SACAR AL PROCESO DE MEMORIA
-                console.log("Proceso " + recursoCPU.proceso.idProceso + " termina");
-            }
-            recursoCPU.proceso = null;
-            recursoCPU.inicioRafaga = tiempoSimulacion;
+            recursoCPU.proceso = null; // elimina el proceso de la cpu
+            document.getElementById("usoDeCPU").innerHTML = "Libre";
+            recursoCPU.inicioRafaga = tiempoSimulacion; // pone el inicio de rafaga igual al tiempo actual
             //cargar un nuevo proceso    
         }
-        else { // el proceso sigue en la cpu
-            if (recursoCPU.proceso.clicloVida[0] > 0) { // esta ejecutando su primera rafaga de cpu
+        else { // el proceso puede seguir en la cpu (si no es desalojado)
+            if (recursoCPU.proceso.cicloVida[0] > 0) { // esta ejecutando su primera rafaga de cpu
                 recursoCPU.proceso.cicloVida[0]--; // disminuye en 1 su ciclo de vida
             }
-            else if (recursoCPU.proceso.clicloVida[2] > 0) { // esta ejecutando su segunda rafaga de cpu
+            else if (recursoCPU.proceso.cicloVida[2] > 0) { // esta ejecutando su segunda rafaga de cpu
                 recursoCPU.proceso.cicloVida[2]--; // disminuye en 1 su ciclo de vida
             }
-            else if (recursoCPU.proceso.clicloVida[4] > 0) { // esta ejecutando su tercera rafaga de cpu
+            else if (recursoCPU.proceso.cicloVida[4] > 0) { // esta ejecutando su tercera rafaga de cpu
                 recursoCPU.proceso.cicloVida[4]--; // disminuye en 1 su ciclo de vida
+            }
+            if (colaListos1.algoritmo == "SRTF") { // si el algoritmo de la cola de listos 1 es srtf tiene que ejecutarlo
+                SRTF(colaListos1.procesos); // porque puede que se desaloje el proceso de cpu
+            }
+            else if (colaListos1.length == 0 && colaListos2.algoritmo == "SRTF") { // si la cola 1 esta vacia y la cola 2 es srtf
+                SRTF(colaListos2.procesos); // tiene que buscar en la cola 2 para desalojar
+            }
+            else if (colaListos1.length == 0 && colaListos2.length == 0 && colaListos3.algoritmo == "SRTF") { // si las colas 1 y 2 estan vacias y la cola 3 es srtf
+                SRTF(colaListos3.procesos); // tiene que buscar en la cola 3 para desalojar
             }
             console.log("Proceso " + recursoCPU.proceso.idProceso + " continúa en CPU"); // muestra por consola
         }
     }
 
-    if (recursoE.proceso === null) { // se ejecuta cuando la e/s esta vacia
+    if (recursoE.proceso === null) { // se ejecuta cuando la entrada esta vacia
         if (colaBloqueadosE.length > 0) { // si hay procesos en cola de bloqueados
             recursoE.finRafaga = tiempoSimulacion; // asigna al fin de rafaga (ocioso) el tiempo actual
-            // MOSTRAR EN EL GRAFICO // se muestra en el grafico el tiempo que estuvo ocioso
-            recursoE.proceso = colaBloqueadosE[0]; // asigna el primer proceso de la cola a la e/s
+            agregarGanttE(null, recursoE.inicioRafaga, recursoE.finRafaga); // se muestra en el grafico el tiempo que estuvo ocioso
+            recursoE.proceso = colaBloqueadosE[0]; // asigna el primer proceso de la cola a la entrada
             recursoE.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual como inicio de la rafaga
             recursoE.finRafaga = tiempoSimulacion + recursoE.proceso.cicloVida[1]; // asigna el tiempo de fin de la rafaga
-            colaBloqueados.shift(); // elimina ese proceso de la cola de bloqueados
+            colaBloqueadosE.shift(); // elimina ese proceso de la cola de bloqueados
             agregarGanttE(recursoE.proceso.idProceso, recursoE.inicioRafaga, recursoE.finRafaga); // se muestra en el grafico el tiempo que va a estar el proceso
             document.getElementById("usoDeE").innerHTML = "P" + recursoE.proceso.idProceso;
-            console.log("Proceso " + recursoE.idProceso + " ingresó a E"); // muestra por consola
+            console.log("Proceso " + recursoE.proceso.idProceso + " ingresó a E"); // muestra por consola
         }
         else { // si no hay procesos en cola de bloqueados
             console.log("E continúa ocioso"); // muestra por consola
         }
     }
 
-    if (recursoE.proceso !== null) { // se ejecuta cuando la e/s esta llena
+    if (recursoE.proceso !== null) { // se ejecuta cuando la entrada esta llena
         if (recursoE.finRafaga == tiempoSimulacion) { // si el fin de rafaga es igual al tiempo actual, el proceso sale de la entrada
             recursoE.proceso.cicloVida[1] = 0;
             switch (recursoE.proceso.prioridad) { // coloca el proceso en la cola de listos correspondiente a su prioridad
@@ -194,7 +241,7 @@ function cosoQueSeEjecutaCadaSegundo() {
             recursoE.proceso = null; // se saca al proceso de la entrada
             recursoE.inicioRafaga = tiempoSimulacion; // se asigna al inicio de rafaga el tiempo actual
             if (colaBloqueadosE.length > 0) { // mira si hay procesos que quieren entrar en la entrada
-                recursoE.proceso = colaBloqueadosE[0]; // asigna el primer proceso de la cola a la e/s
+                recursoE.proceso = colaBloqueadosE[0]; // asigna el primer proceso de la cola a la entrada
                 recursoE.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual como inicio de la rafaga
                 recursoE.finRafaga = tiempoSimulacion + recursoE.proceso.cicloVida[1]; // asigna el tiempo de fin de la rafaga
                 colaBloqueadosE.shift(); // elimina ese proceso de la cola de bloqueados
@@ -209,17 +256,71 @@ function cosoQueSeEjecutaCadaSegundo() {
             }
         }
         else { // sino, el proceso sigue ahi
-            console.log("Proceso " + recursoE.idProceso + " continúa en E"); // muestra por consola
+            console.log("Proceso " + recursoE.proceso.idProceso + " continúa en E"); // muestra por consola
         }
     }
 
-    console.log(colaNuevos);
-    console.log(colaListos1);
-    console.log(colaListos2);
-    console.log(colaListos3);
-    console.log(colaBloqueadosE);
-    console.log(colaBloqueadosS);
-    console.log(colaTerminados);
+    if (recursoS.proceso === null) { // se ejecuta cuando la salida esta vacia
+        if (colaBloqueadosS.length > 0) { // si hay procesos en cola de bloqueados
+            recursoS.finRafaga = tiempoSimulacion; // asigna al fin de rafaga (ocioso) el tiempo actual
+            agregarGanttS(null, recursoS.inicioRafaga, recursoS.finRafaga); // se muestra en el grafico el tiempo que estuvo ocioso
+            recursoS.proceso = colaBloqueadosS[0]; // asigna el primer proceso de la cola a la salida
+            recursoS.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual como inicio de la rafaga
+            recursoS.finRafaga = tiempoSimulacion + recursoS.proceso.cicloVida[3]; // asigna el tiempo de fin de la rafaga
+            colaBloqueadosS.shift(); // elimina ese proceso de la cola de bloqueados
+            agregarGanttS(recursoS.proceso.idProceso, recursoS.inicioRafaga, recursoS.finRafaga); // se muestra en el grafico el tiempo que va a estar el proceso
+            document.getElementById("usoDeS").innerHTML = "P" + recursoS.proceso.idProceso;
+            console.log("Proceso " + recursoS.proceso.idProceso + " ingresó a S"); // muestra por consola
+        }
+        else { // si no hay procesos en cola de bloqueados
+            console.log("S continúa ocioso"); // muestra por consola
+        }
+    }
+
+    if (recursoS.proceso !== null) { // se ejecuta cuando la salida esta llena
+        if (recursoS.finRafaga == tiempoSimulacion) { // si el fin de rafaga es igual al tiempo actual, el proceso sale de la salida
+            recursoS.proceso.cicloVida[3] = 0;
+            switch (recursoS.proceso.prioridad) { // coloca el proceso en la cola de listos correspondiente a su prioridad
+                case 1:
+                    colaListos1.procesos.push(recursoS.proceso);
+                    break;
+                case 2:
+                    colaListos2.procesos.push(recursoS.proceso);
+                    break;
+                case 3:
+                    colaListos3.procesos.push(recursoS.proceso);
+                    break;
+            }
+            console.log("Proceso " + recursoS.proceso.idProceso + " salió de S"); // muestra por consola
+            recursoS.proceso = null; // se saca al proceso de la salida
+            recursoS.inicioRafaga = tiempoSimulacion; // se asigna al inicio de rafaga el tiempo actual
+            if (colaBloqueadosS.length > 0) { // mira si hay procesos que quieren entrar en la salida
+                recursoS.proceso = colaBloqueadosS[0]; // asigna el primer proceso de la cola a la salida
+                recursoS.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual como inicio de la rafaga
+                recursoS.finRafaga = tiempoSimulacion + recursoS.proceso.cicloVida[3]; // asigna el tiempo de fin de la rafaga
+                colaBloqueadosS.shift(); // elimina ese proceso de la cola de bloqueados
+                agregarGanttS(recursoS.proceso.idProceso, recursoS.inicioRafaga, recursoS.finRafaga); // se muestra en el grafico el tiempo que va a estar el proceso
+                document.getElementById("usoDeS").innerHTML = "P" + recursoS.proceso.idProceso; // muestra en el html
+                console.log("Proceso " + recursoS.idProceso + " ingresó a S"); // muestra por consola    
+            }
+            else { // sino la entrada va a quedar ociosa por no se cuanto tiempo
+                recursoS.finRafaga = null; // se deja el fin de rafaga como null (no se cuando va a dejar de estar ocioso)
+                document.getElementById("usoDeS").innerHTML = "Libre"; // muestra en el html
+                console.log("S quedará ocioso"); // muestra por consola
+            }
+        }
+        else { // sino, el proceso sigue ahi
+            console.log("Proceso " + recursoS.proceso.idProceso + " continúa en S"); // muestra por consola
+        }
+    }
+
+    //console.log(colaNuevos);
+    //console.log(colaListos1.procesos);
+    //console.log(colaListos2.procesos);
+    //console.log(colaListos3.procesos);
+    //console.log(colaBloqueadosE);
+    //console.log(colaBloqueadosS);
+    //console.log(colaTerminados);
 
     if (colaTerminados.length == tablaProcesos.length) { // esto quiere decir que terminaron todos los procesos, entonces tiene que terminar la simulacion
         document.getElementById("next").disabled = true; // deshabilita el boton de siguiente
@@ -234,20 +335,20 @@ function FCFS(cola) {
     if (cola.length > 0) { // si hay procesos en la cola busca ahi
         procesoADespachar = cola[0]; // elige el primer proceso de la cola
         cola.shift(); // elimina ese proceso de la cola
+        recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
+        document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
+        recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
+        if (recursoCPU.proceso.cicloVida[0] > 0) { // debe ejecutar su primera rafaga de cpu
+            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
+        }
+        else if (recursoCPU.proceso.cicloVida[2] > 0) { // debe ejecutar su segunda rafaga de cpu
+            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[2]; // asigna el tiempo de fin de rafaga
+        }
+        else if (recursoCPU.proceso.cicloVida[4] > 0) { // debe ejecutar su tercera rafaga de cpu
+            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[4]; // asigna el tiempo de fin de rafaga
+        }
+        console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola    
     }
-    recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
-    recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
-    if (recursoCPU.proceso.clicloVida[0] > 0) { // debe ejecutar su primera rafaga de cpu
-        recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
-    }
-    else if (recursoCPU.proceso.clicloVida[2] > 0) { // debe ejecutar su segunda rafaga de cpu
-        recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[2]; // asigna el tiempo de fin de rafaga
-    }
-    else if (recursoCPU.proceso.clicloVida[4] > 0) { // debe ejecutar su tercera rafaga de cpu
-        recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[4]; // asigna el tiempo de fin de rafaga
-    }
-    console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
-    agregarGanttCPU(recursoCPU.proceso.idProceso, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // muestra en el grafico
 }
 
 // algoritmo sjf
@@ -265,10 +366,18 @@ function SJF(cola) {
         }
         cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
         recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
+        document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
         recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
-        recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
+        if (recursoCPU.proceso.cicloVida[0] > 0) { // debe ejecutar su primera rafaga de cpu
+            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
+        }
+        else if (recursoCPU.proceso.cicloVida[2] > 0) { // debe ejecutar su segunda rafaga de cpu
+            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[2]; // asigna el tiempo de fin de rafaga
+        }
+        else if (recursoCPU.proceso.cicloVida[4] > 0) { // debe ejecutar su tercera rafaga de cpu
+            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[4]; // asigna el tiempo de fin de rafaga
+        }
         console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
-        agregarGanttCPU(recursoCPU.proceso.idProceso, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // muestra en el grafico
     }
 }
 
@@ -304,18 +413,37 @@ function SRTF(cola) {
                         break;
                 }
                 recursoCPU.proceso = null; // desaloja el proceso de la cpu
+                document.getElementById("usoDeCPU").innerHTML = "Libre";
                 cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
                 recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
+                document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
                 recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
-                recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
+                if (recursoCPU.proceso.cicloVida[0] > 0) { // debe ejecutar su primera rafaga de cpu
+                    recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
+                }
+                else if (recursoCPU.proceso.cicloVida[2] > 0) { // debe ejecutar su segunda rafaga de cpu
+                    recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[2]; // asigna el tiempo de fin de rafaga
+                }
+                else if (recursoCPU.proceso.cicloVida[4] > 0) { // debe ejecutar su tercera rafaga de cpu
+                    recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[4]; // asigna el tiempo de fin de rafaga
+                }
                 console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
             }
         }
         else { // sino, la cpu esta vacia y el proceso se mete de una
             cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
             recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
+            document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
             recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
-            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
+            if (recursoCPU.proceso.cicloVida[0] > 0) { // debe ejecutar su primera rafaga de cpu
+                recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
+            }
+            else if (recursoCPU.proceso.cicloVida[2] > 0) { // debe ejecutar su segunda rafaga de cpu
+                recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[2]; // asigna el tiempo de fin de rafaga
+            }
+            else if (recursoCPU.proceso.cicloVida[4] > 0) { // debe ejecutar su tercera rafaga de cpu
+                recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[4]; // asigna el tiempo de fin de rafaga
+            }
             console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
         }
     }
@@ -337,19 +465,20 @@ function firstFitFijas() {
         var admitido = false; // indica si un proceso fue admitido en memoria o no
         var j = 0; // para iterar sobre la tabla de particiones
         while (j < tablaParticiones.length && !admitido) { // itera por la tabla de particiones
-            if ((tablaParticiones[i].tamaño >= colaNuevos[i].tamaño) && (tablaParticiones[i].estado == 0)) { // si la particion esta libre y el proceso entra
-                tablaParticiones[i].estado = 1; // asigna el estado ocupado a la particion
-                tablaParticiones[i].idProceso = colaNuevos[i].idProceso; // asigna el id de proceso a la particion
-                tablaParticiones[i].FI = tablaParticiones[i].tamaño - colaNuevos[i].tamaño; // asigna la fragmentacion interna
+            if ((tablaParticiones[j].tamaño >= colaNuevos[i].tamaño) && (tablaParticiones[j].estado == 0)) { // si la particion esta libre y el proceso entra
+                tablaParticiones[j].estado = 1; // asigna el estado ocupado a la particion
+                tablaParticiones[j].idProceso = colaNuevos[i].idProceso; // asigna el id de proceso a la particion
+                tablaParticiones[j].FI = tablaParticiones[j].tamaño - colaNuevos[i].tamaño; // asigna la fragmentacion interna
+                console.log("Proceso " + tablaParticiones[j].idProceso + " asignado a la partición " + tablaParticiones[j].idParticion); // muestra por consola
                 switch (colaNuevos[i].prioridad) { // segun la prioridad del proceso lo carga a su correspondiente cola de listos
                     case 1:
-                        colaListos1.push(colaNuevos[i]);
+                        colaListos1.procesos.push(colaNuevos[i]);
                         break;
                     case 2:
-                        colaListos2.push(colaNuevos[i]);
+                        colaListos2.procesos.push(colaNuevos[i]);
                         break;
                     case 3:
-                        colaListos3.push(colaNuevos[i]);
+                        colaListos3.procesos.push(colaNuevos[i]);
                         break;
                 }
                 colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
@@ -374,18 +503,19 @@ function bestFit() {
             }
         }
         if (mejorAjuste >= 0) { // si es mayor o igual a 0 es porque el proceso entra en una particion
-            tablaParticiones[j].estado = 1; // asigna el estado ocupado a la particion
-            tablaParticiones[j].idProceso = colaNuevos[i].idProceso; // asigna el id de proceso a la particion
-            tablaParticiones[j].FI = tablaParticiones[j].tamaño - colaNuevos[i].tamaño; // asigna la fragmentacion interna
+            tablaParticiones[mejorAjuste].estado = 1; // asigna el estado ocupado a la particion
+            tablaParticiones[mejorAjuste].idProceso = colaNuevos[i].idProceso; // asigna el id de proceso a la particion
+            tablaParticiones[mejorAjuste].FI = tablaParticiones[mejorAjuste].tamaño - colaNuevos[i].tamaño; // asigna la fragmentacion interna
+            console.log("Proceso " + tablaParticiones[mejorAjuste].idProceso + " asignado a la partición " + tablaParticiones[mejorAjuste].idParticion); // muestra por consola
             switch (colaNuevos[i].prioridad) { // segun la prioridad del proceso lo carga a su correspondiente cola de listos
                 case 1:
-                    colaListos1.push(colaNuevos[i]);
+                    colaListos1.procesos.push(colaNuevos[i]);
                     break;
                 case 2:
-                    colaListos2.push(colaNuevos[i]);
+                    colaListos2.procesos.push(colaNuevos[i]);
                     break;
                 case 3:
-                    colaListos3.push(colaNuevos[i]);
+                    colaListos3.procesos.push(colaNuevos[i]);
                     break;
             }
             colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
