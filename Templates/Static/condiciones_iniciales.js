@@ -229,6 +229,18 @@ function modalCargarParticiones() {
 // comprueba si se guardaron los cambios para pasar a la carga de trabajo
 // con info de https://stackoverflow.com/questions/39461076/how-to-change-active-bootstrap-tab-with-javascript
 function continuarParticiones() {
+    if (document.getElementById("prtvar").checked == true) { // si las particiones son variables carga los datos en el object
+        condicionesInciales.tamanoMP = document.getElementById("mp").value; // carga el tamaño de memoria
+        condicionesInciales.porcentajeSO = Number(document.getElementById("myRange").value) / 100; // carga el porcentaje del so
+        condicionesInciales.tamanoSO = Math.ceil(condicionesInciales.tamanoMP * condicionesInciales.porcentajeSO); // carga el tamaño del so
+        condicionesInciales.tipoParticion = "V"; // carga el tipo de particion (variable)
+        if (document.getElementById("frtfit").checked == true) { // si se chequeo el algoritmo first fit lo carga
+            condicionesInciales.algoritmo = "FV";
+        }
+        else if (document.getElementById("wrtfit").checked == true) { // si se chequeo el algoritmo worst fit lo carga
+            condicionesInciales.algoritmo = "W";
+        }
+    }
     if (seGuardaronLasParticiones) { // si se guardo todo continua a la parte de carga de trabajo
         $('a[href="#workload"]').trigger("click"); // cambia a la pestaña carga de trabajo
     }
