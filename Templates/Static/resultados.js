@@ -622,7 +622,20 @@ function bestFit() {
 
 // algoritmo first fit para particiones variables
 function firstFitVariables() {
-    //
+    var idParticion = 1;
+    var dirInicio = condicionesInciales.tamanoSO
+    var dirFin = condicionesInciales.tamanoMP - 1;
+    if (tablaParticiones.length == 0) { // si no hay particiones es la primera vez que se ejecuta
+        var particion = { // se crea una particion
+            "idParticion": idParticion,
+            "dirInicio": dirInicio,
+            "dirFin": dirFin,
+            "tamaño": dirFin - dirInicio + 1,
+            "estado": 1,
+            "idProceso": colaNuevos[i].idProceso,
+            "FI": 0,
+        };
+    }
 }
 
 // algoritmo worst fit
