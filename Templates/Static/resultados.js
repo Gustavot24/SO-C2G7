@@ -357,15 +357,31 @@ function FCFS(cola) {
 
 // algoritmo sjf
 function SJF(cola) {
-    var procesoADespachar = null;
-    var menorTiempo = Infinity;
-    var posicionEnLaCola = 0;
+    var procesoADespachar = null; // proceso que se va a despachar a cpu
+    var menorTiempo = Infinity; // menor tiempo de irrupcion
+    var posicionEnLaCola = 0; // posicion en la cola del proceso con menor irrupcion
     if (cola.length > 0) { // si hay procesos en la cola busca ahi
         for (var i = 0; i < cola.length; i++) {
-            if (cola[i].cicloVida[0] < menorTiempo) {
-                procesoADespachar = cola[i];
-                menorTiempo = procesoADespachar.cicloVida[0];
-                posicionEnLaCola = i;
+            if (cola[i].cicloVida[0] > 0) { // si el proceso debe ejecutar su primera rafaga de cpu
+                if (cola[i].cicloVida[0] < menorTiempo) { // si la duracion de esa rafaga es menor al menor tiempo guardado
+                    procesoADespachar = cola[i]; // elige ese proceso para despachar
+                    menorTiempo = procesoADespachar.cicloVida[0]; // actualiza el menor tiempo
+                    posicionEnLaCola = i; // guarda la posicion en la cola de ese proceso
+                }
+            }
+            else if (cola[i].cicloVida[2] > 0) { // si el proceso debe ejecutar su segunda rafaga de cpu
+                if (cola[i].cicloVida[2] < menorTiempo) { // si la duracion de esa rafaga es menor al menor tiempo guardado
+                    procesoADespachar = cola[i]; // elige ese proceso para despachar
+                    menorTiempo = procesoADespachar.cicloVida[2]; // actualiza el menor tiempo
+                    posicionEnLaCola = i; // guarda la posicion en la cola de ese proceso
+                }
+            }
+            else if (cola[i].cicloVida[4] > 0) { // debe ejecutar su tercera rafaga de cpu
+                if (cola[i].cicloVida[4] < menorTiempo) { // si la duracion de esa rafaga es menor al menor tiempo guardado
+                    procesoADespachar = cola[i]; // elige ese proceso para despachar
+                    menorTiempo = procesoADespachar.cicloVida[4]; // actualiza el menor tiempo
+                    posicionEnLaCola = i; // guarda la posicion en la cola de ese proceso
+                }
             }
         }
         cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
@@ -388,14 +404,30 @@ function SJF(cola) {
 // algoritmo srtf
 function SRTF(cola) {
     var procesoADespachar = null; // proceso que se va a despachar a cpu
-    var menorTiempo = Infinity; //
-    var posicionEnLaCola = 0;
+    var menorTiempo = Infinity; // menor tiempo de irrupcion
+    var posicionEnLaCola = 0; // posicion en la cola del proceso con menor irrupcion
     if (cola.length > 0) { // si hay procesos en la cola busca ahi
         for (var i = 0; i < cola.length; i++) {
-            if (cola[i].cicloVida[0] < menorTiempo) {
-                procesoADespachar = cola[i];
-                menorTiempo = procesoADespachar.cicloVida[0];
-                posicionEnLaCola = i;
+            if (cola[i].cicloVida[0] > 0) { // si el proceso debe ejecutar su primera rafaga de cpu
+                if (cola[i].cicloVida[0] < menorTiempo) { // si la duracion de esa rafaga es menor al menor tiempo guardado
+                    procesoADespachar = cola[i]; // elige ese proceso para despachar
+                    menorTiempo = procesoADespachar.cicloVida[0]; // actualiza el menor tiempo
+                    posicionEnLaCola = i; // guarda la posicion en la cola de ese proceso
+                }
+            }
+            else if (cola[i].cicloVida[2] > 0) { // si el proceso debe ejecutar su segunda rafaga de cpu
+                if (cola[i].cicloVida[2] < menorTiempo) { // si la duracion de esa rafaga es menor al menor tiempo guardado
+                    procesoADespachar = cola[i]; // elige ese proceso para despachar
+                    menorTiempo = procesoADespachar.cicloVida[2]; // actualiza el menor tiempo
+                    posicionEnLaCola = i; // guarda la posicion en la cola de ese proceso
+                }
+            }
+            else if (cola[i].cicloVida[4] > 0) { // debe ejecutar su tercera rafaga de cpu
+                if (cola[i].cicloVida[4] < menorTiempo) { // si la duracion de esa rafaga es menor al menor tiempo guardado
+                    procesoADespachar = cola[i]; // elige ese proceso para despachar
+                    menorTiempo = procesoADespachar.cicloVida[4]; // actualiza el menor tiempo
+                    posicionEnLaCola = i; // guarda la posicion en la cola de ese proceso
+                }
             }
         }
     }
@@ -496,7 +528,32 @@ function roundRobin(cola, quantum) {
 
 // algoritmo por prioridad
 function porPrioridad(cola) {
-    //
+    var procesoADespachar = null;
+    var menorPrioridad = Infinity;
+    var posicionEnLaCola = 0;
+    if (cola.length > 0) { // si hay procesos en la cola busca ahi
+        for (var i = 0; i < cola.length; i++) {
+            if (cola[i].prioridad < menorPrioridad) {
+                procesoADespachar = cola[i];
+                menorPrioridad = procesoADespachar.prioridad;
+                posicionEnLaCola = i;
+            }
+        }
+        cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
+        recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
+        document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
+        recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
+        if (recursoCPU.proceso.cicloVida[0] > 0) { // debe ejecutar su primera rafaga de cpu
+            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[0]; // asigna el tiempo de fin de rafaga
+        }
+        else if (recursoCPU.proceso.cicloVida[2] > 0) { // debe ejecutar su segunda rafaga de cpu
+            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[2]; // asigna el tiempo de fin de rafaga
+        }
+        else if (recursoCPU.proceso.cicloVida[4] > 0) { // debe ejecutar su tercera rafaga de cpu
+            recursoCPU.finRafaga = tiempoSimulacion + recursoCPU.proceso.cicloVida[4]; // asigna el tiempo de fin de rafaga
+        }
+        console.log("Proceso " + recursoCPU.proceso.idProceso + " ingresó a CPU"); // muestra por consola
+    }
 }
 
 // algoritmo first fit para particiones fijas
