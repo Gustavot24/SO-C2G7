@@ -82,6 +82,24 @@ function continuarColas() {
         }
         colasMultinivel.push(colaMultinivel); // agrega la cola al array de colas
     }
+    if (colasMultinivel.length == 1) { // si hay una sola cola multinivel, oculta las otras dos de la pestaña resultados
+        document.getElementById("tituloColaListo2").style.display = "none";
+        document.getElementById("colaListo2").style.display = "none";
+        document.getElementById("tituloColaListo3").style.display = "none";
+        document.getElementById("colaListo3").style.display = "none";
+    }
+    if (colasMultinivel.length == 2) { // si hay dos colas multinivel, oculta la otra en el html
+        document.getElementById("tituloColaListo2").removeAttribute("style");
+        document.getElementById("colaListo2").removeAttribute("style");
+        document.getElementById("tituloColaListo3").style.display = "none";
+        document.getElementById("colaListo3").style.display = "none";
+    }
+    if (colasMultinivel.length == 3) {
+        document.getElementById("tituloColaListo2").removeAttribute("style");
+        document.getElementById("colaListo2").removeAttribute("style");
+        document.getElementById("tituloColaListo3").removeAttribute("style");
+        document.getElementById("colaListo3").removeAttribute("style");
+    }
     if (seGuardaronLasColas) { // si se guardo todo continua a la parte de resultados
         $('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
         console.log(colasMultinivel);
