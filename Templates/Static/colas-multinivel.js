@@ -18,22 +18,13 @@ var objetivo3 = false;
 var objetivo4 = false;
 
 function agregarCola() {
-	agregarCola:{ //Similar para cuando se implemente "Guardar en DB"
-		var algoritmo = document.getElementById("typealgm"+nroDeCola).value;
-		if (algoritmo == "Round Robin") {
-			validarQuantum();
-			if (quantumValido == false) {
-				break agregarCola;
-			}
-		}
-		nroDeCola++;
-        var tablaColas = document.getElementById("tabla-colas");
-        tablaColas.tBodies.item(0).rows[nroDeCola - 1].removeAttribute("style");
-		if (nroDeCola == 3) {
-			document.getElementById("botonAgregarCola").style.display = "none";
-		}
-		seGuardaronLasColas = false;
-	}		
+	nroDeCola++;
+    var tablaColas = document.getElementById("tabla-colas");
+    tablaColas.tBodies.item(0).rows[nroDeCola - 1].removeAttribute("style");
+	if (nroDeCola == 3) {
+		document.getElementById("botonAgregarCola").style.display = "none";
+	}
+	seGuardaronLasColas = false;
 }
 
 // carga una lista con los nombres de todas las listas de colas guardadas
@@ -76,6 +67,10 @@ function continuarColas() {
     var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
     for (var i = 0; i < tablaColas.rows.length; i++) { // itera para cada fila de la tabla
         if (tablaColas.rows[i].style.display != "none") {
+            if (tablaColas.rows[i].cells[1].children[1].children[0].children[1].value < 1) { // si hay un quantum menor a 1 deberia dar error
+                mostrarMensaje("errorColasMultinivel", "El valor del quantum no puede ser menor a 1"); // muestra el error
+                return; // termina la funcion
+            }
             var colaMultinivel = { // crea un objeto con una cola y le agrega sus datos
                 idCola: Number(tablaColas.rows[i].cells[0].innerHTML),
                 algoritmo: tablaColas.rows[i].cells[1].children[0].children[0].value,
@@ -120,16 +115,6 @@ function continuarColas() {
 }
 
 // esta cosa es porque si lo meto en el atributo onclick de un boton no anda un carajo
-function continuarColasSinGuardar() { // falta implementar similar para agregarColas y continuarColas...
-    var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
-    for (var i = 0; i < tablaColas.rows.length; i++) { // itera para cada fila de la tabla
-        var algoritmo = tablaColas.rows[i].cells[1].children[0].children[0].value;
-        if (algoritmo == "Round Robin") {
-            validarQuantum();
-            if (quantumValido == false) {
-                return;
-            }
-        }    
-    }
+function continuarColasSinGuardar() { 
 	$('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
 }
