@@ -201,7 +201,67 @@ function cosoQueSeEjecutaCadaSegundo() {
             recursoCPU.proceso = null; // elimina el proceso de la cpu
             document.getElementById("usoDeCPU").innerHTML = "Libre";
             recursoCPU.inicioRafaga = tiempoSimulacion; // pone el inicio de rafaga igual al tiempo actual
-            //CARGAR UN NUEVO PROCESO    
+            // ahora se fija si hay un proceso que pueda ser cargado
+            if (colaListos1.procesos.length > 0) { // si la cola de listos 1 tiene procesos busca ahi uno para despachar
+                switch (colaListos1.algoritmo) { // dependiendo del algoritmo de la cola ejecuta la funcion del algoritmo
+                    case "FCFS":
+                        FCFS(colaListos1.procesos);
+                        break;
+                    case "SJF":
+                        SJF(colaListos1.procesos);
+                        break;
+                    case "SRTF":
+                        SRTF(colaListos1.procesos);
+                        break;
+                    case "Round Robin":
+                        roundRobin(colaListos1.procesos, colaListos1.quantum);
+                        break;
+                    case "Por Prioridad":
+                        porPrioridad(colaListos1.procesos);
+                        break;
+                }
+            }
+            else if (colaListos2.procesos.length > 0) { // si la cola de listos 2 tiene procesos busca ahi uno para despachar
+                switch (colaListos2.algoritmo) { // dependiendo del algoritmo de la cola ejecuta la funcion del algoritmo
+                    case "FCFS":
+                        FCFS(colaListos2.procesos);
+                        break;
+                    case "SJF":
+                        SJF(colaListos2.procesos);
+                        break;
+                    case "SRTF":
+                        SRTF(colaListos2.procesos);
+                        break;
+                    case "Round Robin":
+                        roundRobin(colaListos2.procesos, colaListos2.quantum);
+                        break;
+                    case "Por Prioridad":
+                        porPrioridad(colaListos2.procesos);
+                        break;
+                }
+            }
+            else if (colaListos3.procesos.length > 0) { // si la cola de listos 3 tiene procesos busca ahi uno para despachar
+                switch (colaListos3.algoritmo) { // dependiendo del algoritmo de la cola ejecuta la funcion del algoritmo
+                    case "FCFS":
+                        FCFS(colaListos3.procesos);
+                        break;
+                    case "SJF":
+                        SJF(colaListos3.procesos);
+                        break;
+                    case "SRTF":
+                        SRTF(colaListos3.procesos);
+                        break;
+                    case "Round Robin":
+                        roundRobin(colaListos3.procesos, colaListos3.quantum);
+                        break;
+                    case "Por Prioridad":
+                        porPrioridad(colaListos3.procesos);
+                        break;
+                }
+            }
+            else { // si ninguna cola de listos tiene procesos, la cpu queda ociosa
+                console.log("CPU quedará ocioso");
+            }
         }
         else { // el proceso puede seguir en la cpu (si no es desalojado por srtf)
             if (recursoCPU.proceso.cicloVida[0] > 0) { // esta ejecutando su primera rafaga de cpu
@@ -494,6 +554,10 @@ function FCFS(cola) {
     if (cola.length > 0) { // si hay procesos en la cola busca ahi
         procesoADespachar = cola[0]; // elige el primer proceso de la cola
         cola.shift(); // elimina ese proceso de la cola
+        if (recursoCPU.proceso === null) { // si no habia ningun proceso en la cpu, grafica el tiempo ocioso en el gantt
+            recursoCPU.finRafaga = tiempoSimulacion; // pone el fin de rafaga como el tiempo actual
+            agregarGanttCPU(null, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // agrega el tiempo ocioso al gantt
+        }
         recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
         document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
         recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
@@ -540,6 +604,10 @@ function SJF(cola) {
             }
         }
         cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
+        if (recursoCPU.proceso === null) { // si no habia ningun proceso en la cpu, grafica el tiempo ocioso en el gantt
+            recursoCPU.finRafaga = tiempoSimulacion; // pone el fin de rafaga como el tiempo actual
+            agregarGanttCPU(null, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // agrega el tiempo ocioso al gantt
+        }
         recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
         document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
         recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
@@ -623,6 +691,8 @@ function SRTF(cola) {
         }
         else { // sino, la cpu esta vacia y el proceso se mete de una
             cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
+            recursoCPU.finRafaga = tiempoSimulacion; // pone el fin de rafaga como el tiempo actual
+            agregarGanttCPU(null, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // agrega el tiempo ocioso al gantt
             recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
             document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
             recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
@@ -646,6 +716,10 @@ function roundRobin(cola, quantum) {
     if (cola.length > 0) { // si hay procesos en la cola busca ahi
         procesoADespachar = cola[0]; // elige el primer proceso de la cola
         cola.shift(); // elimina ese proceso de la cola
+        if (recursoCPU.proceso === null) { // si no habia ningun proceso en la cpu, grafica el tiempo ocioso en el gantt
+            recursoCPU.finRafaga = tiempoSimulacion; // pone el fin de rafaga como el tiempo actual
+            agregarGanttCPU(null, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // agrega el tiempo ocioso al gantt
+        }
         recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
         document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
         recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
@@ -695,6 +769,10 @@ function porPrioridad(cola) {
             }
         }
         cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
+        if (recursoCPU.proceso === null) { // si no habia ningun proceso en la cpu, grafica el tiempo ocioso en el gantt
+            recursoCPU.finRafaga = tiempoSimulacion; // pone el fin de rafaga como el tiempo actual
+            agregarGanttCPU(null, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // agrega el tiempo ocioso al gantt
+        }
         recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
         document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
         recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
