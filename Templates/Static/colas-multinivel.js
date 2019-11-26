@@ -75,12 +75,15 @@ function continuarColas() {
     colasMultinivel = [] // vacia el array de colas para no guardar colas repetidas (si el usuario cliquea siguiente varias veces)
     var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
     for (var i = 0; i < tablaColas.rows.length; i++) { // itera para cada fila de la tabla
-        var colaMultinivel = { // crea un objeto con una cola y le agrega sus datos
-            idCola: Number(tablaColas.rows[i].cells[0].innerHTML),
-            algoritmo: tablaColas.rows[i].cells[1].children[0].children[0].value,
-            procesos: [],
+        if (tablaColas.rows[i].style.display != "none") {
+            var colaMultinivel = { // crea un objeto con una cola y le agrega sus datos
+                idCola: Number(tablaColas.rows[i].cells[0].innerHTML),
+                algoritmo: tablaColas.rows[i].cells[1].children[0].children[0].value,
+                quantum: tablaColas.rows[i].cells[1].children[1].children[0].children[1].value,
+                procesos: [],
+            }
+            colasMultinivel.push(colaMultinivel); // agrega la cola al array de colas
         }
-        colasMultinivel.push(colaMultinivel); // agrega la cola al array de colas
     }
     if (colasMultinivel.length == 1) { // si hay una sola cola multinivel, oculta las otras dos de la pestaña resultados
         document.getElementById("tituloColaListo2").style.display = "none";
