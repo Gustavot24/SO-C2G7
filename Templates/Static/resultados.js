@@ -25,6 +25,13 @@ var colaListos3 = null; // cola de listos con prioridad 3 (puede que no se use)
 var colaBloqueadosE = []; // cola de bloqueados que van a la entrada
 var colaBloqueadosS = []; // cola de bloqueados que van a la salida
 var colaTerminados = []; // cola de terminados
+var colaListos1EnElHTML;
+var colaListos2EnElHTML;
+var colaListos3EnElHTML;
+var colaNuevosEnElHTML = document.getElementById("colaNuevo");
+var colaBloqueadosEEnElHTML = document.getElementById("colaBloqueadoE");
+var colaBloqueadosSEnElHTML = document.getElementById("colaBloqueadoS");
+var colaTerminadosEnElHTML = document.getElementById("colaTerminado");
 var tablaParticiones = condicionesInciales.tablaParticiones; // tabla de particiones
 
 // arranca la simulacion
@@ -32,19 +39,29 @@ function iniciarSimulacion() {
     document.getElementById("previous").disabled = false; // habilita el boton de anterior
     document.getElementById("next").disabled = false; // habilita el boton de siguiente
     document.getElementById("iniciar").disabled = true; // deshabilita el boton de iniciar
-    colaListos1 = colasMultinivel[0]; // asigna a colaListos1 la primer cola multinivel
-    if (colasMultinivel.length > 1) { // si hay una 2º cola multinivel
-        colaListos2 = colasMultinivel[1]; // la asigna a colaListos2
-        if (colasMultinivel.length == 3) { // si hay una 3º cola multinivel
-            colaListos3 = colasMultinivel[2]; // la asigna a colaListos3
-        }
-        else { // si no hay 3º cola multinivel
-            colaListos3 = colaListos2; // colaListos3 apunta a colaListos2
-        }
-    }
-    else { // si no hay 2º ni 3º cola multinivel
+    if (colasMultinivel.length == 1) { // si hay una sola cola multinivel
+        colaListos1 = colasMultinivel[0]; // asigna a colaListos1 la primer cola multinivel
         colaListos2 = colaListos1; // colaListos2 apunta a colaListos1
         colaListos3 = colaListos1; // colaListos3 apunta a colaListos1
+        colaListos1EnElHTML = document.getElementById("colaListo1");
+        colaListos2EnElHTML = document.getElementById("colaListo1");
+        colaListos3EnElHTML = document.getElementById("colaListo1");
+    }
+    else if (colasMultinivel.length == 2) { // si hay dos colas multinivel
+        colaListos1 = colasMultinivel[0]; // asigna a colaListos1 la primer cola multinivel
+        colaListos2 = colasMultinivel[1]; // asigna a colaListos2 la segunda cola multinivel
+        colaListos3 = colaListos2; // colaListos3 apunta a colaListos2
+        colaListos1EnElHTML = document.getElementById("colaListo1");
+        colaListos2EnElHTML = document.getElementById("colaListo2");
+        colaListos3EnElHTML = document.getElementById("colaListo2");
+    }
+    else if (colasMultinivel.length == 3) { // si hay tres colas multinivel
+        colaListos1 = colasMultinivel[0]; // asigna a colaListos1 la primer cola multinivel
+        colaListos2 = colasMultinivel[1]; // asigna a colaListos2 la segunda cola multinivel
+        colaListos3 = colasMultinivel[2]; // asigna a colaListos3 la tercera cola multinivel
+        colaListos1EnElHTML = document.getElementById("colaListo1");
+        colaListos2EnElHTML = document.getElementById("colaListo2");
+        colaListos3EnElHTML = document.getElementById("colaListo3");
     }
     recursoCPU.inicioRafaga = 0;
     recursoE.inicioRafaga = 0;
@@ -317,13 +334,122 @@ function cosoQueSeEjecutaCadaSegundo() {
         }
     }
 
-    //console.log(colaNuevos);
-    //console.log(colaListos1.procesos);
-    //console.log(colaListos2.procesos);
-    //console.log(colaListos3.procesos);
-    //console.log(colaBloqueadosE);
-    //console.log(colaBloqueadosS);
-    //console.log(colaTerminados);
+    colaNuevosEnElHTML.innerHTML = "";
+    colaListos1EnElHTML.innerHTML = "";
+    colaListos2EnElHTML.innerHTML = "";
+    colaListos3EnElHTML.innerHTML = "";
+    colaBloqueadosEEnElHTML.innerHTML = "";
+    colaBloqueadosSEnElHTML.innerHTML = "";
+    colaTerminadosEnElHTML.innerHTML = "";
+
+    if (colaNuevos.length == 0) { // si la cola de nuevos esta vacia
+        colaNuevosEnElHTML.innerHTML = 
+            '<div class="p-2 bg-white" id="CNVacio">' +
+            'Vacío' +
+            '</div>'; // carga un div que dice vacio
+    }
+    else { // sino, carga los procesos en la cola
+        for (var i = 0; i < colaNuevos.length; i++) { 
+            colaNuevosEnElHTML.innerHTML +=
+            '<div class="p-2 bg-white" id="CN' + colaNuevos[i].idProceso + '">' +
+            colaNuevos[i].idProceso +
+            '</div>'; // carga un div con el proceso
+        }
+    }
+
+    if (colaListos1.procesos.length == 0) { // si la cola de listos 1 esta vacia
+        colaListos1EnElHTML.innerHTML = 
+        '<div class="p-2 bg-white" id="CL1Vacio">' +
+        'Vacío' +
+        '</div>'; // carga un div que dice vacio
+    }
+    else { // sino, carga los procesos en la cola
+        for (var i = 0; i < colaListos1.procesos.length; i++) { 
+            colaListos1EnElHTML.innerHTML +=
+            '<div class="p-2 bg-white" id="CL1' + colaListos1.procesos[i].idProceso + '">' +
+            colaListos1.procesos[i].idProceso +
+            '</div>'; // carga un div con el proceso
+        }
+    }
+
+    if (colaListos2EnElHTML.style.display != "none") { // si se usa la cola de listos 2 se trabaja sobre ella
+        if (colaListos2.procesos.length == 0) { // si la cola de listos 2 esta vacia
+            colaListos2EnElHTML.innerHTML = 
+            '<div class="p-2 bg-white" id="CL2Vacio">' +
+            'Vacío' +
+            '</div>'; // carga un div que dice vacio
+        }
+        else { // sino, carga los procesos en la cola
+            for (var i = 0; i < colaListos2.procesos.length; i++) { 
+                colaListos2EnElHTML.innerHTML +=
+                '<div class="p-2 bg-white" id="CL1' + colaListos2.procesos[i].idProceso + '">' +
+                colaListos2.procesos[i].idProceso +
+                '</div>'; // carga un div con el proceso
+            }
+        }
+    }
+
+    if (colaListos3EnElHTML.style.display != "none") { // si se usa la cola de listos 3 se trabaja sobre ella
+        if (colaListos3.procesos.length == 0) { // si la cola de listos 3 esta vacia
+            colaListos3EnElHTML.innerHTML = 
+            '<div class="p-2 bg-white" id="CL3Vacio">' +
+            'Vacío' +
+            '</div>'; // carga un div que dice vacio
+        }
+        else { // sino, carga los procesos en la cola
+            for (var i = 0; i < colaListos3.procesos.length; i++) { 
+                colaListos3EnElHTML.innerHTML +=
+                '<div class="p-2 bg-white" id="CL1' + colaListos3.procesos[i].idProceso + '">' +
+                colaListos3.procesos[i].idProceso +
+                '</div>'; // carga un div con el proceso
+            }
+        }
+    }
+
+    if (colaBloqueadosE.length == 0) { // si la cola de bloqueados de entrada esta vacia
+        colaBloqueadosEEnElHTML.innerHTML = 
+            '<div class="p-2 bg-white" id="CBEVacio">' +
+            'Vacío' +
+            '</div>'; // carga un div que dice vacio
+    }
+    else { // sino, carga los procesos en la cola
+        for (var i = 0; i < colaBloqueadosE.length; i++) { 
+            colaBloqueadosEEnElHTML.innerHTML +=
+            '<div class="p-2 bg-white" id="CBE' + colaBloqueadosE[i].idProceso + '">' +
+            colaBloqueadosE[i].idProceso +
+            '</div>'; // carga un div con el proceso
+        }
+    }
+
+    if (colaBloqueadosS.length == 0) { // si la cola de bloqueados de salida esta vacia
+        colaBloqueadosSEnElHTML.innerHTML = 
+            '<div class="p-2 bg-white" id="CBSVacio">' +
+            'Vacío' +
+            '</div>'; // carga un div que dice vacio
+    }
+    else { // sino, carga los procesos en la cola
+        for (var i = 0; i < colaBloqueadosS.length; i++) { 
+            colaBloqueadosSEnElHTML.innerHTML +=
+            '<div class="p-2 bg-white" id="CBS' + colaBloqueadosS[i].idProceso + '">' +
+            colaBloqueadosS[i].idProceso +
+            '</div>'; // carga un div con el proceso
+        }
+    }
+
+    if (colaTerminados.length == 0) { // si la cola de terminados esta vacia
+        colaTerminadosEnElHTML.innerHTML = 
+            '<div class="p-2 bg-white" id="CTVacio">' +
+            'Vacío' +
+            '</div>'; // carga un div que dice vacio
+    }
+    else { // sino, carga los procesos en la cola
+        for (var i = 0; i < colaTerminados.length; i++) { 
+            colaTerminadosEnElHTML.innerHTML +=
+            '<div class="p-2 bg-white" id="CT' + colaTerminados[i].idProceso + '">' +
+            colaTerminados[i].idProceso +
+            '</div>'; // carga un div con el proceso
+        }
+    }
 
     if (colaTerminados.length == tablaProcesos.length) { // esto quiere decir que terminaron todos los procesos, entonces tiene que terminar la simulacion
         document.getElementById("next").disabled = true; // deshabilita el boton de siguiente
@@ -625,16 +751,31 @@ function firstFitVariables() {
     var idParticion = 1;
     var dirInicio = condicionesInciales.tamanoSO
     var dirFin = condicionesInciales.tamanoMP - 1;
-    if (tablaParticiones.length == 0) { // si no hay particiones es la primera vez que se ejecuta
-        var particion = { // se crea una particion
-            "idParticion": idParticion,
-            "dirInicio": dirInicio,
-            "dirFin": dirFin,
-            "tamaño": dirFin - dirInicio + 1,
-            "estado": 1,
-            "idProceso": colaNuevos[i].idProceso,
-            "FI": 0,
-        };
+    for (var i = 0; i < colaNuevos.length; i++) {
+        if (tablaParticiones.length == 0) { // si no hay particiones es la primera vez que se ejecuta
+            var particion = { // se crea una particion
+                "idParticion": idParticion,
+                "dirInicio": dirInicio,
+                "dirFin": dirFin,
+                "tamaño": dirFin - dirInicio + 1,
+                "estado": 1,
+                "idProceso": colaNuevos[i].idProceso,
+                "FI": 0,
+            };
+        }
+        console.log("Proceso " + tablaParticiones[j].idProceso + " asignado a la partición " + tablaParticiones[j].idParticion); // muestra por consola
+        switch (colaNuevos[i].prioridad) { // segun la prioridad del proceso lo carga a su correspondiente cola de listos
+            case 1:
+                colaListos1.procesos.push(colaNuevos[i]);
+                break;
+            case 2:
+                colaListos2.procesos.push(colaNuevos[i]);
+                break;
+            case 3:
+                colaListos3.procesos.push(colaNuevos[i]);
+                break;
+        }
+        colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
     }
 }
 
