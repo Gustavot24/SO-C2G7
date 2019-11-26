@@ -86,18 +86,24 @@ function continuarColas() {
         }
     }
     if (colasMultinivel.length == 1) { // si hay una sola cola multinivel, oculta las otras dos de la pestaña resultados
+        document.getElementById("tituloColaListo1").innerHTML = "Cola de Listos:";
         document.getElementById("tituloColaListo2").style.display = "none";
         document.getElementById("colaListo2").style.display = "none";
         document.getElementById("tituloColaListo3").style.display = "none";
         document.getElementById("colaListo3").style.display = "none";
     }
-    if (colasMultinivel.length == 2) { // si hay dos colas multinivel, oculta la otra en el html
+    else if (colasMultinivel.length == 2) { // si hay dos colas multinivel, oculta la otra en el html
+        document.getElementById("tituloColaListo1").innerHTML = "Cola de Listos de prioridad 1:";
+        document.getElementById("tituloColaListo2").innerHTML = "Cola de Listos de prioridad 2 y 3:";
         document.getElementById("tituloColaListo2").removeAttribute("style");
         document.getElementById("colaListo2").removeAttribute("style");
         document.getElementById("tituloColaListo3").style.display = "none";
         document.getElementById("colaListo3").style.display = "none";
     }
-    if (colasMultinivel.length == 3) {
+     else if (colasMultinivel.length == 3) { // si hay 3 colas multinivel, no oculta ninguna
+        document.getElementById("tituloColaListo1").innerHTML = "Cola de Listos de prioridad 1:";
+        document.getElementById("tituloColaListo2").innerHTML = "Cola de Listos de prioridad 2:";
+        document.getElementById("tituloColaListo3").innerHTML = "Cola de Listos de prioridad 3:";
         document.getElementById("tituloColaListo2").removeAttribute("style");
         document.getElementById("colaListo2").removeAttribute("style");
         document.getElementById("tituloColaListo3").removeAttribute("style");
