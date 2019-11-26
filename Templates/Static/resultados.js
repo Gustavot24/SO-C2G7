@@ -25,13 +25,13 @@ var colaListos3 = null; // cola de listos con prioridad 3 (puede que no se use)
 var colaBloqueadosE = []; // cola de bloqueados que van a la entrada
 var colaBloqueadosS = []; // cola de bloqueados que van a la salida
 var colaTerminados = []; // cola de terminados
-var colaListos1EnElHTML;
-var colaListos2EnElHTML;
-var colaListos3EnElHTML;
-var colaNuevosEnElHTML = document.getElementById("colaNuevo");
-var colaBloqueadosEEnElHTML = document.getElementById("colaBloqueadoE");
-var colaBloqueadosSEnElHTML = document.getElementById("colaBloqueadoS");
-var colaTerminadosEnElHTML = document.getElementById("colaTerminado");
+var colaListos1EnElHTML; // cola de listos 1 en la pestaña resultados del html
+var colaListos2EnElHTML; // cola de listos 2 en la pestaña resultados del html
+var colaListos3EnElHTML; // cola de listos 3 en la pestaña resultados del html
+var colaNuevosEnElHTML = document.getElementById("colaNuevo"); // cola de nuevos en la pestaña resultados del html
+var colaBloqueadosEEnElHTML = document.getElementById("colaBloqueadoE"); // cola de bloqueados de entrada en la pestaña resultados del html
+var colaBloqueadosSEnElHTML = document.getElementById("colaBloqueadoS"); // cola de bloqueados de salida en la pestaña resultados del html
+var colaTerminadosEnElHTML = document.getElementById("colaTerminado"); // cola de terminados en la pestaña resultados del html
 var tablaParticiones = condicionesInciales.tablaParticiones; // tabla de particiones
 
 // arranca la simulacion
@@ -69,7 +69,7 @@ function iniciarSimulacion() {
     cosoQueSeEjecutaCadaSegundo();
 }
 
-// esta funcion se ejecuta una vez por segundo
+// esta funcion se ejecuta una vez por segundo (o sea, cada vez que se hace clic en el boton de avanzar)
 function cosoQueSeEjecutaCadaSegundo() {
     tiempoSimulacion++; // incrementa en uno el tiempo actual
     document.getElementById("tiempoActual").innerHTML = "Tiempo Actual: " + tiempoSimulacion; // muestra en el html
