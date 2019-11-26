@@ -451,6 +451,35 @@ function cosoQueSeEjecutaCadaSegundo() {
         }
     }
 
+    document.getElementById("divMemoria").innerHTML = 
+        '<div class="p-2 bg-white">' +
+        '  <a data-trigger="hover" data-placement="bottom" data-original-title="Reservado para el SO" data-toggle="popover" data-content="Dir. inicio: 0 Dir. fin: ' + (condicionesInciales.tamanoSO - 1) + ' Tamaño: ' + condicionesInciales.tamanoSO + '">Reservado para el SO</a>' +
+        '</div>'; // deja el mapa de memoria solo con el SO, para agregar las particiones despues
+    for (var i = 0; i < tablaParticiones.length; i++) { // dibuja el mapa de memoria con las particiones
+        if (tablaParticiones[i].estado == 0) { // particion libre
+            var texto =
+                "Dir. inicio: " + tablaParticiones[i].dirInicio +
+                " Dir. fin: " + tablaParticiones[i].dirFin +
+                " Tamaño: " + tablaParticiones[i].tamaño; // crea el contenido del popover con los datos de la particion
+            document.getElementById("divMemoria").innerHTML +=
+                '<div class="p-2 bg-white">' +
+                '  <a data-trigger="hover" data-placement="bottom" data-original-title="Partición ' + tablaParticiones[i].idParticion + '" data-toggle="popover" data-content="' + texto + '">Libre</a>' +
+                '</div>'; // agrega la particion al mapa de memoria
+        }
+        else {
+            var texto =
+                "Dir. inicio: " + tablaParticiones[i].dirInicio +
+                " Dir. fin: " + tablaParticiones[i].dirFin +
+                " Tamaño: " + tablaParticiones[i].tamaño +
+                " Frag. interna: " + tablaParticiones[i].FI; // crea el contenido del popover con los datos de la particion
+            document.getElementById("divMemoria").innerHTML +=
+                '<div class="p-2 bg-white">' +
+                '  <a data-trigger="hover" data-placement="bottom" data-original-title="Partición ' + tablaParticiones[i].idParticion + '" data-toggle="popover" data-content="' + texto + '">P' + tablaParticiones[i].idProceso +'</a>' +
+                '</div>'; // agrega la particion al mapa de memoria
+        }
+    }
+    $('[data-toggle="popover"]').popover(); // hace que sean visibles los popover
+
     if (colaTerminados.length == tablaProcesos.length) { // esto quiere decir que terminaron todos los procesos, entonces tiene que terminar la simulacion
         document.getElementById("next").disabled = true; // deshabilita el boton de siguiente
         document.getElementById("tiempoActual").innerHTML = "Tiempo final: " + tiempoSimulacion; // muestra el tiempo final en el html
