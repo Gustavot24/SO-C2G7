@@ -27,6 +27,15 @@ function agregarCola() {
 	seGuardaronLasColas = false;
 }
 
+// muestra el input del quantum si se elige round robin y lo oculta si se elige otro algoritmo
+function mostrarQuantum(cola) {
+    if (document.getElementById("typealgm" + cola).value == "Round Robin") {
+        document.getElementById("ingresarQuantum" + cola).removeAttribute("style");
+    }
+    else {
+        document.getElementById("ingresarQuantum" + cola).style.display = "none";
+    }
+}
 // carga una lista con los nombres de todas las listas de colas guardadas
 // y abre el modal para poder seleccionar
 // con info de https://www.w3schools.com/jsref/met_select_remove.asp
