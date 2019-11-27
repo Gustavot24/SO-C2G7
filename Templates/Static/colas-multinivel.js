@@ -83,7 +83,7 @@ function continuarColas() {
             var colaMultinivel = { // crea un objeto con una cola y le agrega sus datos
                 idCola: Number(tablaColas.rows[i].cells[0].innerHTML),
                 algoritmo: tablaColas.rows[i].cells[1].children[0].children[0].value,
-                quantum: tablaColas.rows[i].cells[1].children[1].children[0].children[1].value,
+                quantum: Number(tablaColas.rows[i].cells[1].children[1].children[0].children[1].value),
                 procesos: [],
             }
             colasMultinivel.push(colaMultinivel); // agrega la cola al array de colas
