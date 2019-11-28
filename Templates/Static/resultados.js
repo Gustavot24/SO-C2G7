@@ -865,9 +865,9 @@ function firstFitVariables() {
         if (tablaParticiones.length == 0) { // si no hay particiones es la primera vez que se ejecuta
             var particion = { // se crea una particion
                 "idParticion": idParticion,
-                "dirInicio": dirInicio,
-                "dirFin": dirFin,
-                "tamaño": dirFin - dirInicio + 1,
+                "dirInicio": condicionesInciales.tamanoSO,
+                "dirFin": colaNuevos[i].tamaño - 1,
+                "tamaño": colaNuevos[i].tamaño,
                 "estado": 1,
                 "idProceso": colaNuevos[i].idProceso,
                 "FI": 0,
@@ -875,6 +875,17 @@ function firstFitVariables() {
             tablaParticiones.push(particion); // agrega la particion a la tabla
             posicionEnLaTabla = 0; // guarda la posicion en la tabla de esa particion
             admitido = true; // indica que el proceso fue admitido
+            idParticion++;
+            var particion = { // crea otra particion para el espacio que quedo libre
+                "idParticion": idParticion,
+                "dirInicio": tablaParticiones[0].dirFin + 1,
+                "dirFin": condicionesInciales.tamanoMP - 1,
+                "tamaño": (condicionesInciales.tamanoMP - 1) - (tablaParticiones[0].dirFin + 1) + 1,
+                "estado": 0,
+                "idProceso": null,
+                "FI": 0,
+            }
+            tablaParticiones.push(particion); // agrega esa particion a la tabla
         }
         else { // si ya hay particiones tiene que ver donde meter o crear una nueva
             var j = 0; // variable para recorrer la tabla de particiones
@@ -884,6 +895,21 @@ function firstFitVariables() {
                     tablaParticiones[j].idProceso = colaNuevos[i].idProceso; // le asigna el id del proceso
                     posicionEnLaTabla = j; // guarda la posicion en la tabla de la particion
                     admitido = true; // indica que el proceso fue admitido
+                    if (tablaParticiones[j].tamaño > colaNuevos[i].tamaño) { // si la particion es mas grande que el proceso hay que recortar lo que sobra
+                        tablaParticiones[j].dirFin = tablaParticiones[j].dirInicio + colaNuevos[i].tamaño - 1, // actualiza la direccion de fin
+                        tablaParticiones[j].tamaño = colaNuevos[i].tamaño; // actualiza el tamaño
+                        var pedazoRecortado = { // particion que va a contener el pedazo que se recorto de la particion donde entro el proceso
+                            "idParticion": tablaParticiones[j].idParticion + 1,
+                            "dirInicio": tablaParticiones[0].dirFin + 1,
+                            "dirFin": condicionesInciales.tamanoMP - 1,
+                            "tamaño": (condicionesInciales.tamanoMP - 1) - (tablaParticiones[0].dirFin + 1) + 1,
+                            "estado": 0,
+                            "idProceso": null,
+                            "FI": 0,
+                        }
+                        tablaParticiones.splice(j + 1, 0, pedazoRecortado); // agrega el pedazo recortado a la tabla
+                        // CAMBIAR LOS ID DE LAS PARTICIONES QUE LE SIGUEN
+                    }
                 }
                 j++; // necesita comentario esto?
             }
