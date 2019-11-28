@@ -76,9 +76,14 @@ var tamMax = 0; //Variable para almacenar el tamaño de la partición más grand
 function obtenerTamMax() {
 	//Aquí se obtiene el tamaño de la partición más grande (tamMax)
 	//Será utilizada para controlar que el tamaño del proceso no sea mayor al tamaño de la partición más grande
-	for (i = 0; i < condicionesInciales.tablaParticiones.length; i++) {
-		if (condicionesInciales.tablaParticiones[i].tamaño > tamMax) {
-			tamMax = condicionesInciales.tablaParticiones[i].tamaño;
+	if (condicionesInciales.tipoParticion == "V") { // si las particiones son variables el tamaño maximo es el espacio libre total
+		tamMax = condicionesInciales.tamanoMP - condicionesInciales.tamanoSO;
+	}
+	else { // si las particiones son fijas el tamaño maximo es el de la particion mas grande
+		for (i = 0; i < condicionesInciales.tablaParticiones.length; i++) {
+			if (condicionesInciales.tablaParticiones[i].tamaño > tamMax) {
+				tamMax = condicionesInciales.tablaParticiones[i].tamaño;
+			}
 		}
 	}
 }
