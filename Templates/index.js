@@ -13,20 +13,21 @@ app.use('/Static', express.static('Static')); // esto es para que agarre los js,
 // el nombre de usuario y la contraseña dependen de como configuraste tu maquina
 // ver como hacer para que ande en cualquier maquina sin tocar nada
 var sql = require("mssql"); // solicita el modulo de sql server
-/*
+
 var config = { // establece los parametros para conectarse a la db
     user: 'sa',
     password: 'Intel80386!',
     server: 'localhost', 
     database: 'Simulador' 
 };
-*/
+/*
 var config = { // establece los parametros para conectarse a la db
     user: 'sa',
     password: '123456',
     server: 'localhost', 
     database: 'Simulador' 
 };
+*/
 sql.connect(config, function (err) { // ejecuta la conexion
     if (err) { // si falla al conectarse tira el error
         throw err;
@@ -43,14 +44,15 @@ request.query('select * from dbo.ParticionesFijas', function (err, resultado) { 
 });*/
 
 // hace un get para devolver el html al cargar la pagina
-/*
+
 app.get('/', function(request, response) {
     response.sendFile('C:/Users/emmah/repositorio local del tpi/Templates/index.html');
 });
-*/
+/*
 app.get('/', function(request, response) {
     response.sendFile('d:/Users/Gustavo/Documents/GitHub/SO-C2G7/Templates/index.html');
 });
+*/
 // hace que se acceda a la pagina desde el puerto 8000
 // e imprime eso en consola
 app.listen(8000, () => {
