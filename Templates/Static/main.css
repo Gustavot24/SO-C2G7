@@ -145,3 +145,12 @@ a:link, a:visited {
 #P8{
     background-color: #C30B99;
 }
+
+.col-9{
+    flex: 0 0 90%;
+    max-width: 90%;
+}
+
+.p-2{
+    border: 1px solid black;
+}

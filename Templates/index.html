@@ -151,32 +151,46 @@
                 <button type="button" class="btn btn-secondary ml-3" id="boton3" onclick="modalCargarParticiones()">Cargar desde DB</button>
               </div>        
               <div id="div-particiones" class="d-flex align-items-center mt-4" style="visibility: collapse">
-                <table class="table table-bordered bg-white" id="tabla-particiones">
-                  <thead class="text-white">
-                    <tr>
-                      <th>Id</th>
-                      <th>Direccion de Inicio</th>
-                      <th>Direccion de Fin</th>
-                      <th>Tamaño</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>#</td>
-                      <td>#</td>
-                      <td>#</td>
-                      <td>
-                        <input type="text" class="form-control" id='tamano1' placeholder="Ingrese tamaño">
-                      </td>                                        
-                    </tr>                                    
-                  </tbody>
-                  <tfoot id="boton4" style="visibility: hidden">
-                    <td>
-                      <button type="button" class="btn btn-outline-dark" onclick="cargarParticionesVbles()">
-                      <i class="material-icons md-light align-middle" id="add">add</i></button>
-                    </td>
-                  </tfoot>
-                </table>
+                <div class="d-flex mt-4">
+                  <div  class="d-flex align-items-center mt-4">
+                    <table class="table table-bordered bg-white" id="tabla-particiones">
+                      <thead class="text-white">
+                        <tr>
+                          <th>Id</th>
+                          <th>Direccion de Inicio</th>
+                          <th>Direccion de Fin</th>
+                          <th>Tamaño</th>
+                          <th>Opciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                            <td>#</td>
+                            <td>#</td>
+                            <td>#</td>
+                            <td>
+                              <input type="text" class="form-control" id='tamano1' placeholder="Ingrese tamaño">
+                            </td>                                        
+                          </tr>     
+                      </tbody>
+                      <tfoot id="boton4" style="visibility: hidden">
+                        <td>
+                          <button type="button" class="btn btn-outline-dark" onclick="nuevaPart()">
+                          <i class="material-icons md-light align-middle" id="add">add</i></button>
+                        </td>
+                      </tfoot>
+                    </table>
+                  </div>
+                  <div class="d-flex align-items-right mt-4" style="margin-left: 30px;"> 
+                    <div class="row text-white" style="background-color: #17202A;">
+                      <div class="col-sm">
+                        <p>Memoria: </p>
+                        <div class="d-flex flex-column m-2 text-dark" id="divMemoria1">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <button type="button" class="btn btn-secondary" id="boton5" style="visibility: collapse" onclick="$('#guardarParticiones').modal()">Guardar en DB</button>
               <div class="contenedorMensajes" id="mensajesCondicionesIniciales">
