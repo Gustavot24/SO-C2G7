@@ -86,7 +86,7 @@
                     <div class="modal-body">
                       <div class="form-group">
                         <label for="nombList" class="form-control-label">Ingrese el nombre de la lista a guardar:</label>
-                        <input type="text" class="form-control" id="nombList" placeholder="Nombre de Lista de Procesos">
+                        <input type="text" class="form-control" id="nombList" placeholder="Nombre de Lista de Procesos" maxlength="20">
                       </div>
                     </div>
                     <div class="modal-footer">
@@ -212,7 +212,7 @@
                     <div class="modal-body">
                       <div class="form-group">
                         <label for="nombreParticiones" class="form-control-label">Ingrese el nombre de la lista a guardar:</label>
-                        <input type="text" class="form-control" id="nombreParticiones" placeholder="Nombre de Lista de Particiones">
+                        <input type="text" class="form-control" id="nombreParticiones" placeholder="Nombre de Lista de Particiones" maxlength="20">
                       </div>
                     </div>
                     <div class="modal-footer">
@@ -361,7 +361,7 @@
                     <th scope="row">1</th>
                     <td>
                       <div class="form-group">
-                        <select class="form-control" id="typealgm1" onchange="tipoAlgoritmo(this.id)">
+                        <select class="form-control" id="typealgm1" onchange="mostrarQuantum(1)">
                           <option value="FCFS">FCFS</option>
                           <option value="SJF">SJF</option>
                           <option value="SRTF">SRTF</option>
@@ -381,7 +381,7 @@
                     <th scope="row">2</th>
                     <td>
                       <div class="form-group">
-                        <select class="form-control" id="typealgm2" onchange="tipoAlgoritmo(this.id)">
+                        <select class="form-control" id="typealgm2" onchange="mostrarQuantum(2)">
                           <option value="FCFS">FCFS</option>
                           <option value="SJF">SJF</option>
                           <option value="SRTF">SRTF</option>
@@ -611,8 +611,7 @@
     <script type="text/javascript" src="Static/base-de-datos.js"></script>
     <script type="text/javascript" src="Static/lista-de-procesos.js"></script>
     <script type="text/javascript" src="Static/colas-multinivel.js"></script>
-	<script type="text/javascript" src="Static/diagrama.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
 </html>

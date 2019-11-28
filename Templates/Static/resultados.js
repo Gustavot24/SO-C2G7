@@ -25,13 +25,13 @@ var colaListos3 = null; // cola de listos con prioridad 3 (puede que no se use)
 var colaBloqueadosE = []; // cola de bloqueados que van a la entrada
 var colaBloqueadosS = []; // cola de bloqueados que van a la salida
 var colaTerminados = []; // cola de terminados
-var colaListos1EnElHTML;
-var colaListos2EnElHTML;
-var colaListos3EnElHTML;
-var colaNuevosEnElHTML = document.getElementById("colaNuevo");
-var colaBloqueadosEEnElHTML = document.getElementById("colaBloqueadoE");
-var colaBloqueadosSEnElHTML = document.getElementById("colaBloqueadoS");
-var colaTerminadosEnElHTML = document.getElementById("colaTerminado");
+var colaListos1EnElHTML; // cola de listos 1 en la pestaña resultados del html
+var colaListos2EnElHTML; // cola de listos 2 en la pestaña resultados del html
+var colaListos3EnElHTML; // cola de listos 3 en la pestaña resultados del html
+var colaNuevosEnElHTML = document.getElementById("colaNuevo"); // cola de nuevos en la pestaña resultados del html
+var colaBloqueadosEEnElHTML = document.getElementById("colaBloqueadoE"); // cola de bloqueados de entrada en la pestaña resultados del html
+var colaBloqueadosSEnElHTML = document.getElementById("colaBloqueadoS"); // cola de bloqueados de salida en la pestaña resultados del html
+var colaTerminadosEnElHTML = document.getElementById("colaTerminado"); // cola de terminados en la pestaña resultados del html
 var tablaParticiones = condicionesInciales.tablaParticiones; // tabla de particiones
 
 // arranca la simulacion
@@ -69,7 +69,7 @@ function iniciarSimulacion() {
     cosoQueSeEjecutaCadaSegundo();
 }
 
-// esta funcion se ejecuta una vez por segundo
+// esta funcion se ejecuta una vez por segundo (o sea, cada vez que se hace clic en el boton de avanzar)
 function cosoQueSeEjecutaCadaSegundo() {
     tiempoSimulacion++; // incrementa en uno el tiempo actual
     document.getElementById("tiempoActual").innerHTML = "Tiempo Actual: " + tiempoSimulacion; // muestra en el html
@@ -201,7 +201,67 @@ function cosoQueSeEjecutaCadaSegundo() {
             recursoCPU.proceso = null; // elimina el proceso de la cpu
             document.getElementById("usoDeCPU").innerHTML = "Libre";
             recursoCPU.inicioRafaga = tiempoSimulacion; // pone el inicio de rafaga igual al tiempo actual
-            //CARGAR UN NUEVO PROCESO    
+            // ahora se fija si hay un proceso que pueda ser cargado
+            if (colaListos1.procesos.length > 0) { // si la cola de listos 1 tiene procesos busca ahi uno para despachar
+                switch (colaListos1.algoritmo) { // dependiendo del algoritmo de la cola ejecuta la funcion del algoritmo
+                    case "FCFS":
+                        FCFS(colaListos1.procesos);
+                        break;
+                    case "SJF":
+                        SJF(colaListos1.procesos);
+                        break;
+                    case "SRTF":
+                        SRTF(colaListos1.procesos);
+                        break;
+                    case "Round Robin":
+                        roundRobin(colaListos1.procesos, colaListos1.quantum);
+                        break;
+                    case "Por Prioridad":
+                        porPrioridad(colaListos1.procesos);
+                        break;
+                }
+            }
+            else if (colaListos2.procesos.length > 0) { // si la cola de listos 2 tiene procesos busca ahi uno para despachar
+                switch (colaListos2.algoritmo) { // dependiendo del algoritmo de la cola ejecuta la funcion del algoritmo
+                    case "FCFS":
+                        FCFS(colaListos2.procesos);
+                        break;
+                    case "SJF":
+                        SJF(colaListos2.procesos);
+                        break;
+                    case "SRTF":
+                        SRTF(colaListos2.procesos);
+                        break;
+                    case "Round Robin":
+                        roundRobin(colaListos2.procesos, colaListos2.quantum);
+                        break;
+                    case "Por Prioridad":
+                        porPrioridad(colaListos2.procesos);
+                        break;
+                }
+            }
+            else if (colaListos3.procesos.length > 0) { // si la cola de listos 3 tiene procesos busca ahi uno para despachar
+                switch (colaListos3.algoritmo) { // dependiendo del algoritmo de la cola ejecuta la funcion del algoritmo
+                    case "FCFS":
+                        FCFS(colaListos3.procesos);
+                        break;
+                    case "SJF":
+                        SJF(colaListos3.procesos);
+                        break;
+                    case "SRTF":
+                        SRTF(colaListos3.procesos);
+                        break;
+                    case "Round Robin":
+                        roundRobin(colaListos3.procesos, colaListos3.quantum);
+                        break;
+                    case "Por Prioridad":
+                        porPrioridad(colaListos3.procesos);
+                        break;
+                }
+            }
+            else { // si ninguna cola de listos tiene procesos, la cpu queda ociosa
+                console.log("CPU quedará ocioso");
+            }
         }
         else { // el proceso puede seguir en la cpu (si no es desalojado por srtf)
             if (recursoCPU.proceso.cicloVida[0] > 0) { // esta ejecutando su primera rafaga de cpu
@@ -451,6 +511,35 @@ function cosoQueSeEjecutaCadaSegundo() {
         }
     }
 
+    document.getElementById("divMemoria").innerHTML = 
+        '<div class="p-2 bg-white">' +
+        '  <a data-trigger="hover" data-placement="bottom" data-original-title="Reservado para el SO" data-toggle="popover" data-content="Dir. inicio: 0 Dir. fin: ' + (condicionesInciales.tamanoSO - 1) + ' Tamaño: ' + condicionesInciales.tamanoSO + '">Reservado para el SO</a>' +
+        '</div>'; // deja el mapa de memoria solo con el SO, para agregar las particiones despues
+    for (var i = 0; i < tablaParticiones.length; i++) { // dibuja el mapa de memoria con las particiones
+        if (tablaParticiones[i].estado == 0) { // particion libre
+            var texto =
+                "Dir. inicio: " + tablaParticiones[i].dirInicio +
+                " Dir. fin: " + tablaParticiones[i].dirFin +
+                " Tamaño: " + tablaParticiones[i].tamaño; // crea el contenido del popover con los datos de la particion
+            document.getElementById("divMemoria").innerHTML +=
+                '<div class="p-2 bg-white">' +
+                '  <a data-trigger="hover" data-placement="bottom" data-original-title="Partición ' + tablaParticiones[i].idParticion + '" data-toggle="popover" data-content="' + texto + '">Libre</a>' +
+                '</div>'; // agrega la particion al mapa de memoria
+        }
+        else {
+            var texto =
+                "Dir. inicio: " + tablaParticiones[i].dirInicio +
+                " Dir. fin: " + tablaParticiones[i].dirFin +
+                " Tamaño: " + tablaParticiones[i].tamaño +
+                " Frag. interna: " + tablaParticiones[i].FI; // crea el contenido del popover con los datos de la particion
+            document.getElementById("divMemoria").innerHTML +=
+                '<div class="p-2 bg-white">' +
+                '  <a data-trigger="hover" data-placement="bottom" data-original-title="Partición ' + tablaParticiones[i].idParticion + '" data-toggle="popover" data-content="' + texto + '">P' + tablaParticiones[i].idProceso +'</a>' +
+                '</div>'; // agrega la particion al mapa de memoria
+        }
+    }
+    $('[data-toggle="popover"]').popover(); // hace que sean visibles los popover
+
     if (colaTerminados.length == tablaProcesos.length) { // esto quiere decir que terminaron todos los procesos, entonces tiene que terminar la simulacion
         document.getElementById("next").disabled = true; // deshabilita el boton de siguiente
         document.getElementById("tiempoActual").innerHTML = "Tiempo final: " + tiempoSimulacion; // muestra el tiempo final en el html
@@ -465,6 +554,10 @@ function FCFS(cola) {
     if (cola.length > 0) { // si hay procesos en la cola busca ahi
         procesoADespachar = cola[0]; // elige el primer proceso de la cola
         cola.shift(); // elimina ese proceso de la cola
+        if (recursoCPU.proceso === null) { // si no habia ningun proceso en la cpu, grafica el tiempo ocioso en el gantt
+            recursoCPU.finRafaga = tiempoSimulacion; // pone el fin de rafaga como el tiempo actual
+            agregarGanttCPU(null, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // agrega el tiempo ocioso al gantt
+        }
         recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
         document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
         recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
@@ -511,6 +604,10 @@ function SJF(cola) {
             }
         }
         cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
+        if (recursoCPU.proceso === null) { // si no habia ningun proceso en la cpu, grafica el tiempo ocioso en el gantt
+            recursoCPU.finRafaga = tiempoSimulacion; // pone el fin de rafaga como el tiempo actual
+            agregarGanttCPU(null, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // agrega el tiempo ocioso al gantt
+        }
         recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
         document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
         recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
@@ -594,6 +691,8 @@ function SRTF(cola) {
         }
         else { // sino, la cpu esta vacia y el proceso se mete de una
             cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
+            recursoCPU.finRafaga = tiempoSimulacion; // pone el fin de rafaga como el tiempo actual
+            agregarGanttCPU(null, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // agrega el tiempo ocioso al gantt
             recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
             document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
             recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
@@ -617,6 +716,10 @@ function roundRobin(cola, quantum) {
     if (cola.length > 0) { // si hay procesos en la cola busca ahi
         procesoADespachar = cola[0]; // elige el primer proceso de la cola
         cola.shift(); // elimina ese proceso de la cola
+        if (recursoCPU.proceso === null) { // si no habia ningun proceso en la cpu, grafica el tiempo ocioso en el gantt
+            recursoCPU.finRafaga = tiempoSimulacion; // pone el fin de rafaga como el tiempo actual
+            agregarGanttCPU(null, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // agrega el tiempo ocioso al gantt
+        }
         recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
         document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
         recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
@@ -666,6 +769,10 @@ function porPrioridad(cola) {
             }
         }
         cola.splice(posicionEnLaCola, 1); // elimina el proceso a despachar de la cola de listos
+        if (recursoCPU.proceso === null) { // si no habia ningun proceso en la cpu, grafica el tiempo ocioso en el gantt
+            recursoCPU.finRafaga = tiempoSimulacion; // pone el fin de rafaga como el tiempo actual
+            agregarGanttCPU(null, recursoCPU.inicioRafaga, recursoCPU.finRafaga); // agrega el tiempo ocioso al gantt
+        }
         recursoCPU.proceso = procesoADespachar; // asigna a la cpu el proceso a despachar
         document.getElementById("usoDeCPU").innerHTML = "P" + recursoCPU.proceso.idProceso;
         recursoCPU.inicioRafaga = tiempoSimulacion; // asigna el tiempo actual al inicio de rafaga
@@ -751,31 +858,77 @@ function firstFitVariables() {
     var idParticion = 1;
     var dirInicio = condicionesInciales.tamanoSO
     var dirFin = condicionesInciales.tamanoMP - 1;
+    var posicionEnLaTabla;
+    var admitido = false;
     for (var i = 0; i < colaNuevos.length; i++) {
+        admitido = false;
         if (tablaParticiones.length == 0) { // si no hay particiones es la primera vez que se ejecuta
             var particion = { // se crea una particion
                 "idParticion": idParticion,
-                "dirInicio": dirInicio,
-                "dirFin": dirFin,
-                "tamaño": dirFin - dirInicio + 1,
+                "dirInicio": condicionesInciales.tamanoSO,
+                "dirFin": colaNuevos[i].tamaño - 1,
+                "tamaño": colaNuevos[i].tamaño,
                 "estado": 1,
                 "idProceso": colaNuevos[i].idProceso,
                 "FI": 0,
             };
+            tablaParticiones.push(particion); // agrega la particion a la tabla
+            posicionEnLaTabla = 0; // guarda la posicion en la tabla de esa particion
+            admitido = true; // indica que el proceso fue admitido
+            idParticion++;
+            var particion = { // crea otra particion para el espacio que quedo libre
+                "idParticion": idParticion,
+                "dirInicio": tablaParticiones[0].dirFin + 1,
+                "dirFin": condicionesInciales.tamanoMP - 1,
+                "tamaño": (condicionesInciales.tamanoMP - 1) - (tablaParticiones[0].dirFin + 1) + 1,
+                "estado": 0,
+                "idProceso": null,
+                "FI": 0,
+            }
+            tablaParticiones.push(particion); // agrega esa particion a la tabla
         }
-        console.log("Proceso " + tablaParticiones[j].idProceso + " asignado a la partición " + tablaParticiones[j].idParticion); // muestra por consola
-        switch (colaNuevos[i].prioridad) { // segun la prioridad del proceso lo carga a su correspondiente cola de listos
-            case 1:
-                colaListos1.procesos.push(colaNuevos[i]);
-                break;
-            case 2:
-                colaListos2.procesos.push(colaNuevos[i]);
-                break;
-            case 3:
-                colaListos3.procesos.push(colaNuevos[i]);
-                break;
+        else { // si ya hay particiones tiene que ver donde meter o crear una nueva
+            var j = 0; // variable para recorrer la tabla de particiones
+            while (j < tablaParticiones.length && !admitido) { //busca por toda la tabla de particiones mientras no sea admitido el proceso
+                if (tablaParticiones[j].estado == 0 && tablaParticiones[j].tamaño >= colaNuevos[i].tamaño) { // si la particion esta libre y el proceso entra, se lo pone ahi
+                    tablaParticiones[j].estado = 1; // le asigna el estado de ocupado
+                    tablaParticiones[j].idProceso = colaNuevos[i].idProceso; // le asigna el id del proceso
+                    posicionEnLaTabla = j; // guarda la posicion en la tabla de la particion
+                    admitido = true; // indica que el proceso fue admitido
+                    if (tablaParticiones[j].tamaño > colaNuevos[i].tamaño) { // si la particion es mas grande que el proceso hay que recortar lo que sobra
+                        tablaParticiones[j].dirFin = tablaParticiones[j].dirInicio + colaNuevos[i].tamaño - 1, // actualiza la direccion de fin
+                        tablaParticiones[j].tamaño = colaNuevos[i].tamaño; // actualiza el tamaño
+                        var pedazoRecortado = { // particion que va a contener el pedazo que se recorto de la particion donde entro el proceso
+                            "idParticion": tablaParticiones[j].idParticion + 1,
+                            "dirInicio": tablaParticiones[0].dirFin + 1,
+                            "dirFin": condicionesInciales.tamanoMP - 1,
+                            "tamaño": (condicionesInciales.tamanoMP - 1) - (tablaParticiones[0].dirFin + 1) + 1,
+                            "estado": 0,
+                            "idProceso": null,
+                            "FI": 0,
+                        }
+                        tablaParticiones.splice(j + 1, 0, pedazoRecortado); // agrega el pedazo recortado a la tabla
+                        // CAMBIAR LOS ID DE LAS PARTICIONES QUE LE SIGUEN
+                    }
+                }
+                j++; // necesita comentario esto?
+            }
         }
-        colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
+        if (admitido) { // si el proceso fue admitido en memoria
+            console.log("Proceso " + tablaParticiones[posicionEnLaTabla].idProceso + " asignado a la partición " + tablaParticiones[posicionEnLaTabla].idParticion); // muestra por consola
+            switch (colaNuevos[i].prioridad) { // segun la prioridad del proceso lo carga a su correspondiente cola de listos
+                case 1:
+                    colaListos1.procesos.push(colaNuevos[i]);
+                    break;
+                case 2:
+                    colaListos2.procesos.push(colaNuevos[i]);
+                    break;
+                case 3:
+                    colaListos3.procesos.push(colaNuevos[i]);
+                    break;
+            }
+            colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
+        }
     }
 }
 

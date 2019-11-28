@@ -18,24 +18,24 @@ var objetivo3 = false;
 var objetivo4 = false;
 
 function agregarCola() {
-	agregarCola:{ //Similar para cuando se implemente "Guardar en DB"
-		var algoritmo = document.getElementById("typealgm"+nroDeCola).value;
-		if (algoritmo == "Round Robin") {
-			validarQuantum();
-			if (quantumValido == false) {
-				break agregarCola;
-			}
-		}
-		nroDeCola++;
-        var tablaColas = document.getElementById("tabla-colas");
-        tablaColas.tBodies.item(0).rows[nroDeCola - 1].removeAttribute("style");
-		if (nroDeCola == 3) {
-			document.getElementById("botonAgregarCola").style.display = "none";
-		}
-		seGuardaronLasColas = false;
-	}		
+	nroDeCola++;
+    var tablaColas = document.getElementById("tabla-colas");
+    tablaColas.tBodies.item(0).rows[nroDeCola - 1].removeAttribute("style");
+	if (nroDeCola == 3) {
+		document.getElementById("botonAgregarCola").style.display = "none";
+	}
+	seGuardaronLasColas = false;
 }
 
+// muestra el input del quantum si se elige round robin y lo oculta si se elige otro algoritmo
+function mostrarQuantum(cola) {
+    if (document.getElementById("typealgm" + cola).value == "Round Robin") {
+        document.getElementById("ingresarQuantum" + cola).removeAttribute("style");
+    }
+    else {
+        document.getElementById("ingresarQuantum" + cola).style.display = "none";
+    }
+}
 // carga una lista con los nombres de todas las listas de colas guardadas
 // y abre el modal para poder seleccionar
 // con info de https://www.w3schools.com/jsref/met_select_remove.asp
@@ -75,26 +75,39 @@ function continuarColas() {
     colasMultinivel = [] // vacia el array de colas para no guardar colas repetidas (si el usuario cliquea siguiente varias veces)
     var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
     for (var i = 0; i < tablaColas.rows.length; i++) { // itera para cada fila de la tabla
-        var colaMultinivel = { // crea un objeto con una cola y le agrega sus datos
-            idCola: Number(tablaColas.rows[i].cells[0].innerHTML),
-            algoritmo: tablaColas.rows[i].cells[1].children[0].children[0].value,
-            procesos: [],
+        if (tablaColas.rows[i].style.display != "none") {
+            if (tablaColas.rows[i].cells[1].children[1].children[0].children[1].value < 1) { // si hay un quantum menor a 1 deberia dar error
+                mostrarMensaje("errorColasMultinivel", "El valor del quantum no puede ser menor a 1"); // muestra el error
+                return; // termina la funcion
+            }
+            var colaMultinivel = { // crea un objeto con una cola y le agrega sus datos
+                idCola: Number(tablaColas.rows[i].cells[0].innerHTML),
+                algoritmo: tablaColas.rows[i].cells[1].children[0].children[0].value,
+                quantum: Number(tablaColas.rows[i].cells[1].children[1].children[0].children[1].value),
+                procesos: [],
+            }
+            colasMultinivel.push(colaMultinivel); // agrega la cola al array de colas
         }
-        colasMultinivel.push(colaMultinivel); // agrega la cola al array de colas
     }
     if (colasMultinivel.length == 1) { // si hay una sola cola multinivel, oculta las otras dos de la pestaña resultados
+        document.getElementById("tituloColaListo1").innerHTML = "Cola de Listos:";
         document.getElementById("tituloColaListo2").style.display = "none";
         document.getElementById("colaListo2").style.display = "none";
         document.getElementById("tituloColaListo3").style.display = "none";
         document.getElementById("colaListo3").style.display = "none";
     }
-    if (colasMultinivel.length == 2) { // si hay dos colas multinivel, oculta la otra en el html
+    else if (colasMultinivel.length == 2) { // si hay dos colas multinivel, oculta la otra en el html
+        document.getElementById("tituloColaListo1").innerHTML = "Cola de Listos de prioridad 1:";
+        document.getElementById("tituloColaListo2").innerHTML = "Cola de Listos de prioridad 2 y 3:";
         document.getElementById("tituloColaListo2").removeAttribute("style");
         document.getElementById("colaListo2").removeAttribute("style");
         document.getElementById("tituloColaListo3").style.display = "none";
         document.getElementById("colaListo3").style.display = "none";
     }
-    if (colasMultinivel.length == 3) {
+     else if (colasMultinivel.length == 3) { // si hay 3 colas multinivel, no oculta ninguna
+        document.getElementById("tituloColaListo1").innerHTML = "Cola de Listos de prioridad 1:";
+        document.getElementById("tituloColaListo2").innerHTML = "Cola de Listos de prioridad 2:";
+        document.getElementById("tituloColaListo3").innerHTML = "Cola de Listos de prioridad 3:";
         document.getElementById("tituloColaListo2").removeAttribute("style");
         document.getElementById("colaListo2").removeAttribute("style");
         document.getElementById("tituloColaListo3").removeAttribute("style");
@@ -111,16 +124,6 @@ function continuarColas() {
 }
 
 // esta cosa es porque si lo meto en el atributo onclick de un boton no anda un carajo
-function continuarColasSinGuardar() { // falta implementar similar para agregarColas y continuarColas...
-    var tablaColas = document.getElementById("tabla-colas").tBodies.item(0); // variable que apunta a la tabla de colas
-    for (var i = 0; i < tablaColas.rows.length; i++) { // itera para cada fila de la tabla
-        var algoritmo = tablaColas.rows[i].cells[1].children[0].children[0].value;
-        if (algoritmo == "Round Robin") {
-            validarQuantum();
-            if (quantumValido == false) {
-                return;
-            }
-        }    
-    }
+function continuarColasSinGuardar() { 
 	$('a[href="#result"]').trigger("click"); // cambia a la pestaña resultados
 }
