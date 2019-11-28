@@ -890,7 +890,7 @@ function firstFitVariables() {
         else { // si ya hay particiones tiene que ver donde meter o crear una nueva
             var j = 0; // variable para recorrer la tabla de particiones
             while (j < tablaParticiones.length && !admitido) { //busca por toda la tabla de particiones mientras no sea admitido el proceso
-                if (tablaParticiones[j].estado == 0 && tablaParticiones[j].tamaño >= colaNuevos[i].tamaño) { // si la particion esta libre y el proceso entra, se lo pone ahi
+                if ((tablaParticiones[j].estado == 0) && (tablaParticiones[j].tamaño >= colaNuevos[i].tamaño)) { // si la particion esta libre y el proceso entra, se lo pone ahi
                     tablaParticiones[j].estado = 1; // le asigna el estado de ocupado
                     tablaParticiones[j].idProceso = colaNuevos[i].idProceso; // le asigna el id del proceso
                     posicionEnLaTabla = j; // guarda la posicion en la tabla de la particion
@@ -898,19 +898,35 @@ function firstFitVariables() {
                     if (tablaParticiones[j].tamaño > colaNuevos[i].tamaño) { // si la particion es mas grande que el proceso hay que recortar lo que sobra
                         tablaParticiones[j].dirFin = tablaParticiones[j].dirInicio + colaNuevos[i].tamaño - 1, // actualiza la direccion de fin
                         tablaParticiones[j].tamaño = colaNuevos[i].tamaño; // actualiza el tamaño
-                        var pedazoRecortado = { // particion que va a contener el pedazo que se recorto de la particion donde entro el proceso
-                            "idParticion": tablaParticiones[j].idParticion + 1,
-                            "dirInicio": tablaParticiones[0].dirFin + 1,
-                            "dirFin": condicionesInciales.tamanoMP - 1,
-                            "tamaño": (condicionesInciales.tamanoMP - 1) - (tablaParticiones[0].dirFin + 1) + 1,
-                            "estado": 0,
-                            "idProceso": null,
-                            "FI": 0,
+                        if (j == tablaParticiones.length - 1) { // si es la ultima particion la actual, el pedazo recortado se carga usando el tamaño de memoria
+                            var pedazoRecortado = { // particion que va a contener el pedazo que se recorto de la particion donde entro el proceso
+                                "idParticion": tablaParticiones[j].idParticion + 1,
+                                "dirInicio": tablaParticiones[j].dirFin + 1,
+                                "dirFin": condicionesInciales.tamanoMP - 1,
+                                "tamaño": (condicionesInciales.tamanoMP - 1) - (tablaParticiones[j].dirFin + 1) + 1,
+                                "estado": 0,
+                                "idProceso": null,
+                                "FI": 0,
+                            }
+                        }
+                        else { // si la particion actual no es la ultima, el pedazo recortado se define segun la particion siguiente
+                            var pedazoRecortado = { // particion que va a contener el pedazo que se recorto de la particion donde entro el proceso
+                                "idParticion": tablaParticiones[j].idParticion + 1,
+                                "dirInicio": tablaParticiones[j].dirFin + 1,
+                                "dirFin": tablaParticiones[j + 1].dirInicio - 1,
+                                "tamaño": (tablaParticiones[j + 1].dirInicio - 1) - (tablaParticiones[j].dirFin + 1) + 1,
+                                "estado": 0,
+                                "idProceso": null,
+                                "FI": 0,
+                            }
                         }
                         tablaParticiones.splice(j + 1, 0, pedazoRecortado); // agrega el pedazo recortado a la tabla
-                        // CAMBIAR LOS ID DE LAS PARTICIONES QUE LE SIGUEN
+                        for (var k = 0; k < tablaParticiones.length; k++) { // actualiza los id de todas las particiones
+                            tablaParticiones[k].idParticion = k + 1;
+                        }
                     }
                 }
+                // FALTA HACER COMPACTACION EN CASO DE QUE HAYA ESPACIO LIBRE PERO NO ENTRE EN NINGUNA PARTICION
                 j++; // necesita comentario esto?
             }
         }
