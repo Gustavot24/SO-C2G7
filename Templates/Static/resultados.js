@@ -858,7 +858,10 @@ function firstFitVariables() {
     var idParticion = 1;
     var dirInicio = condicionesInciales.tamanoSO
     var dirFin = condicionesInciales.tamanoMP - 1;
+    var posicionEnLaTabla;
+    var admitido = false;
     for (var i = 0; i < colaNuevos.length; i++) {
+        admitido = false;
         if (tablaParticiones.length == 0) { // si no hay particiones es la primera vez que se ejecuta
             var particion = { // se crea una particion
                 "idParticion": idParticion,
@@ -869,20 +872,37 @@ function firstFitVariables() {
                 "idProceso": colaNuevos[i].idProceso,
                 "FI": 0,
             };
+            tablaParticiones.push(particion); // agrega la particion a la tabla
+            posicionEnLaTabla = 0; // guarda la posicion en la tabla de esa particion
+            admitido = true; // indica que el proceso fue admitido
         }
-        console.log("Proceso " + tablaParticiones[j].idProceso + " asignado a la partición " + tablaParticiones[j].idParticion); // muestra por consola
-        switch (colaNuevos[i].prioridad) { // segun la prioridad del proceso lo carga a su correspondiente cola de listos
-            case 1:
-                colaListos1.procesos.push(colaNuevos[i]);
-                break;
-            case 2:
-                colaListos2.procesos.push(colaNuevos[i]);
-                break;
-            case 3:
-                colaListos3.procesos.push(colaNuevos[i]);
-                break;
+        else { // si ya hay particiones tiene que ver donde meter o crear una nueva
+            var j = 0; // variable para recorrer la tabla de particiones
+            while (j < tablaParticiones.length && !admitido) { //busca por toda la tabla de particiones mientras no sea admitido el proceso
+                if (tablaParticiones[j].estado == 0 && tablaParticiones[j].tamaño >= colaNuevos[i].tamaño) { // si la particion esta libre y el proceso entra, se lo pone ahi
+                    tablaParticiones[j].estado = 1; // le asigna el estado de ocupado
+                    tablaParticiones[j].idProceso = colaNuevos[i].idProceso; // le asigna el id del proceso
+                    posicionEnLaTabla = j; // guarda la posicion en la tabla de la particion
+                    admitido = true; // indica que el proceso fue admitido
+                }
+                j++; // necesita comentario esto?
+            }
         }
-        colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
+        if (admitido) { // si el proceso fue admitido en memoria
+            console.log("Proceso " + tablaParticiones[posicionEnLaTabla].idProceso + " asignado a la partición " + tablaParticiones[posicionEnLaTabla].idParticion); // muestra por consola
+            switch (colaNuevos[i].prioridad) { // segun la prioridad del proceso lo carga a su correspondiente cola de listos
+                case 1:
+                    colaListos1.procesos.push(colaNuevos[i]);
+                    break;
+                case 2:
+                    colaListos2.procesos.push(colaNuevos[i]);
+                    break;
+                case 3:
+                    colaListos3.procesos.push(colaNuevos[i]);
+                    break;
+            }
+            colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
+        }
     }
 }
 
