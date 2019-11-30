@@ -1,3 +1,5 @@
+import { addListener } from "cluster";
+
 // Pestaña de resultados
 
 // variables globales
@@ -856,10 +858,9 @@ function bestFit() {
 // algoritmo first fit para particiones variables
 function firstFitVariables() {
     var idParticion = 1;
-    var dirInicio = condicionesInciales.tamanoSO
-    var dirFin = condicionesInciales.tamanoMP - 1;
     var posicionEnLaTabla;
     var admitido = false;
+    var espacioParaCompactacion = 0;
     for (var i = 0; i < colaNuevos.length; i++) {
         admitido = false;
         if (tablaParticiones.length == 0) { // si no hay particiones es la primera vez que se ejecuta
@@ -890,6 +891,9 @@ function firstFitVariables() {
         else { // si ya hay particiones tiene que ver donde meter o crear una nueva
             var j = 0; // variable para recorrer la tabla de particiones
             while (j < tablaParticiones.length && !admitido) { //busca por toda la tabla de particiones mientras no sea admitido el proceso
+                if ((tablaParticiones[j].estado == 0) && (tablaParticiones[j].tamaño < colaNuevos[i].tamaño)) { // si la particion esta libre pero el proceso no entra, se guarda su tamaño para poder compactar
+                    espacioParaCompactacion += tablaParticiones[j].tamaño;
+                }
                 if ((tablaParticiones[j].estado == 0) && (tablaParticiones[j].tamaño >= colaNuevos[i].tamaño)) { // si la particion esta libre y el proceso entra, se lo pone ahi
                     tablaParticiones[j].estado = 1; // le asigna el estado de ocupado
                     tablaParticiones[j].idProceso = colaNuevos[i].idProceso; // le asigna el id del proceso
@@ -926,8 +930,34 @@ function firstFitVariables() {
                         }
                     }
                 }
-                // FALTA HACER COMPACTACION EN CASO DE QUE HAYA ESPACIO LIBRE PERO NO ENTRE EN NINGUNA PARTICION
                 j++; // necesita comentario esto?
+            }
+        }
+        if (!admitido) { // si el proceso no fue admitido en memoria
+            if (espacioParaCompactacion >= colaNuevos[i].tamaño) { // si el espacio vacio (suma de todas las particiones libres) es mayor o igual al tamaño del proceso no admitido
+                compactacion(); // hace la compactacion
+                tablaParticiones[tablaParticiones.length - 1].estado = 1; // pone como ocupada la ultima particion (creada en la compactacion)
+                tablaParticiones[tablaParticiones.length - 1].idProceso = colaNuevos[i].idProceso; // le asigna a esa particion el id del proceso
+                if (tablaParticiones[tablaParticiones.length - 1].tamaño > colaNuevos[i].idProceso) { // si la particion es mas grande que el proceso, se crea otra con el espacio que sobra
+                    tablaParticiones[tablaParticiones.length - 1].dirFin = tablaParticiones[tablaParticiones.length - 1].dirInicio + colaNuevos[i].tamaño - 1, // actualiza la direccion de fin
+                    tablaParticiones[tablaParticiones.length - 1].tamaño = colaNuevos[i].tamaño; // actualiza el tamaño
+                    var pedazoRecortado = { // particion que va a contener el pedazo que se recorto de la particion donde entro el proceso
+                        "idParticion": tablaParticiones.length,
+                        "dirInicio": tablaParticiones[tablaParticiones.length - 1].dirFin + 1,
+                        "dirFin": condicionesInciales.tamanoMP - 1,
+                        "tamaño": (condicionesInciales.tamanoMP - 1) - (tablaParticiones[tablaParticiones.length - 1].dirFin + 1) + 1,
+                        "estado": 0,
+                        "idProceso": null,
+                        "FI": 0,
+                    }
+                    tablaParticiones.push(pedazoRecortado); // agrega el pedazo recortado a la tabla
+                    for (var k = 0; k < tablaParticiones.length; k++) { // actualiza los id de todas las particiones
+                        tablaParticiones[k].idParticion = k + 1;
+                    }
+                }
+            }
+            else {
+                console.log("Proceso " + colaNuevos[i].idProceso + " no admitido en memoria por falta de espacio");
             }
         }
         if (admitido) { // si el proceso fue admitido en memoria
@@ -951,6 +981,15 @@ function firstFitVariables() {
 // algoritmo worst fit
 function worstFit() {
     //
+}
+
+// compactacion de la memoria (une todas las particiones libres en una sola al final de todo)
+function compactacion() {
+    for (var i = 0; i < tablaParticiones.length; i++) { // itera por toda la tabla de particiones
+        if (tablaParticiones[i].estado == 0) {
+            tablaParticiones[j].dirInicio;
+        }
+    }
 }
 
 // agrega algo al diagrama de gantt de cpu
