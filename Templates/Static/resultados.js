@@ -1,5 +1,3 @@
-import { addListener } from "cluster";
-
 // Pestaña de resultados
 
 // variables globales
@@ -956,8 +954,8 @@ function firstFitVariables() {
                     }
                 }
             }
-            else {
-                console.log("Proceso " + colaNuevos[i].idProceso + " no admitido en memoria por falta de espacio");
+            else { // sino, el proceso no puede ser cargado en memoria
+                console.log("Proceso " + colaNuevos[i].idProceso + " no admitido en memoria por falta de espacio"); // muestra por consola
             }
         }
         if (admitido) { // si el proceso fue admitido en memoria
@@ -985,11 +983,28 @@ function worstFit() {
 
 // compactacion de la memoria (une todas las particiones libres en una sola al final de todo)
 function compactacion() {
-    for (var i = 0; i < tablaParticiones.length; i++) { // itera por toda la tabla de particiones
-        if (tablaParticiones[i].estado == 0) {
-            tablaParticiones[j].dirInicio;
+    var dirInicio = condicionesInciales.tamanoSO; // direccion de inicio de la primera particion
+    for (var i = 0; i < tablaParticiones.length; i++) { // itera para eliminar particiones
+        if (tablaParticiones[i].estado == 0) { // si la particion esta libre
+            tablaParticiones.splice(i, 1); // la elimina de la tabla
         }
     }
+    for (var i = 0; i < tablaParticiones.length; i++) { // itera para reorganizar las direcciones y los id
+        tablaParticiones[i].idParticion = i; // actualiza el id
+        tablaParticiones[i].dirInicio = dirInicio; // actualiza la direccion de inicio
+        tablaParticiones[i].dirFin = dirInicio + tablaParticiones[i].tamaño - 1; // actualiza la direccion de fin
+        dirInicio = tablaParticiones[i].dirFin + 1; // guarda la direccion de inicio de la proxima particion
+    }
+    var espacioCompactado = { // crea una nueva particion con el espacio compactado
+        "idParticion": tablaParticiones.length,
+        "dirInicio": dirInicio,
+        "dirFin": condicionesInciales.tamanoMP - 1,
+        "tamaño": (condicionesInciales.tamanoMP - 1) - dirInicio + 1,
+        "estado": 0,
+        "idProceso": null,
+        "FI": 0,
+    }
+    tablaParticiones.push(espacioCompactado); // agrega esa particion a la tabla de particiones
 }
 
 // agrega algo al diagrama de gantt de cpu
