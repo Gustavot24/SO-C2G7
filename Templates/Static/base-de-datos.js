@@ -9,6 +9,14 @@ function guardarParticiones(nombre) {
         mostrarMensaje("errorCondicionesIniciales", "El nombre de la lista de particiones no puede estar en blanco"); // muestra el mensaje de error
         return; // termina la funcion
     }
+    if (Number(document.getElementById("mp").value) > 128) {
+        mostrarMensaje("errorCondicionesIniciales", "El tamaño de la memoria principal no puede ser menor a 128");
+        return;
+    }
+    if (Number(document.getElementById("mp").value) < 2048) {
+        mostrarMensaje("errorCondicionesIniciales", "El tamaño de la memoria principal no puede ser mayor a 2048");
+        return;
+    }
     var tablaDeParticiones = document.getElementById("tabla-particiones").tBodies.item(0); // variable que apunta al body de la lista de procesos
     var tablaConvertidaEnString = []; // array que va a contener las particiones
     for (var i = 0; i < tablaDeParticiones.rows.length; i++) { // itera para cada fila de la tabla

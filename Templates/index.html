@@ -102,15 +102,19 @@
             <div id="icondition" class="container tab-pane active"><br>
               <form class="form-inline">
                 <div class="form-group mx-sm-3 mb-2">
-                  <label for="szmem">Tamaño de la Memoria (KB)</label>
-                  <select class="form-control ml-2" id="mp" onchange="habilitarControles()">
+                  <label for="mp">Tamaño de la Memoria (KB)</label>
+                  <input type="number" class="form-control ml-2" id="mp" onchange="habilitarControles()" min="128" max="2048" placeholder="Ingresar">
+                  <!-- asi estaba el selector de tamaño de memoria -->
+                  <!-- segun ristoff no tiene sentido limitarle a tamaños que sean potencias de 2 -->
+                  <!-- anda a cualquier casa de computacion y pedile una ram de 5 gb, a ver que te dicen -->
+                  <!-- <select class="form-control ml-2" id="mp" onchange="habilitarControles()">
                     <option disabled="true" selected="true">Selecciona</option>
                     <option value="128">128</option>
                     <option value="256">256</option>
                     <option value="512">512</option>
                     <option value="1024">1024</option>
                     <option value="2048">2048</option>
-                  </select>
+                  </select> -->
                 </div>
               </form>
               <div class="d-flex align-items-center justify-items-start m-3">

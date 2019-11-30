@@ -488,6 +488,14 @@ function modalCargarParticiones() {
 // comprueba si se guardaron los cambios para pasar a la carga de trabajo
 // con info de https://stackoverflow.com/questions/39461076/how-to-change-active-bootstrap-tab-with-javascript
 function continuarParticiones() {
+    if (Number(document.getElementById("mp").value) > 128) {
+        mostrarMensaje("errorCondicionesIniciales", "El tamaño de la memoria principal no puede ser menor a 128");
+        return;
+    }
+    if (Number(document.getElementById("mp").value) < 2048) {
+        mostrarMensaje("errorCondicionesIniciales", "El tamaño de la memoria principal no puede ser mayor a 2048");
+        return;
+    }
     if (document.getElementById("prtvar").checked == true) { // si las particiones son variables carga los datos en el object
         condicionesInciales.tamanoMP = document.getElementById("mp").value; // carga el tamaño de memoria
         condicionesInciales.porcentajeSO = Number(document.getElementById("myRange").value) / 100; // carga el porcentaje del so
