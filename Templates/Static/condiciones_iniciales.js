@@ -488,11 +488,11 @@ function modalCargarParticiones() {
 // comprueba si se guardaron los cambios para pasar a la carga de trabajo
 // con info de https://stackoverflow.com/questions/39461076/how-to-change-active-bootstrap-tab-with-javascript
 function continuarParticiones() {
-    if (Number(document.getElementById("mp").value) > 128) {
+    if (Number(document.getElementById("mp").value) < 128) {
         mostrarMensaje("errorCondicionesIniciales", "El tamaño de la memoria principal no puede ser menor a 128");
         return;
     }
-    if (Number(document.getElementById("mp").value) < 2048) {
+    if (Number(document.getElementById("mp").value) > 2048) {
         mostrarMensaje("errorCondicionesIniciales", "El tamaño de la memoria principal no puede ser mayor a 2048");
         return;
     }
