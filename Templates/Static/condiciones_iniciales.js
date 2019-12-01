@@ -121,7 +121,6 @@ function nuevaPart() {
     } else {
         mostrarMensaje("errorCondicionesIniciales", "Primero termine la operación pendiente.");
     }
-    
 }
 // habilita los controles de porcentaje del SO y otros
 // cuando se selecciona un tamaño de memoria
