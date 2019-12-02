@@ -196,6 +196,22 @@ function cosoQueSeEjecutaCadaSegundo() {
                         }
                     }
                     console.log("Proceso " + recursoCPU.proceso.idProceso + " termina"); // muestra por consola
+					
+					//Como se liberó un espacio de memoria entonces se corre el algoritmo de asignación de proceso a memoria
+					switch (condicionesInciales.algoritmo) { // cargar los procesos de la cola de nuevos en memoria y cola de listos
+						case "FF": // first fit para particiones fijas
+							firstFitFijas();
+							break;
+						case "B": // best fit para particiones fijas
+							bestFit();
+							break;
+						case "FV": // first fit para particiones variables
+							firstFitVariables();
+							break;
+						case "W": // worst fit para particiones variables
+							worstFit();
+							break;
+					}
                 }
             }
             recursoCPU.proceso = null; // elimina el proceso de la cpu
@@ -432,39 +448,45 @@ function cosoQueSeEjecutaCadaSegundo() {
         }
     }
 
-    if (colaListos2EnElHTML.style.display != "none") { // si se usa la cola de listos 2 se trabaja sobre ella
-        if (colaListos2.procesos.length == 0) { // si la cola de listos 2 esta vacia
-            colaListos2EnElHTML.innerHTML = 
-            '<div class="p-2 bg-white" id="CL2Vacio">' +
-            'Vacío' +
-            '</div>'; // carga un div que dice vacio
-        }
-        else { // sino, carga los procesos en la cola
-            for (var i = 0; i < colaListos2.procesos.length; i++) { 
-                colaListos2EnElHTML.innerHTML +=
-                '<div class="p-2 bg-white" id="CL1' + colaListos2.procesos[i].idProceso + '">' +
-                colaListos2.procesos[i].idProceso +
-                '</div>'; // carga un div con el proceso
-            }
-        }
-    }
+	if (colasMultinivel.length > 1) {
 
-    if (colaListos3EnElHTML.style.display != "none") { // si se usa la cola de listos 3 se trabaja sobre ella
-        if (colaListos3.procesos.length == 0) { // si la cola de listos 3 esta vacia
-            colaListos3EnElHTML.innerHTML = 
-            '<div class="p-2 bg-white" id="CL3Vacio">' +
-            'Vacío' +
-            '</div>'; // carga un div que dice vacio
-        }
-        else { // sino, carga los procesos en la cola
-            for (var i = 0; i < colaListos3.procesos.length; i++) { 
-                colaListos3EnElHTML.innerHTML +=
-                '<div class="p-2 bg-white" id="CL1' + colaListos3.procesos[i].idProceso + '">' +
-                colaListos3.procesos[i].idProceso +
-                '</div>'; // carga un div con el proceso
-            }
-        }
-    }
+		if (colaListos2EnElHTML.style.display != "none") { // si se usa la cola de listos 2 se trabaja sobre ella
+			if (colaListos2.procesos.length == 0) { // si la cola de listos 2 esta vacia
+				colaListos2EnElHTML.innerHTML = 
+				'<div class="p-2 bg-white" id="CL2Vacio">' +
+				'Vacío' +
+				'</div>'; // carga un div que dice vacio
+			}
+			else { // sino, carga los procesos en la cola
+				for (var i = 0; i < colaListos2.procesos.length; i++) { 
+					colaListos2EnElHTML.innerHTML +=
+					'<div class="p-2 bg-white" id="CL1' + colaListos2.procesos[i].idProceso + '">' +
+					colaListos2.procesos[i].idProceso +
+					'</div>'; // carga un div con el proceso
+				}
+			}
+		}
+	}
+
+	if (colasMultinivel.length > 2) {
+
+		if (colaListos3EnElHTML.style.display != "none") { // si se usa la cola de listos 3 se trabaja sobre ella
+			if (colaListos3.procesos.length == 0) { // si la cola de listos 3 esta vacia
+				colaListos3EnElHTML.innerHTML = 
+				'<div class="p-2 bg-white" id="CL3Vacio">' +
+				'Vacío' +
+				'</div>'; // carga un div que dice vacio
+			}
+			else { // sino, carga los procesos en la cola
+				for (var i = 0; i < colaListos3.procesos.length; i++) { 
+					colaListos3EnElHTML.innerHTML +=
+					'<div class="p-2 bg-white" id="CL1' + colaListos3.procesos[i].idProceso + '">' +
+					colaListos3.procesos[i].idProceso +
+					'</div>'; // carga un div con el proceso
+				}
+			}
+		}
+	}
 
     if (colaBloqueadosE.length == 0) { // si la cola de bloqueados de entrada esta vacia
         colaBloqueadosEEnElHTML.innerHTML = 
@@ -791,8 +813,9 @@ function porPrioridad(cola) {
 
 // algoritmo first fit para particiones fijas
 function firstFitFijas() {
-    for (var i = 0;  i < colaNuevos.length; i++) { // itera por la cola de nuevos
-        var admitido = false; // indica si un proceso fue admitido en memoria o no
+	var i = 0; //Indice para recorrer los procesos que están en cola de Nuevos
+    while (i < colaNuevos.length) { //Recorre la cola de Nuevos
+		var admitido = false; // indica si un proceso fue admitido en memoria o no
         var j = 0; // para iterar sobre la tabla de particiones
         while (j < tablaParticiones.length && !admitido) { // itera por la tabla de particiones
             if ((tablaParticiones[j].tamaño >= colaNuevos[i].tamaño) && (tablaParticiones[j].estado == 0)) { // si la particion esta libre y el proceso entra
@@ -813,9 +836,11 @@ function firstFitFijas() {
                 }
                 colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
                 admitido = true; // indica que el proceso fue admitido para pasar al siguiente
+				i--; //Decrementa el indice porque se ha eliminado un proceso de la cola de Nuevos
             }
             j++; // incrementa j para pasar a la siguiente particion
         }
+		i++; //Incrementa el indice para trabajar con el siguiente proceso
     }
 }
 
@@ -823,11 +848,12 @@ function firstFitFijas() {
 function bestFit() {
     var mejorAjuste = -1; // indica la particion donde mejor entra el proceso
     var diferencia = Infinity; // diferencia de tamaño entre una particion y un proceso
-    for (var i = 0; i < colaNuevos.length; i++) { // itera por la cola de nuevos
+    var i = 0; //Indice para recorrer los procesos que están en cola de Nuevos
+	while (i < colaNuevos.length) { //Recorre la cola de Nuevos
         mejorAjuste = -1;
         diferencia = Infinity;
         for (var j = 0; j < tablaParticiones.length; j++) { // itera por la tabla de particiones
-            if ((tablaParticiones[i].tamaño >= colaNuevos[i].tamaño) && (tablaParticiones[i].estado == 0)) { // si la particion esta libre y el proceso entra
+            if ((tablaParticiones[j].tamaño >= colaNuevos[i].tamaño) && (tablaParticiones[j].estado == 0)) { // si la particion esta libre y el proceso entra
                 if ((tablaParticiones[j].tamaño - colaNuevos[i].tamaño) < diferencia) { // si el proceso se ajusta mejor que la diferencia guardada
                     diferencia = tablaParticiones[j].tamaño - colaNuevos[i].tamaño; // actualiza la diferencia
                     mejorAjuste = j; // guarda la posicion de esa particion
@@ -851,7 +877,9 @@ function bestFit() {
                     break;
             }
             colaNuevos.splice(i, 1); // elimina al proceso de la cola de nuevos
+			i--; //Decrementa el indice porque se ha eliminado un proceso de la cola de Nuevos
         }
+		i++; //Incrementa el indice para trabajar con el siguiente proceso
     }
 }
 
