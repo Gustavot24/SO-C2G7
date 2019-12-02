@@ -9,6 +9,14 @@ function guardarParticiones(nombre) {
         mostrarMensaje("errorCondicionesIniciales", "El nombre de la lista de particiones no puede estar en blanco"); // muestra el mensaje de error
         return; // termina la funcion
     }
+    if (Number(document.getElementById("mp").value) > 128) {
+        mostrarMensaje("errorCondicionesIniciales", "El tamaño de la memoria principal no puede ser menor a 128");
+        return;
+    }
+    if (Number(document.getElementById("mp").value) < 2048) {
+        mostrarMensaje("errorCondicionesIniciales", "El tamaño de la memoria principal no puede ser mayor a 2048");
+        return;
+    }
     var tablaDeParticiones = document.getElementById("tabla-particiones").tBodies.item(0); // variable que apunta al body de la lista de procesos
     var tablaConvertidaEnString = []; // array que va a contener las particiones
     for (var i = 0; i < tablaDeParticiones.rows.length; i++) { // itera para cada fila de la tabla
@@ -63,12 +71,11 @@ function cargarParticiones(nombre) {
             console.log(this.responseText); // muestra por consola la respuesta del servidor
             document.getElementById("prtfixed").checked = true; // chequea el radio de particiones fijas
             fixed(); // ejecuta la funcion ???
-            tabla.deleteRow(0); // elimina la primera fila de la tabla (donde se cargan los datos de una particion)
-            document.getElementById("div-particiones").style.visibility="visible"; // hace visible el div que contiene la tabla de particiones
             tablaParticiones = JSON.parse(this.responseText).recordset[0]; // convierte a un array de objetos la tabla de particiones sacada de la db
             condicionesInciales.tipoParticion = "F"; // en la variable global de condiciones iniciales pone que el tipo de particion es fija
             document.getElementById("mp").value = tablaParticiones.tamanoMemoria; // asigna el valor del tamaño de memoria al select
             condicionesInciales.tamanoMP = tablaParticiones.tamanoMemoria; // guarda el tamaño de la memoria en la variable global de condiciones iniciales
+            document.getElementById("myRange").disabled = false; // habilita el range de porcentaje de SO
             document.getElementById("myRange").value = tablaParticiones.porcentajeSO; // asigna el valor del porcentaje del SO al range
             document.getElementById("demo").innerHTML = tablaParticiones.porcentajeSO; // asigna el valor del porcentaje del SO al label
             condicionesInciales.porcentajeSO = parseInt(tablaParticiones.porcentajeSO) / 100; // asigna el porcentaje ocupado por el SO a la variable de condiciones iniciales
@@ -83,27 +90,17 @@ function cargarParticiones(nombre) {
                 document.getElementById("bstfit").checked = true;
                 condicionesInciales.algoritmo = "B"; // pone en la variable de condiciones iniciales que el algoritmo es best fit
             }
+            setVisible(); // funcion que se ejecuta al hacer clic en "agregar particiones manualmente"
             var tablaConvertidaEnJSON = JSON.parse(tablaParticiones.listado); // convierte al string del json (directamente sacado del resultado de la consulta) en un array de objects
             for (var i = 0; i < tablaConvertidaEnJSON.length; i++) { // itera  sobre el array de objects
-                var nuevaFila = tabla.insertRow(); // agrega una nueva fila a la tabla de particiones
-                var celdaIdParticion = nuevaFila.insertCell(0); // le va agregando las celdas a la fila esa
-                var celdaDirInicio = nuevaFila.insertCell(1);
-                var celdaDirFin = nuevaFila.insertCell(2);
-                var celdaTamano = nuevaFila.insertCell(3);
-                celdaIdParticion.innerHTML = tablaConvertidaEnJSON[i].idParticion; // le va cargando los datos a cada una de las celdas
-                celdaDirInicio.innerHTML = tablaConvertidaEnJSON[i].dirInicio;
-                celdaDirFin.innerHTML = tablaConvertidaEnJSON[i].dirFin;
-                celdaTamano.innerHTML = tablaConvertidaEnJSON[i].tamaño;
-                var particion = { // crea un objeto con los datos dela particion recien cargada
-                    idParticion: Number(tablaConvertidaEnJSON[i].idParticion),
-                    dirInicio: Number(tablaConvertidaEnJSON[i].dirInicio),
-                    dirFin: Number(tablaConvertidaEnJSON[i].dirFin),
-                    tamaño: Number(tablaConvertidaEnJSON[i].tamaño),
-                    estado: 0,
-                    idProceso: null,
-                    FI: 0,
-                };
-                condicionesInciales.tablaParticiones.push(particion); // pone esa particion en el array tablaParticiones de la variable de condiciones iniciales
+                tabla.rows[i].cells[0].innerHTML = tablaConvertidaEnJSON[i].idParticion; // le va cargando los datos a cada una de las celdas
+                tabla.rows[i].cells[1].innerHTML = tablaConvertidaEnJSON[i].dirInicio;
+                tabla.rows[i].cells[2].innerHTML = tablaConvertidaEnJSON[i].dirFin;
+                tabla.rows[i].cells[3].children[0].value = tablaConvertidaEnJSON[i].tamaño;
+                guardarPart(); // guarda esa particion en la tabla
+                if (i < tablaConvertidaEnJSON.length) { // si todavia no llega a la ultima particion
+                    nuevaPart(); // agrega una nueva fila para agregar una nueva particion
+                }
             }
             //cargarParticionesVbles(); // ejecuta esta funcion de algoritmo.js para crear el object que tiene todos los datos de la pagina        
             mostrarMensaje("avisoCondicionesIniciales", "Se cargó la configuración de la memoria principal"); // muestra un mensaje de que se cargo todo bien
