@@ -229,7 +229,22 @@
             </div>
 
             <!-- pestaña de resultados -->
-            <div id="result" class="container tab-pane fade"><br>              
+            <div id="result" class="container tab-pane fade"><br>
+              <button type="button" class="btn btn-secondary m-3" id="mostrarCargaDeTrabajo" onclick="mostrarCargaDeTrabajo()">Mostrar carga de trabajo</button>
+              <div style="margin-bottom: 20px; display: none;" id="cargaDeTrabajoEnResultados">
+                <table class="table table-bordered bg-white">
+                  <thead class="text-white">
+                    <tr>
+                      <th scope="col" id="idProc">Id</th>
+                      <th scope="col" id="tamProc">Tamaño</th>
+                      <th scope="col" id="prioProc">Prioridad</th>
+                      <th scope="col" id="tArrProc">Tiempo de Arribo</th>
+                      <th scope="col" id="cvProc">Ciclo de Vida</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
               <div style="margin-bottom: 20px;">
                 <h4>Diagrama de Gantt de CPU</h4>
                 <div class="progress" id="cola_cpu">  
@@ -299,17 +314,17 @@
                       <div class="p-2 bg-white" id="CL1Vacio">Vacío</div>
                     </div>
                     <div id="colaListo2">
-						<p id="tituloColaListo2">Cola de Listos de prioridad 2: </p>
-						<div class="d-flex flex-nowrap bg-secondary mb-3 text-dark">
-							<div class="p-2 bg-white" id="CL2Vacio">Vacío</div>
-						</div>
-					</div>
-					<div id="colaListo3">
-						<p id="tituloColaListo3">Cola de Listos de prioridad 3: </p>
-						<div class="d-flex flex-nowrap bg-secondary mb-3 text-dark">
-							<div class="p-2 bg-white" id="CL3Vacio">Vacío</div>
-						</div>
-					</div>
+                      <p id="tituloColaListo2">Cola de Listos de prioridad 2: </p>
+                      <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark">
+                        <div class="p-2 bg-white" id="CL2Vacio">Vacío</div>
+                      </div>
+                    </div>
+                    <div id="colaListo3">
+                      <p id="tituloColaListo3">Cola de Listos de prioridad 3: </p>
+                      <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark">
+                        <div class="p-2 bg-white" id="CL3Vacio">Vacío</div>
+                      </div>
+                    </div>
                     <p>Cola de Bloqueados para Entrada: </p>
                     <div class="d-flex flex-nowrap bg-secondary mb-3 text-dark" id="colaBloqueadoE">
                       <div class="p-2 bg-white" id="CBEVacio">Vacío</div>
@@ -538,7 +553,7 @@
       </div>
     </div>
     
-    <!-- modal de guardar lista de c -->
+    <!-- modal de guardar lista de colas -->
     <div class="modal fade" id="todbcolas" role="dialog">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">            
@@ -618,8 +633,8 @@
     <script type="text/javascript" src="Static/base-de-datos.js"></script>
     <script type="text/javascript" src="Static/lista-de-procesos.js"></script>
     <script type="text/javascript" src="Static/colas-multinivel.js"></script>
-	<script type="text/javascript" src="Static/resultados.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	  <script type="text/javascript" src="Static/resultados.js"></script>
+	  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
 </html>

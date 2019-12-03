@@ -1220,3 +1220,32 @@ function agregarGanttS(proceso, inicio, fin) {
         $('[data-toggle="popover"]').popover(); // hace el popover
     }
 }
+
+// funcion que muestra u oculta la carga de trabajo en la pestaña de resultados
+// que queria ristoff
+function mostrarCargaDeTrabajo() {
+    var tabla = document.getElementById("cargaDeTrabajoEnResultados").children[0].tBodies.item(0); // tabla que va a tener los procesos
+    if (tabla.rows.length == 0) { // si la  tabla esta vacia la carga
+        for (var i = 0; i < tablaProcesos.length; i++) {
+            var nuevaFila = tabla.insertRow(tabla.rows.length);
+            var celda1 = nuevaFila.insertCell(0);
+            var celda2 = nuevaFila.insertCell(1);
+            var celda3 = nuevaFila.insertCell(2);
+            var celda4 = nuevaFila.insertCell(3);
+            var celda5 = nuevaFila.insertCell(4);
+            celda1.innerHTML = tablaProcesos[i].idProceso;
+            celda2.innerHTML = tablaProcesos[i].tamaño;
+            celda3.innerHTML = tablaProcesos[i].prioridad;
+            celda4.innerHTML = tablaProcesos[i].tiempoArribo;
+            celda5.innerHTML = tablaProcesos[i].cicloVida.join("-");
+        }
+    }
+    if (document.getElementById("cargaDeTrabajoEnResultados").style.display == "none") { // si la carga de trabajo esta oculta
+        document.getElementById("cargaDeTrabajoEnResultados").style.display = "block"; // la muestra
+        document.getElementById("mostrarCargaDeTrabajo").innerHTML = "Ocultar carga de trabajo"; // pone que el boton diga ocultar
+    }
+    else { // si la carga de trabajo no esta oculta
+        document.getElementById("cargaDeTrabajoEnResultados").style.display = "none"; // la oculta
+        document.getElementById("mostrarCargaDeTrabajo").innerHTML = "Mostrar carga de trabajo"; // pone que el boton diga mostrar
+    }
+}
