@@ -49,6 +49,8 @@ function setVisible() {
         if($('#frtfit').is(':checked')) { condicionesInciales.algoritmo="FV"} //FV Firstfit para variable
         if($('#wrtfit').is(':checked')) { condicionesInciales.algoritmo="W"}
     }
+    document.getElementById("mp").disabled = true; // deshabilita el number de tamaño de memoria para no hacer cagadas
+    document.getElementById("myRange").disabled = true; // deshabilita el range de tamaño de SO para no hacer cagadas
     //La primera vez realiza calculos necesarios para dsps (tamanoLibre, direccionLibre, etc)
     var tamanoMP =parseInt(document.getElementById("mp").value);
     var porcentaje =parseInt(document.getElementById("myRange").value)/100;
