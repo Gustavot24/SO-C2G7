@@ -397,7 +397,7 @@ function cosoQueSeEjecutaCadaSegundo() {
                 colaBloqueadosS.shift(); // elimina ese proceso de la cola de bloqueados
                 agregarGanttS(recursoS.proceso.idProceso, recursoS.inicioRafaga, recursoS.finRafaga); // se muestra en el grafico el tiempo que va a estar el proceso
                 document.getElementById("usoDeS").innerHTML = "P" + recursoS.proceso.idProceso; // muestra en el html
-                console.log("Proceso " + recursoS.idProceso + " ingresó a S"); // muestra por consola    
+                console.log("Proceso " + recursoS.proceso.idProceso + " ingresó a S"); // muestra por consola    
             }
             else { // sino la entrada va a quedar ociosa por no se cuanto tiempo
                 recursoS.finRafaga = null; // se deja el fin de rafaga como null (no se cuando va a dejar de estar ocioso)
