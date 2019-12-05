@@ -220,6 +220,7 @@ function cargarColas(nombre) {
                 }
                 document.getElementById("typealgm" + (i + 1)).value = tablaColas[i].algoritmo;
                 document.getElementById("quantum" + (i + 1)).value = tablaColas[i].quantum;
+                mostrarQuantum(i + 1);
             }
             mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas"); // muestra un mensaje de que se cargo todo bien
             seGuardaronLasColas = true; // pone a true la variable que indica que se guardaron las colas

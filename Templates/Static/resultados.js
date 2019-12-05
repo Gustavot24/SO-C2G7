@@ -44,8 +44,8 @@ function iniciarSimulacion() {
         colaListos2 = colaListos1; // colaListos2 apunta a colaListos1
         colaListos3 = colaListos1; // colaListos3 apunta a colaListos1
         colaListos1EnElHTML = document.getElementById("colaListo1");
-        colaListos2EnElHTML = document.getElementById("colaListo1");
-        colaListos3EnElHTML = document.getElementById("colaListo1");
+        //colaListos2EnElHTML = document.getElementById("colaListo1");
+        //colaListos3EnElHTML = document.getElementById("colaListo1");
     }
     else if (colasMultinivel.length == 2) { // si hay dos colas multinivel
         colaListos1 = colasMultinivel[0]; // asigna a colaListos1 la primer cola multinivel
@@ -53,7 +53,7 @@ function iniciarSimulacion() {
         colaListos3 = colaListos2; // colaListos3 apunta a colaListos2
         colaListos1EnElHTML = document.getElementById("colaListo1");
         colaListos2EnElHTML = document.getElementById("colaListo2");
-        colaListos3EnElHTML = document.getElementById("colaListo2");
+        //colaListos3EnElHTML = document.getElementById("colaListo2");
     }
     else if (colasMultinivel.length == 3) { // si hay tres colas multinivel
         colaListos1 = colasMultinivel[0]; // asigna a colaListos1 la primer cola multinivel
@@ -433,39 +433,6 @@ function cosoQueSeEjecutaCadaSegundo() {
         }
     }
 
-    if (colaListos1.procesos.length == 0) { // si la cola de listos 1 esta vacia
-        colaListos1EnElHTML.innerHTML = 
-        '<div class="p-2 bg-white" id="CL1Vacio">' +
-        'Vacío' +
-        '</div>'; // carga un div que dice vacio
-    }
-    else { // sino, carga los procesos en la cola
-        for (var i = 0; i < colaListos1.procesos.length; i++) { 
-            colaListos1EnElHTML.innerHTML +=
-            '<div class="p-2 bg-white" id="CL1' + colaListos1.procesos[i].idProceso + '">' +
-            colaListos1.procesos[i].idProceso +
-            '</div>'; // carga un div con el proceso
-        }
-    }
-
-	if (colasMultinivel.length > 1) {
-		if (colaListos2.procesos.length == 0) { // si la cola de listos 2 esta vacia
-			colaListos2EnElHTML.innerHTML = 
-			'<div class="p-2 bg-white" id="CL2Vacio">' +
-			'Vacío' +
-			'</div>'; // carga un div que dice vacio
-		}
-		else { // sino, carga los procesos en la cola
-			for (var i = 0; i < colaListos2.procesos.length; i++) { 
-				colaListos2EnElHTML.innerHTML +=
-				'<div class="p-2 bg-white" id="CL1' + colaListos2.procesos[i].idProceso + '">' +
-				colaListos2.procesos[i].idProceso +
-				'</div>'; // carga un div con el proceso
-			}
-		}
-
-	}
-
 	if (colasMultinivel.length > 2) {
 		if (colaListos3.procesos.length == 0) { // si la cola de listos 3 esta vacia
 			colaListos3EnElHTML.innerHTML = 
@@ -482,6 +449,38 @@ function cosoQueSeEjecutaCadaSegundo() {
 			}
 		}
 	}
+
+    if (colasMultinivel.length > 1) {
+		if (colaListos2.procesos.length == 0) { // si la cola de listos 2 esta vacia
+			colaListos2EnElHTML.innerHTML = 
+			'<div class="p-2 bg-white" id="CL2Vacio">' +
+			'Vacío' +
+			'</div>'; // carga un div que dice vacio
+		}
+		else { // sino, carga los procesos en la cola
+			for (var i = 0; i < colaListos2.procesos.length; i++) { 
+				colaListos2EnElHTML.innerHTML +=
+				'<div class="p-2 bg-white" id="CL1' + colaListos2.procesos[i].idProceso + '">' +
+				colaListos2.procesos[i].idProceso +
+				'</div>'; // carga un div con el proceso
+			}
+		}
+	}
+
+    if (colaListos1.procesos.length == 0) { // si la cola de listos 1 esta vacia
+        colaListos1EnElHTML.innerHTML = 
+        '<div class="p-2 bg-white" id="CL1Vacio">' +
+        'Vacío' +
+        '</div>'; // carga un div que dice vacio
+    }
+    else { // sino, carga los procesos en la cola
+        for (var i = 0; i < colaListos1.procesos.length; i++) { 
+            colaListos1EnElHTML.innerHTML +=
+            '<div class="p-2 bg-white" id="CL1' + colaListos1.procesos[i].idProceso + '">' +
+            colaListos1.procesos[i].idProceso +
+            '</div>'; // carga un div con el proceso
+        }
+    }
 
     if (colaBloqueadosE.length == 0) { // si la cola de bloqueados de entrada esta vacia
         colaBloqueadosEEnElHTML.innerHTML = 
