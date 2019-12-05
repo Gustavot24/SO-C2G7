@@ -449,41 +449,36 @@ function cosoQueSeEjecutaCadaSegundo() {
     }
 
 	if (colasMultinivel.length > 1) {
-
-		if (colaListos2EnElHTML.style.display != "none") { // si se usa la cola de listos 2 se trabaja sobre ella
-			if (colaListos2.procesos.length == 0) { // si la cola de listos 2 esta vacia
-				colaListos2EnElHTML.innerHTML = 
-				'<div class="p-2 bg-white" id="CL2Vacio">' +
-				'Vacío' +
-				'</div>'; // carga un div que dice vacio
-			}
-			else { // sino, carga los procesos en la cola
-				for (var i = 0; i < colaListos2.procesos.length; i++) { 
-					colaListos2EnElHTML.innerHTML +=
-					'<div class="p-2 bg-white" id="CL1' + colaListos2.procesos[i].idProceso + '">' +
-					colaListos2.procesos[i].idProceso +
-					'</div>'; // carga un div con el proceso
-				}
+		if (colaListos2.procesos.length == 0) { // si la cola de listos 2 esta vacia
+			colaListos2EnElHTML.innerHTML = 
+			'<div class="p-2 bg-white" id="CL2Vacio">' +
+			'Vacío' +
+			'</div>'; // carga un div que dice vacio
+		}
+		else { // sino, carga los procesos en la cola
+			for (var i = 0; i < colaListos2.procesos.length; i++) { 
+				colaListos2EnElHTML.innerHTML +=
+				'<div class="p-2 bg-white" id="CL1' + colaListos2.procesos[i].idProceso + '">' +
+				colaListos2.procesos[i].idProceso +
+				'</div>'; // carga un div con el proceso
 			}
 		}
+
 	}
 
 	if (colasMultinivel.length > 2) {
-
-		if (colaListos3EnElHTML.style.display != "none") { // si se usa la cola de listos 3 se trabaja sobre ella
-			if (colaListos3.procesos.length == 0) { // si la cola de listos 3 esta vacia
-				colaListos3EnElHTML.innerHTML = 
-				'<div class="p-2 bg-white" id="CL3Vacio">' +
-				'Vacío' +
-				'</div>'; // carga un div que dice vacio
-			}
-			else { // sino, carga los procesos en la cola
-				for (var i = 0; i < colaListos3.procesos.length; i++) { 
-					colaListos3EnElHTML.innerHTML +=
-					'<div class="p-2 bg-white" id="CL1' + colaListos3.procesos[i].idProceso + '">' +
-					colaListos3.procesos[i].idProceso +
-					'</div>'; // carga un div con el proceso
-				}
+		if (colaListos3.procesos.length == 0) { // si la cola de listos 3 esta vacia
+			colaListos3EnElHTML.innerHTML = 
+			'<div class="p-2 bg-white" id="CL3Vacio">' +
+			'Vacío' +
+			'</div>'; // carga un div que dice vacio
+		}
+		else { // sino, carga los procesos en la cola
+			for (var i = 0; i < colaListos3.procesos.length; i++) { 
+				colaListos3EnElHTML.innerHTML +=
+				'<div class="p-2 bg-white" id="CL1' + colaListos3.procesos[i].idProceso + '">' +
+				colaListos3.procesos[i].idProceso +
+				'</div>'; // carga un div con el proceso
 			}
 		}
 	}

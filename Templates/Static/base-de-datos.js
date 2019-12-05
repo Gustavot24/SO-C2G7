@@ -25,7 +25,7 @@ function guardarParticiones(nombre) {
                 "idParticion": tablaDeParticiones.rows[i].cells[0].innerHTML,
                 "dirInicio": tablaDeParticiones.rows[i].cells[1].innerHTML,
                 "dirFin": tablaDeParticiones.rows[i].cells[2].innerHTML,
-                "tamaño": tablaDeParticiones.rows[i].cells[3].innerHTML,
+                "tamaño": tablaDeParticiones.rows[i].cells[3].children[0].value,
             }
             tablaConvertidaEnString.push(particion); // agrega esa particion al array
         }
