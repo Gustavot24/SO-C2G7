@@ -136,8 +136,11 @@ function habilitarControles() {
 //Cuando presiona el boton Agregar Particiones Manualmente
 function guardarPart() {          
     //Carga la particion en el array tabla de particiones que es parte del object
-    var tamano = parseInt(document.getElementById(`tamano${idPart}`).value);
+    var tamano = Number(document.getElementById("tamano" + idPart).value);
     var espacioLibre=condicionesInciales.tablaParticiones.find(element => element.idParticion==0 && element.tamaño>=tamano );
+    //if (condicionesInciales.tablaParticiones[condicionesInciales.tablaParticiones.length - 1].idParticion == 0) {
+    //    var espacioLibre = condicionesInciales.tablaParticiones[condicionesInciales.tablaParticiones.length - 1];
+    //}
     var index=condicionesInciales.tablaParticiones.indexOf(espacioLibre);
     if (espacioLibre!=undefined) {
         document.getElementById("save"+idPart).style.display = "none";
@@ -306,6 +309,15 @@ function borrar(nodo) {
             document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[0].innerHTML = i + 1; // actualiza el id en la tabla
             document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[1].innerHTML = condicionesInciales.tablaParticiones[i].dirInicio; // actualiza la direccion de inicio en la tabla
             document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[2].innerHTML = condicionesInciales.tablaParticiones[i].dirFin; // actualiza la direccion de fin en la tabla
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[3].children[0].id = "tamano" + (i + 1); // cambia el id del input del tamaño
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[4].id = "opciones" + (i + 1); // cambia el id de la celda de opciones
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[4].children[0].id = "save" + (i + 1);
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[4].children[1].id = "cancel" + (i + 1);
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[4].children[2].id = "edit" + (i + 1);
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[4].children[3].id = "delete" + (i + 1);
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[4].children[4].id = "cancel2" + (i + 1);
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[4].children[5].id = "acep" + (i + 1);
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[4].children[6].id = "cancel3" + (i + 1);
         }
     }
     idPart--; // decrementa esta variable global
