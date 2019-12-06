@@ -87,7 +87,7 @@ function setVisible() {
                 '<button class="btn btn-outline-dark" id="save'+idPart+'" style="display:block" onclick="guardarPart()">'+'<i class="material-icons align-middle">save</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="cancel'+idPart+'" style="display:block" onclick="anularPart()">'+'<i class="material-icons align-middle">highlight_off</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="edit'+idPart+'" style="display:none" onclick="edit(this)">'+'<i class="material-icons align-middle">create</i>'+'</button>'+
-                '<button class="btn btn-outline-dark" id="delete'+idPart+'" style="display:none" onclick="delete(this)">'+'<i class="material-icons align-middle">delete_outline</i>'+'</button>'+
+                '<button class="btn btn-outline-dark" id="delete'+idPart+'" style="display:none" onclick="borrar(this)">'+'<i class="material-icons align-middle">delete_outline</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="cancel2'+idPart+'" style="display:none" onclick="des(this)">'+'<i class="material-icons align-middle">undo</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="acept'+idPart+'" style="display:none" onclick="acept(this)">'+'<i class="material-icons align-middle">done_outline</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="cancel3'+idPart+'" style="display:none" onclick="cancel()">'+'<i class="material-icons align-middle">close</i>'+'</button>'+
@@ -113,7 +113,7 @@ function nuevaPart() {
                 '<button class="btn btn-outline-dark" id="save'+idPart+'" style="display:block" onclick="guardarPart()">'+'<i class="material-icons align-middle">save</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="cancel'+idPart+'" style="display:block" onclick="anularPart()">'+'<i class="material-icons align-middle">highlight_off</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="edit'+idPart+'" style="display:none" onclick="edit(this)">'+'<i class="material-icons align-middle">create</i>'+'</button>'+
-                '<button class="btn btn-outline-dark" id="delete'+idPart+'" style="display:none" onclick="delete(this)">'+'<i class="material-icons align-middle">delete_outline</i>'+'</button>'+
+                '<button class="btn btn-outline-dark" id="delete'+idPart+'" style="display:none" onclick="borrar(this)">'+'<i class="material-icons align-middle">delete_outline</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="cancel2'+idPart+'" style="display:none" onclick="des(this)">'+'<i class="material-icons align-middle">undo</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="acept'+idPart+'" style="display:none" onclick="acept(this)">'+'<i class="material-icons align-middle">done_outline</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="cancel3'+idPart+'" style="display:none" onclick="cancel()">'+'<i class="material-icons align-middle">close</i>'+'</button>'+
@@ -245,7 +245,7 @@ function cargarParticionesVbles() {
                 '<button class="btn btn-outline-dark" id="save'+idPart+'" style="display:block" onclick="guardarPart()">'+'<i class="material-icons align-middle">save</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="cancel'+idPart+'" style="display:block" onclick="anularPart()">'+'<i class="material-icons align-middle">highlight_off</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="edit'+idPart+'" style="display:none" onclick="edit(this)">'+'<i class="material-icons align-middle">create</i>'+'</button>'+
-                '<button class="btn btn-outline-dark" id="delete'+idPart+'" style="display:none" onclick="delete(this)">'+'<i class="material-icons align-middle">delete_outline</i>'+'</button>'+
+                '<button class="btn btn-outline-dark" id="delete'+idPart+'" style="display:none" onclick="borrar(this)">'+'<i class="material-icons align-middle">delete_outline</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="cancel2'+idPart+'" style="display:none" onclick="des(this)">'+'<i class="material-icons align-middle">undo</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="acept'+idPart+'" style="display:none" onclick="acept(this)">'+'<i class="material-icons align-middle">done_outline</i>'+'</button>'+
                 '<button class="btn btn-outline-dark" id="cancel3'+idPart+'" style="display:none" onclick="cancel()">'+'<i class="material-icons align-middle">close</i>'+'</button>'+
@@ -278,6 +278,63 @@ function edit(nodo) {
         mostrarMensaje("errorCondicionesIniciales", "Primero termine la operación pendiente.");
     }
 }
+
+// funcion que permite eliminar una particion
+function borrar(nodo) {
+    fila = (nodo.parentNode).parentNode;
+    //Se obtiene el Id del proceso
+    idP = fila.getAttribute("id");
+    document.getElementById("tabla-particiones").tBodies.item(0).deleteRow(idP - 1); // borra la fila de la tabla
+    for (var i = 0; i < condicionesInciales.tablaParticiones.length; i++) { // busca en el array la particion a eliminar
+        if (condicionesInciales.tablaParticiones[i].idParticion == idP) { // cuando encuentra la particion
+            tamanoLibre += condicionesInciales.tablaParticiones[i].tamaño;
+            condicionesInciales.tablaParticiones.splice(i, 1); // la borra
+        }
+    }
+    for (var i = 0; i < condicionesInciales.tablaParticiones.length; i++) { // va actualizando las direcciones de inicio y fin
+        if (condicionesInciales.tablaParticiones[i].idParticion != 0) { // opera solo si el id no es 0 (el espacio libre)
+            if (i == 0) { // si es la primera particion usa el tamaño del SO como direccion de inicio
+                condicionesInciales.tablaParticiones[i].dirInicio = condicionesInciales.tamanoSO;
+                condicionesInciales.tablaParticiones[i].dirFin = condicionesInciales.tamanoSO + condicionesInciales.tablaParticiones[i].tamaño - 1;
+            }
+            else { // sino, usa la direccion de fin de la particion anterior
+                condicionesInciales.tablaParticiones[i].dirInicio = condicionesInciales.tablaParticiones[i - 1].dirFin + 1;
+                condicionesInciales.tablaParticiones[i].dirFin = condicionesInciales.tablaParticiones[i].dirInicio + condicionesInciales.tablaParticiones[i].tamaño - 1;
+            }
+            condicionesInciales.tablaParticiones[i].idParticion = i + 1;
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].id = i + 1;
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[0].innerHTML = i + 1; // actualiza el id en la tabla
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[1].innerHTML = condicionesInciales.tablaParticiones[i].dirInicio; // actualiza la direccion de inicio en la tabla
+            document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[2].innerHTML = condicionesInciales.tablaParticiones[i].dirFin; // actualiza la direccion de fin en la tabla
+        }
+    }
+    idPart--; // decrementa esta variable global
+    if (tamanoLibre > 0) { // si queda espacio libre hace lo correspondiente
+        if (condicionesInciales.tablaParticiones[condicionesInciales.tablaParticiones.length - 1].idParticion == 0) { // si ya hay particion de espacio libre
+            condicionesInciales.tablaParticiones.pop(); // elimina la particion espacio libre
+        }
+        var espacioLibre = { //se crea el espacio libre
+            "idParticion": 0,
+            "dirInicio": condicionesInciales.tablaParticiones[condicionesInciales.tablaParticiones.length - 1].dirFin + 1,
+            "dirFin": condicionesInciales.tamanoMP - 1,
+            "tamaño": tamanoLibre,
+            "estado": 0, //0 libre 1 ocupado
+            "idProceso": null,
+            "FI": 0,
+        };
+        condicionesInciales.tablaParticiones.push(espacioLibre); // se agrega el espacio libre
+        document.getElementById("tabla-particiones").tFoot.style.visibility = "visible"; // se muestra el boton de agregar particion
+    }
+    if (tamanoLibre == 0) { // si no queda espacio libre hace lo correspondiente
+        if (condicionesInciales.tablaParticiones[condicionesInciales.tablaParticiones.length - 1].idParticion == 0) { // si ya hay particion de espacio libre
+            condicionesInciales.tablaParticiones.pop(); // elimina la particion espacio libre
+        }
+        document.getElementById("tabla-particiones").tFoot.style.visibility = "hidden"; // oculta el boton de agregar particion
+    }
+    doGraphichs();
+    $(function () {$('[data-toggle="popover"]').popover()});
+}
+
 function acept(nodo) {
     fila = (nodo.parentNode).parentNode;
     //Se obtiene el Id del proceso
@@ -304,7 +361,7 @@ function acept(nodo) {
             }
         }
         for (var i = 0; i < condicionesInciales.tablaParticiones.length; i++) { // va actualizando las direcciones de inicio y fin
-            if (condicionesInciales.tablaParticiones[i].idParticion != 0) {
+            if (condicionesInciales.tablaParticiones[i].idParticion != 0) { // opera solo si el id no es 0 (el espacio libre)
                 if (i == 0) { // si es la primera particion usa el tamaño del SO como direccion de inicio
                     condicionesInciales.tablaParticiones[i].dirInicio = condicionesInciales.tamanoSO;
                     condicionesInciales.tablaParticiones[i].dirFin = condicionesInciales.tamanoSO + condicionesInciales.tablaParticiones[i].tamaño - 1;
@@ -340,82 +397,6 @@ function acept(nodo) {
             document.getElementById("tabla-particiones").tFoot.style.visibility = "hidden"; // oculta el boton de agregar particion
         }
     }
-    /* if (tamNuevo<tamPart) {//tengo q crear un espacio libre o actualizar el el
-        //Actualizo los datos de la particion
-        particion=condicionesInciales.tablaParticiones[idP-1];
-        particion.tamaño=tamNuevo;
-        particion.dirFin=(particion.dirInicio+(tamNuevo-1));
-        
-        var libreDir=(particion.dirFin+1);
-        var libreTamano=(tamPart-tamNuevo);
-        tamanoLibre=tamanoLibre+libreTamano;
-        if(idP==(condicionesInciales.tablaParticiones.length)){//actualizar el espacio libre
-            var particion ={ //se crea el espacio libre
-                "idParticion": 0,
-                "dirInicio": libreDir,
-                "dirFin": (condicionesInciales.tamanoMP-1),
-                "tamaño": libreTamano,
-                "estado": 0, //0 libre 1 ocupado
-                "idProceso": null,
-                "FI": 0,
-            };
-            condicionesInciales.tablaParticiones.push(particion);
-            
-        }else{
-            particion=condicionesInciales.tablaParticiones[idP];
-            if (particion.idParticion==0) {
-                particion.dirInicio=libreDir;
-                particion.tamaño=libreTamano;
-            } else {
-                var particion ={ //se crea el object
-                    "idParticion": 0,
-                    "dirInicio": libreDir,
-                    "dirFin": (libreDir+libreTamano-1),
-                    "tamaño": libreTamano,
-                    "estado": 0, //0 libre 1 ocupado
-                    "idProceso": null,
-                    "FI": 0,
-                };
-                condicionesInciales.tablaParticiones.splice(idP,0,particion);
-            }
-        }
-        
-        document.getElementById("boton4").style.visibility="visible";
-    }
-    if (tamNuevo>tamPart) {//no esta testeado
-        if (tamNuevo<=tamanoLibre) {
-            particion=condicionesInciales.tablaParticiones[idP];
-            if (particion.idParticion==0) {//el siguiente es espacio libre
-                tamanoLibre=tamanoLibre-tamNuevo;
-                direccionLibre=direccionLibre+tamNuevo;
-                if (tamanoLibre==0) {
-                    condicionesInciales.tablaParticiones.pop;//elimino el espacio libre
-                }else{
-                    //actualizar el espacio libre
-                    particion.tamaño=tamanoLibre;
-                    particion.dirInicio=direccionLibre;
-                    //actualizar la particion editada
-                    particion=condicionesInciales.tablaParticiones[idP-1];
-                    particion.tamaño=tamNuevo;
-                    particion.dirFin=(particion.dirInicio+(tamNuevo-1));
-                }            
-
-            } else {//el siguiente es una particion x. La ultima pos del array es el espacio libre
-                var particion ={ //se crea el object
-                    "idParticion": 0,
-                    "dirInicio": libreDir,
-                    "dirFin": (libreDir+libreTamano),
-                    "tamaño": libreTamano,
-                    "estado": 0, //0 libre 1 ocupado
-                    "idProceso": null,
-                    "FI": 0,
-                };
-                condicionesInciales.tablaParticiones.splice(idP,0,particion);
-            }
-        } else {
-            mostrarMensaje("errorCondicionesIniciales", "No hay espacio para la particion");
-        }
-    } */
     doGraphichs();
     $(function () {$('[data-toggle="popover"]').popover()});
     document.getElementById(`tamano${idP}`).disabled = true;
