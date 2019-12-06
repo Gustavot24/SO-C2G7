@@ -292,7 +292,55 @@ function acept(nodo) {
         document.getElementById("cancel3"+idP).style.display = "none";
         editando1=false;
     }
-    if (tamNuevo<tamPart) {//tengo q crear un espacio libre o actualizar el el
+    if (tamNuevo != tamPart) { // si se cambia el tamaño de la particion
+        if ((tamNuevo - tamPart) > tamanoLibre) { // si el tamaño nuevo supera el espacio libre
+            mostrarMensaje("errorCondicionesIniciales", "El nuevo tamaño ingresado supera el espacio libre por " + (tamNuevo - tamPart - tamanoLibre) + "KB");
+            return;
+        }
+        tamanoLibre -= (tamNuevo - tamPart);
+        for (var i = 0; i < condicionesInciales.tablaParticiones.length; i++) { // busca la particion modificada
+            if (condicionesInciales.tablaParticiones[i].idParticion == idP) { // cuando la encuentra
+                condicionesInciales.tablaParticiones[i].tamaño = tamNuevo; // le asigna el nuevo tamaño
+            }
+        }
+        for (var i = 0; i < condicionesInciales.tablaParticiones.length; i++) { // va actualizando las direcciones de inicio y fin
+            if (condicionesInciales.tablaParticiones[i].idParticion != 0) {
+                if (i == 0) { // si es la primera particion usa el tamaño del SO como direccion de inicio
+                    condicionesInciales.tablaParticiones[i].dirInicio = condicionesInciales.tamanoSO;
+                    condicionesInciales.tablaParticiones[i].dirFin = condicionesInciales.tamanoSO + condicionesInciales.tablaParticiones[i].tamaño - 1;
+                }
+                else { // sino, usa la direccion de fin de la particion anterior
+                    condicionesInciales.tablaParticiones[i].dirInicio = condicionesInciales.tablaParticiones[i - 1].dirFin + 1;
+                    condicionesInciales.tablaParticiones[i].dirFin = condicionesInciales.tablaParticiones[i].dirInicio + condicionesInciales.tablaParticiones[i].tamaño - 1;
+                }
+                document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[1].innerHTML = condicionesInciales.tablaParticiones[i].dirInicio; // actualiza la direccion de inicio en la tabla
+                document.getElementById("tabla-particiones").tBodies.item(0).rows[i].cells[2].innerHTML = condicionesInciales.tablaParticiones[i].dirFin; // actualiza la direccion de fin en la tabla
+            }
+        }
+        if (tamanoLibre > 0) { // si queda espacio libre hace lo correspondiente
+            if (condicionesInciales.tablaParticiones[condicionesInciales.tablaParticiones.length - 1].idParticion == 0) { // si ya hay particion de espacio libre
+                condicionesInciales.tablaParticiones.pop(); // elimina la particion espacio libre
+            }
+            var espacioLibre = { //se crea el espacio libre
+                "idParticion": 0,
+                "dirInicio": condicionesInciales.tablaParticiones[condicionesInciales.tablaParticiones.length - 1].dirFin + 1,
+                "dirFin": condicionesInciales.tamanoMP - 1,
+                "tamaño": tamanoLibre,
+                "estado": 0, //0 libre 1 ocupado
+                "idProceso": null,
+                "FI": 0,
+            };
+            condicionesInciales.tablaParticiones.push(espacioLibre); // se agrega el espacio libre
+            document.getElementById("tabla-particiones").tFoot.style.visibility = "visible"; // se muestra el boton de agregar particion
+        }
+        if (tamanoLibre == 0) { // si no queda espacio libre hace lo correspondiente
+            if (condicionesInciales.tablaParticiones[condicionesInciales.tablaParticiones.length - 1].idParticion == 0) { // si ya hay particion de espacio libre
+                condicionesInciales.tablaParticiones.pop(); // elimina la particion espacio libre
+            }
+            document.getElementById("tabla-particiones").tFoot.style.visibility = "hidden"; // oculta el boton de agregar particion
+        }
+    }
+    /* if (tamNuevo<tamPart) {//tengo q crear un espacio libre o actualizar el el
         //Actualizo los datos de la particion
         particion=condicionesInciales.tablaParticiones[idP-1];
         particion.tamaño=tamNuevo;
@@ -367,13 +415,13 @@ function acept(nodo) {
         } else {
             mostrarMensaje("errorCondicionesIniciales", "No hay espacio para la particion");
         }
-    }
+    } */
     doGraphichs();
     $(function () {$('[data-toggle="popover"]').popover()});
     document.getElementById(`tamano${idP}`).disabled = true;
     document.getElementById("edit"+idP).style.display = "block";
     document.getElementById("delete"+idP).style.display = "block";        
-    //Se habilitan los botones Aceptar y Cancelar, correspondientes a la operación de Editar
+    //Se deshabilitan los botones Aceptar y Cancelar, correspondientes a la operación de Editar
     document.getElementById("acept"+idP).style.display = "none";
     document.getElementById("cancel3"+idP).style.display = "none";
     editando1=false;
