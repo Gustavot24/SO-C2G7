@@ -222,6 +222,9 @@ function cargarColas(nombre) {
                 document.getElementById("quantum" + (i + 1)).value = tablaColas[i].quantum;
                 mostrarQuantum(i + 1);
             }
+            if (tablaColas.length == 3) {
+                document.getElementById("botonAgregarCola").style.display = "none";
+            }
             mostrarMensaje("avisoColasMultinivel", "Se cargó la lista de colas"); // muestra un mensaje de que se cargo todo bien
             seGuardaronLasColas = true; // pone a true la variable que indica que se guardaron las colas
         }
