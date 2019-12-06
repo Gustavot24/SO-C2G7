@@ -74,8 +74,8 @@ function setVisible() {
     doGraphichs();
 
     document.getElementById("div-particiones").style.visibility = "visible";
-    document.getElementById("boton1").disabled = true; 
-    document.getElementById("boton2").disabled = true;
+    //document.getElementById("boton1").disabled = true; 
+    //document.getElementById("boton2").disabled = true;
     document.getElementById("boton3").disabled = true;
     document.getElementById("boton4").style.visibility = "visible";
     var htmlTags = '<tr id="'+idPart+'">'+
