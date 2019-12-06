@@ -36,7 +36,6 @@ var tablaParticiones = condicionesInciales.tablaParticiones; // tabla de partici
 
 // arranca la simulacion
 function iniciarSimulacion() {
-    document.getElementById("previous").disabled = false; // habilita el boton de anterior
     document.getElementById("next").disabled = false; // habilita el boton de siguiente
     document.getElementById("iniciar").disabled = true; // deshabilita el boton de iniciar
     if (colasMultinivel.length == 1) { // si hay una sola cola multinivel
